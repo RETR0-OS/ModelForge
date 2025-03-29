@@ -6,7 +6,6 @@ const Navbar = ({ appName = "ModelForge" }) => {
   return (
     <nav className="bg-gray-800 p-4 border-b border-orange-500">
       <div className="container mx-auto flex justify-between items-center">
-        {/* Logo and App Name */}
         <div className="flex items-center">
           <Link to="/" className="text-orange-500 text-2xl font-bold">{appName}</Link>
         </div>

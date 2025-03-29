@@ -2,7 +2,7 @@
 import React, { useEffect }  from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
-import LandingPage from './pages/LandingPage';
+import LandingPage from './pages/AppLanding';
 // import DetectHardwarePage from './pages/DetectHardwarePage';
 // import FinetuningSettingsPage from './pages/FinetuningSettingsPage';
 import './index.css';
@@ -22,6 +22,7 @@ function App() {
         <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage />} />
+          {/* <Route path="/landing" element={<LandingPage />} /> */}
           {/* <Route
             path="/app"
             element={<DetectHardwarePage />}
