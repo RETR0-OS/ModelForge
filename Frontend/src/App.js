@@ -1,7 +1,7 @@
 // src/App.jsx
 import React, { useEffect }  from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-// import Navbar from './components/Navbar';
+import Navbar from './components/Navbar';
 import LandingPage from './pages/LandingPage';
 // import DetectHardwarePage from './pages/DetectHardwarePage';
 // import FinetuningSettingsPage from './pages/FinetuningSettingsPage';
@@ -19,6 +19,7 @@ function App() {
   return (
     <Router>
       <div className="bg-gray-900 text-white min-h-screen">
+        <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage />} />
           {/* <Route
