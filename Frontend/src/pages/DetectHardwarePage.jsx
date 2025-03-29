@@ -35,11 +35,33 @@ const HardwareDetection = () => {
     }
   ];
 
-  const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
     e.preventDefault();
-    // Add actual hardware detection logic here
-    setShowResults(true);
-  };
+    // Replace 'text-generation' with the task you want to send
+    const formData = new FormData();
+    formData.append("task", "text-generation");
+
+    try {
+        const response = await fetch('http://127.0.0.1:8000/finetune/detect', {
+            method: 'POST',
+            body: formData,
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.detail || "Error detecting hardware");
+        }
+
+        const data = await response.json();
+        console.log("Response from backend:", data);
+
+        // Handle the response data (e.g., update state or UI)
+        setShowResults(true);
+    } catch (error) {
+        console.error("Error:", error.message);
+        // Handle error (e.g., show an error message to the user)
+    }
+};
 
   return (
     <div className="max-w-4xl mx-auto p-4">
