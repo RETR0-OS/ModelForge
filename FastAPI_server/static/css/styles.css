@@ -1,0 +1,82 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Custom styles */
+body {
+    font-family: 'Inter', sans-serif;
+}
+
+.bg-gray-900 {
+    background-color: #111827;
+}
+
+.bg-gray-800 {
+    background-color: #1f2937;
+}
+
+.bg-gray-700 {
+    background-color: #374151;
+}
+
+.text-orange-500 {
+    color: #f97316;
+}
+
+.bg-orange-500 {
+    background-color: #f97316;
+}
+
+.hover\:bg-orange-600:hover {
+    background-color: #ea580c;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section h1 {
+        font-size: 2.5rem;
+    }
+}
+
+/* Finetune Page Specific Styles */
+.task-option > div {
+    transition: all 0.2s ease;
+}
+
+.spec-card {
+    @apply bg-gray-800 p-4 rounded-lg;
+}
+
+.spec-label {
+    @apply block text-gray-400 text-sm font-medium mb-1;
+}
+
+.spec-value {
+    @apply text-lg font-medium;
+}
+
+/* Animation */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+    animation: fadeIn 0.4s ease-out forwards;
+}
+
+:disabled,
+#set-settings[disabled]{
+    cursor: not-allowed !important;
+    opacity: 0.5 !important;
+}

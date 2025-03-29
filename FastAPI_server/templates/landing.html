@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="/static/css/landing.css">
+{% endblock %}
+
+{% block content %}
+<!-- Hero Section with Gradient and Animation -->
+<div class="hero-section py-20 relative overflow-hidden">
+    <!-- Background SVG Pattern -->
+    <div class="absolute inset-0 opacity-10 z-0">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <pat>h d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" stroke-width="1"/>
+                </pattern>
+            </defs>
+            <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+    </div>
+
+    <div class="max-w-5xl mx-auto text-center relative z-10">
+        <div class="animate-fade-in">
+            <h1 class="text-5xl md:text-6xl font-bold mb-6">Powerful LLM Finetuning <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-orange-600">Without Code</span></h1>
+            <p class="text-xl text-gray-300 mb-8 max-w-3xl mx-auto">{{ app_description }} - Transform and customize large language models to your specific needs with just a few clicks.</p>
+
+            <div class="space-x-4 flex flex-wrap justify-center gap-4">
+                <a href="/finetune/detect" class="group bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 px-8 py-4 rounded-lg text-lg font-medium transition shadow-lg hover:shadow-orange-500/30">
+                    Start Finetuning
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline-block ml-2 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+                    </svg>
+                </a>
+                <a href="#features" class="border border-orange-500 text-orange-400 hover:bg-orange-500 hover:text-white px-8 py-4 rounded-lg text-lg font-medium transition">Learn More</a>
+            </div>
+        </div>
+
+        <!-- Floating Cards Animation -->
+        <div class="mt-16 relative h-64 hidden md:block">
+            <div class="absolute left-1/4 transform -translate-x-1/2 animate-float-slow">
+                <div class="bg-gray-800/80 backdrop-blur-sm p-4 rounded-lg shadow-xl border border-orange-500/20 w-48">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                            </svg>
+                        </div>
+                        <span class="font-medium">4-bit Quantization</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute right-1/4 transform translate-x-1/2 animate-float-medium">
+                <div class="bg-gray-800/80 backdrop-blur-sm p-4 rounded-lg shadow-xl border border-orange-500/20 w-48">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                            </svg>
+                        </div>
+                        <span class="font-medium">LoRA Training</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="absolute left-1/2 transform -translate-x-1/2 top-24 animate-float-fast">
+                <div class="bg-gray-800/80 backdrop-blur-sm p-4 rounded-lg shadow-xl border border-orange-500/20 w-48">
+                    <div class="flex items-center">
+                        <div class="w-8 h-8 bg-orange-500 rounded-full flex items-center justify-center mr-3">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                            </svg>
+                        </div>
+                        <span class="font-medium">PEFT Methods</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Features Section -->
+<div id="features" class="features-section py-16">
+    <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-4">Key Features</h2>
+        <p class="text-center text-gray-300 mb-12 max-w-2xl mx-auto">ModelForge makes finetuning large language models accessible to everyone, regardless of technical expertise.</p>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            {% for feature in features %}
+            <div class="bg-gray-800 rounded-xl overflow-hidden hover:shadow-lg hover:shadow-orange-500/10 transition group">
+                <div class="h-1 bg-gradient-to-r from-orange-400 to-orange-600"></div>
+                <div class="p-6">
+                    <div class="w-12 h-12 bg-orange-500 rounded-full mb-4 flex items-center justify-center group-hover:scale-110 transition-transform">
+                        {% if loop.index == 1 %}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                        </svg>
+                        {% elif loop.index == 2 %}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                        </svg>
+                        {% elif loop.index == 3 %}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+                        </svg>
+                        {% else %}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                        </svg>
+                        {% endif %}
+                    </div>
+                    <h3 class="text-xl font-semibold mb-2">{{ feature }}</h3>
+                    <p class="text-gray-400 text-sm">
+                        {% if loop.index == 1 %}
+                        Simple visual interface that removes the complexity of LLM tuning
+                        {% elif loop.index == 2 %}
+                        Advanced tuning techniques without writing a single line of code
+                        {% elif loop.index == 3 %}
+                        Memory-efficient training that runs on consumer hardware
+                        {% else %}
+                        Optimized for maximum performance on your local CUDA devices
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Process Section -->
+<div class="process-section py-16 bg-gray-800/50">
+    <div class="max-w-6xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-center mb-4">How It Works</h2>
+        <p class="text-center text-gray-300 mb-12 max-w-2xl mx-auto">Three simple steps to customize models for your specific use case</p>
+
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="relative">
+                <div class="absolute -left-3 -top-3 w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center font-bold text-2xl">1</div>
+                <div class="bg-gray-800 p-6 rounded-xl h-full pl-10">
+                    <h3 class="text-xl font-semibold mb-4">Hardware Detection</h3>
+                    <p class="text-gray-400">ModelForge automatically analyzes your system and recommends the optimal configuration for your hardware.</p>
+                </div>
+            </div>
+
+            <div class="relative">
+                <div class="absolute -left-3 -top-3 w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center font-bold text-2xl">2</div>
+                <div class="bg-gray-800 p-6 rounded-xl h-full pl-10">
+                    <h3 class="text-xl font-semibold mb-4">Configure Training</h3>
+                    <p class="text-gray-400">Select your base model, upload your training data and adjust parameters with intuitive controls.</p>
+                </div>
+            </div>
+
+            <div class="relative">
+                <div class="absolute -left-3 -top-3 w-12 h-12 bg-orange-500 rounded-full flex items-center justify-center font-bold text-2xl">3</div>
+                <div class="bg-gray-800 p-6 rounded-xl h-full pl-10">
+                    <h3 class="text-xl font-semibold mb-4">Start Finetuning</h3>
+                    <p class="text-gray-400">Launch the training process with one click and monitor progress in real time with interactive visualizations.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- CTA Section -->
+<div class="cta-section py-20 text-center bg-gradient-to-b from-gray-900 to-gray-800">
+    <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-3xl font-bold mb-6">Ready to customize your LLM?</h2>
+        <p class="text-xl text-gray-300 mb-8">Start finetuning your models in minutes with our guided process.</p>
+        <a href="/finetune/detect" class="bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-lg text-lg font-medium transition inline-flex items-center group">
+            Get Started Now
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+        </a>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+{% endblock %}

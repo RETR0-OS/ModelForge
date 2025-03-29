@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!-- Hardware Detection Section -->
+<div class="max-w-4xl mx-auto">
+    <!-- Header -->
+    <div class="text-center mb-10">
+        <h1 class="text-3xl md:text-4xl font-bold mb-4">Hardware Detection</h1>
+        <p class="text-lg text-gray-300 mb-6">Let's check your system to find the optimal configuration for LLM finetuning</p>
+    </div>
+
+    <!-- Hardware Detection Card -->
+    <div class="bg-gray-800 rounded-xl p-6 md:p-8 shadow-lg mb-12">
+        <h2 class="text-2xl font-semibold mb-6 flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
+            </svg>
+            System Hardware Configuration
+        </h2>
+
+        <!-- Task Selection -->
+        <div class="mb-8">
+            <h3 class="text-xl font-medium mb-4">Select Task</h3>
+            <form id="task-form">
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="task-card border border-gray-700 hover:border-orange-500 p-5 rounded-lg cursor-pointer transition-all">
+                        <input type="radio" name="task" value="text-generation" id="text-generation" class="hidden task-radio">
+                        <label for="text-generation" class="block h-full cursor-pointer">
+                            <h4 class="text-lg font-medium text-orange-500 mb-2">Text Generation</h4>
+                            <p class="text-gray-400 text-sm">Create models for generating coherent and contextually relevant text</p>
+                        </label>
+                    </div>
+                    <div class="task-card border border-gray-700 hover:border-orange-500 p-5 rounded-lg cursor-pointer transition-all">
+                        <input type="radio" name="task" value="summarization" id="summarization" class="hidden task-radio">
+                        <label for="summarization" class="block h-full cursor-pointer">
+                            <h4 class="text-lg font-medium text-orange-500 mb-2">Summarization</h4>
+                            <p class="text-gray-400 text-sm">Train models that can condense long documents into concise summaries</p>
+                        </label>
+                    </div>
+                    <div class="task-card border border-gray-700 hover:border-orange-500 p-5 rounded-lg cursor-pointer transition-all">
+                        <input type="radio" name="task" value="question-answering" id="question-answering" class="hidden task-radio">
+                        <label for="question-answering" class="block h-full cursor-pointer">
+                            <h4 class="text-lg font-medium text-orange-500 mb-2">Question Answering</h4>
+                            <p class="text-gray-400 text-sm">Build models that provide accurate answers to specific questions</p>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mt-6 flex flex-col md:flex-row md:items-center md:justify-between">
+                    <button type="submit" id="detect-hardware-btn" class="bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-lg text-white font-medium transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center" disabled>
+                        Detect Hardware
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Hardware Results -->
+            <div id="hardware-results" class="hidden">
+                <div class="border-t border-gray-700 pt-6 mt-6">
+                    <h3 class="text-xl font-medium mb-4">Hardware Detection Results</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Left Column -->
+                        <div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-400 mb-1">System Profile</label>
+                                <div id="profile-display" class="p-3 bg-gray-900 rounded-lg text-white"></div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-400 mb-1">GPU</label>
+                                <div id="gpu-name-display" class="p-3 bg-gray-900 rounded-lg text-white"></div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-400 mb-1">GPU Memory</label>
+                                <div id="gpu-memory-display" class="p-3 bg-gray-900 rounded-lg text-white"></div>
+                            </div>
+                        </div>
+
+                        <!-- Right Column -->
+                        <div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-400 mb-1">System RAM</label>
+                                <div id="ram-display" class="p-3 bg-gray-900 rounded-lg text-white"></div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-400 mb-1">Available Disk Space</label>
+                                <div id="disk-display" class="p-3 bg-gray-900 rounded-lg text-white"></div>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-400 mb-1">CPU Cores</label>
+                                <div id="cpu-cores-display" class="p-3 bg-gray-900 rounded-lg text-white"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Model Recommendation -->
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-gray-400 mb-1">Recommended Model</label>
+                        <div id="model-recommendation-display" class="p-3 bg-gray-900 rounded-lg text-white font-medium text-orange-500"></div>
+                    </div>
+
+                    <!-- Model Selection -->
+                    <div class="mt-6">
+                            <label for="model-select" class="block text-sm font-medium text-gray-400 mb-1">Select Your Model</label>
+                            <div class="flex space-x-3">
+                                <select id="model-select" name="selected_model" class="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none">
+                                    <!-- Options will be populated dynamically -->
+                                </select>
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+    <!-- Next Steps Navigation -->
+    <div class="text-center mb-8">
+        <a href="/" class="text-orange-500 hover:text-orange-400 mr-6 inline-flex items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 17l-5-5m0 0l5-5m-5 5h12" />
+            </svg>
+            Back to Home
+        </a>
+        <button id="next-step-btn" onclick="window.location.href='/finetune/load_settings'" class="bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-lg font-medium transition inline-flex items-center disabled:opacity-50 disabled:cursor-not-allowed" disabled>
+            Configure Training
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+        </button>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="/static/js/detect_hardware.js"></script>
+{% endblock %}
