@@ -1,0 +1,133 @@
+/* Animation classes for the landing page */
+
+/* Black background for the whole page */
+.bg-black {
+    background-color: #000000;
+  }
+  
+  /* Tech cards container layout */
+  .tech-cards-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+  }
+  
+  /* Position classes for each card with floating animation */
+  .tech-card-animate-left {
+    position: absolute;
+    left: 0;
+    top: 30px;
+    animation: float-left 6s ease-in-out infinite;
+  }
+  
+  .tech-card-animate-center {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: float-center 5s ease-in-out infinite;
+  }
+  
+  .tech-card-animate-right {
+    position: absolute;
+    right: 0;
+    top: 30px;
+    animation: float-right 7s ease-in-out infinite;
+  }
+  
+  /* Floating animations with different patterns */
+  @keyframes float-left {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-15px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  @keyframes float-center {
+    0% {
+      transform: translate(-50%, 0px);
+    }
+    50% {
+      transform: translate(-50%, -15px);
+    }
+    100% {
+      transform: translate(-50%, 0px);
+    }
+  }
+  
+  @keyframes float-right {
+    0% {
+      transform: translateY(0px);
+    }
+    60% {
+      transform: translateY(-20px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  /* Fade in animation for hero content */
+  .animate-fade-in {
+    animation: fadeIn 1s ease-in-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Tech card styling */
+  .tech-card {
+    background-color: #000000; /* Pure black background */
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  
+  /* Hover effects for tech cards */
+  .tech-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px -5px rgba(249, 115, 22, 0.2);
+  }
+  
+  /* Button hover animations */
+  .group:hover .group-hover\:translate-x-1 {
+    transform: translateX(4px);
+  }
+  
+  .group:hover .group-hover\:scale-110 {
+    transform: scale(1.1);
+  }
+  
+  /* Responsive adjustments for mobile */
+  @media (max-width: 768px) {
+    .tech-cards-container {
+      height: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+  
+    .tech-card-animate-left,
+    .tech-card-animate-center,
+    .tech-card-animate-right {
+      position: static;
+      animation: none;
+      transform: none;
+    }
+  
+    .tech-card {
+      width: 100% !important;
+    }
+  }
