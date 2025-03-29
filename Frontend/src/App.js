@@ -1,12 +1,10 @@
 // src/App.jsx
-import React, { useEffect }  from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import LandingPage from './pages/AppLanding';
 import DetectHardwarePage from './pages/DetectHardwarePage';
 import FinetuneSettings from './pages/FinetuningSettingsPage';
-// import DetectHardwarePage from './pages/DetectHardwarePage';
-// import FinetuningSettingsPage from './pages/FinetuningSettingsPage';
 import './index.css';
 
 const RedirectToFastAPI = () => {
@@ -14,11 +12,11 @@ const RedirectToFastAPI = () => {
     window.location.href = "http://127.0.0.1:8000/";
   }, []);
 
-  return null; // Render nothing while redirecting
+  return null;
 };
 
 function App() {
-  const defaultValuesFinetuningSettings = {
+  const [finetuneSettings, setFinetuneSettings] = useState({
     task: 'text-generation',
     model_name: 'llama2-7b',
     compute_specs: 'Standard GPU',
@@ -46,16 +44,53 @@ function App() {
     optim: 'paged_adamw_32bit',
     lr_scheduler_type: 'cosine',
     max_steps: -1,
+    hardware_config: { 
+      gpu: '',
+      ram: 0,
+      disk: 0,
+      cpu_cores: 0,
+    },
+  });
+  useEffect(() => {
+    console.log('Updated Settings:', finetuneSettings);
+  }, [finetuneSettings]);
+  // Function to update settings from child components
+  const updateSettings = (newSettings) => {
+    console.log('New Settings:', newSettings);
+    setFinetuneSettings((prev) => {
+      const updatedSettings = {
+        ...prev,
+        ...newSettings,
+      };
+      console.log('Updated Settings in State:', updatedSettings);
+      return updatedSettings;
+    });
   };
+
   return (
     <Router>
       <div className="bg-gray-900 text-white min-h-screen">
         <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage />} />
-          <Route path="/finetune/load_settings" element={<FinetuneSettings defaultValues={defaultValuesFinetuningSettings} />} />
-          <Route path="/finetune/detect" element={<DetectHardwarePage />} />
-          {/* <Route path="/landing" element={<LandingPage />} /> */}
+          <Route 
+            path="/finetune/load_settings" 
+            element={
+              <FinetuneSettings 
+                defaultValues={finetuneSettings}
+                updateSettings={updateSettings}
+              />
+            } 
+          />
+          <Route 
+            path="/finetune/detect" 
+            element={
+              <DetectHardwarePage 
+                currentSettings={finetuneSettings}
+                updateSettings={updateSettings}
+              />
+            } 
+          />
           {/* <Route
             path="/app"
             element={<DetectHardwarePage />}
@@ -65,7 +100,6 @@ function App() {
             element={<RedirectToFastAPI />}
           />
         </Routes>
-        {/* </Routes> */}
       </div>
     </Router>
   );
