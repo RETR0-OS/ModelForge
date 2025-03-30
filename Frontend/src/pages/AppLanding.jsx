@@ -42,24 +42,6 @@ const LandingPage = ({ appName = "ModelForge" }) => {
     }
   ];
 
-  const testimonials = [
-    {
-      quote: "I've never coded a day in my life, but I trained my own AI in minutes!",
-      author: "Sarah, Small Business Owner",
-      image: "/api/placeholder/60/60"
-    },
-    {
-      quote: "My grandma used ModelForge to create a custom chatbot for her book club!",
-      author: "Michael, Software Engineer",
-      image: "/api/placeholder/60/60"
-    },
-    {
-      quote: "We saved thousands on AI consultants by using this platform ourselves.",
-      author: "Jessica, Marketing Director",
-      image: "/api/placeholder/60/60"
-    }
-  ];
-
   return (
     <div className="bg-black text-gray-100 min-h-screen">
       {/* Hero Section with Animation */}
@@ -140,27 +122,6 @@ const LandingPage = ({ appName = "ModelForge" }) => {
         </div>
       </div>
 
-      {/* "As Seen In" Section */}
-      <div className="as-seen-in py-10 bg-gray-900">
-        <div className="max-w-5xl mx-auto px-4">
-          <p className="text-center text-gray-400 mb-6">Trusted by teams from</p>
-          <div className="flex flex-wrap justify-center items-center gap-8 md:gap-16">
-            <div className="opacity-70 hover:opacity-100 transition w-24 h-12 flex items-center justify-center">
-              <span className="text-xl font-bold text-gray-300">TechCorp</span>
-            </div>
-            <div className="opacity-70 hover:opacity-100 transition w-24 h-12 flex items-center justify-center">
-              <span className="text-xl font-bold text-gray-300">DataAI</span>
-            </div>
-            <div className="opacity-70 hover:opacity-100 transition w-24 h-12 flex items-center justify-center">
-              <span className="text-xl font-bold text-gray-300">FutureLabs</span>
-            </div>
-            <div className="opacity-70 hover:opacity-100 transition w-24 h-12 flex items-center justify-center">
-              <span className="text-xl font-bold text-gray-300">InnovateX</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
       {/* How It Works Section */}
       <div id="how-it-works" className="how-it-works py-16 lg:py-24 bg-gradient-to-b from-black to-gray-900">
         <div className="max-w-6xl mx-auto px-4">
@@ -232,39 +193,6 @@ const LandingPage = ({ appName = "ModelForge" }) => {
                 </div>
               </div>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* User Testimonials */}
-      <div className="testimonials py-16 lg:py-24 bg-black">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">People Just Like You Are Building AI</h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
-              Our users have zero technical background but are creating powerful custom AI models
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div 
-                key={index} 
-                className="testimonial-card bg-gray-800 rounded-xl p-6 transform transition-all duration-300 hover:scale-105 hover:shadow-xl hover:shadow-orange-500/10"
-              >
-                <div className="flex items-center mb-4">
-                  <img 
-                    src={testimonial.image} 
-                    alt={testimonial.author} 
-                    className="w-12 h-12 rounded-full mr-4 border-2 border-orange-500" 
-                  />
-                  <div>
-                    <p className="font-medium text-gray-200">{testimonial.author}</p>
-                  </div>
-                </div>
-                <p className="text-gray-300 italic">"{testimonial.quote}"</p>
-              </div>
-            ))}
           </div>
         </div>
       </div>

@@ -14,7 +14,7 @@ class SettingsBuilder:
         self.use_4bit = True
         self.bnb_4bit_compute_dtype = "float16"
         self.save_steps = 0
-        self.logging_steps = 25
+        self.logging_steps = 2
         self.max_seq_length = None
 
         # BitsAndBytes Advanced
