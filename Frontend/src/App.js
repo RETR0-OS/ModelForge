@@ -6,6 +6,7 @@ import LandingPage from './pages/AppLanding';
 import DetectHardwarePage from './pages/DetectHardwarePage';
 import FinetuneSettings from './pages/FinetuningSettingsPage';
 import Loading from './pages/Loading';
+import TechnicalDetailsPage from './pages/TechnicalDetailsPage';
 import './index.css';
 
 const RedirectToFastAPI = () => {
@@ -113,6 +114,10 @@ function App() {
           <Route 
           path="/finetune/loading" 
           element={<Loading />} 
+          />
+          <Route 
+          path="/technical-details" 
+          element={<TechnicalDetailsPage />} 
           />
         </Routes>
 

@@ -7,6 +7,8 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [formState, setFormState] = useState({});
   const [settingsUpdated, setSettingsUpdated] = useState(false);
+  const [activeTooltip, setActiveTooltip] = useState(null);
+  
   useEffect(() => {
     const fetchDefaultSettings = async () => {
       try {
@@ -74,46 +76,85 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
     setFormState(updatedState);
   };
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-        // Create FormData to send multipart data
-        const formData = new FormData();
+    // Create FormData to send multipart data
+    const formData = new FormData();
 
-        // Append the selected file
-        if (selectedFile) {
-        formData.append("json_file", selectedFile, selectedFile.name);
-        }
+    // Append the selected file
+    if (selectedFile) {
+      formData.append("json_file", selectedFile, selectedFile.name);
+    }
 
-        // Append settings as a JSON string
-        formData.append("settings", JSON.stringify(formState));
+    // Append settings as a JSON string
+    formData.append("settings", JSON.stringify(formState));
 
-        console.log("Sending data to server:", formData);
+    console.log("Sending data to server:", formData);
 
-        try {
-        const response = await fetch('http://localhost:8000/finetune/load_settings', {
-          method: 'POST',
-          body: formData,
-        });
+    try {
+      const response = await fetch('http://localhost:8000/finetune/load_settings', {
+        method: 'POST',
+        body: formData,
+      });
 
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
-        }
+      if (!response.ok) {
+        throw new Error(`Server error: ${response.status}`);
+      }
 
-        const responseGet = await fetch('http://localhost:8000/finetune/start', {
-          method: 'GET',
-        });
-        console.log("Response from GET request:", responseGet);
-        setTimeout(() => {
-          navigate('/finetune/loading'); // change here 
-        }, 1000);
+      const responseGet = await fetch('http://localhost:8000/finetune/start', {
+        method: 'GET',
+      });
+      console.log("Response from GET request:", responseGet);
+      setTimeout(() => {
+        navigate('/finetune/loading'); // change here 
+      }, 1000);
 
-        } catch (error) {
-        console.error("Error submitting form:", error);
-        alert("Failed to update settings.");
-        }
-    };
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      alert("Failed to update settings.");
+    }
+  };
 
+  // Tooltip definitions
+  const tooltips = {
+    task: "What you want your AI to be good at doing",
+    model_name: "The base AI model you're customizing",
+    gpu: "The graphics card that will run your training",
+    ram: "Computer memory available for training",
+    num_train_epochs: "How many times the AI will see your training data",
+    learning_rate: "How quickly the model adapts to new information",
+    per_device_train_batch_size: "How many examples are processed at once",
+    max_seq_length: "Maximum text length the model can handle",
+    dataset_file: "Your training examples in JSON format",
+    lora_r: "Controls model capacity and training speed",
+    lora_alpha: "Controls how much the model changes during training",
+    quantization: "Reduces model size to fit in memory",
+    bnb_4bit_compute_dtype: "Technical setting for calculation precision",
+    optim: "Method used to update the model during training",
+    lr_scheduler_type: "How learning speed changes during training"
+  };
+
+  // Tooltip display component
+  const Tooltip = ({ id, children }) => (
+    <div className="flex justify-between items-center">
+      <div className="flex-grow">{children}</div>
+      <div className="relative">
+        <span 
+          className="cursor-help text-orange-500 font-bold text-sm"
+          onMouseEnter={() => setActiveTooltip(id)}
+          onMouseLeave={() => setActiveTooltip(null)}
+        >
+          ?
+        </span>
+        {activeTooltip === id && (
+          <div className="absolute z-10 w-64 p-2 text-sm text-white bg-gray-900 rounded-md shadow-lg border border-orange-500 right-0 top-6">
+            {tooltips[id]}
+          </div>
+        )}
+      </div>
+    </div>
+  );
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -135,25 +176,33 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
           <h2 className="text-xl font-semibold text-white mb-4">Configuration Summary</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1">Task</label>
+              <Tooltip id="task">
+                <label className="block text-sm font-medium text-gray-400 mb-1">Task</label>
+              </Tooltip>
               <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
                 {formState.task || defaultValues.task || 'Not set'}
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1">Model Name</label>
+              <Tooltip id="model_name">
+                <label className="block text-sm font-medium text-gray-400 mb-1">Model Name</label>
+              </Tooltip>
               <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
                 {formState.model_name || defaultValues.model_name || 'Not set'}
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1">GPU</label>
+              <Tooltip id="gpu">
+                <label className="block text-sm font-medium text-gray-400 mb-1">GPU</label>
+              </Tooltip>
               <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
                 {formState.hardware_config?.gpu || defaultValues.hardware_config?.gpu || 'N/A'}
               </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-400 mb-1">RAM</label>
+              <Tooltip id="ram">
+                <label className="block text-sm font-medium text-gray-400 mb-1">RAM</label>
+              </Tooltip>
               <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
                 {formState.hardware_config?.ram || defaultValues.hardware_config?.ram ?
                   `${formState.hardware_config?.ram || defaultValues.hardware_config?.ram} GB` : 'N/A'}
@@ -167,9 +216,11 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
           <h2 className="text-xl font-semibold text-white mb-4">Basic Settings</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="num_train_epochs" className="block text-sm font-medium text-gray-400 mb-1">
-                Training Epochs
-              </label>
+              <Tooltip id="num_train_epochs">
+                <label htmlFor="num_train_epochs" className="block text-sm font-medium text-gray-400 mb-1">
+                  Training Epochs
+                </label>
+              </Tooltip>
               <input
                 type="number"
                 id="num_train_epochs"
@@ -183,9 +234,11 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
             </div>
 
             <div>
-              <label htmlFor="learning_rate" className="block text-sm font-medium text-gray-400 mb-1">
-                Learning Rate
-              </label>
+              <Tooltip id="learning_rate">
+                <label htmlFor="learning_rate" className="block text-sm font-medium text-gray-400 mb-1">
+                  Learning Rate
+                </label>
+              </Tooltip>
               <input
                 type="number"
                 id="learning_rate"
@@ -198,9 +251,11 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
             </div>
 
             <div>
-              <label htmlFor="per_device_train_batch_size" className="block text-sm font-medium text-gray-400 mb-1">
-                Batch Size (Train)
-              </label>
+              <Tooltip id="per_device_train_batch_size">
+                <label htmlFor="per_device_train_batch_size" className="block text-sm font-medium text-gray-400 mb-1">
+                  Batch Size (Train)
+                </label>
+              </Tooltip>
               <input
                 type="number"
                 id="per_device_train_batch_size"
@@ -213,9 +268,11 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
             </div>
 
             <div>
-              <label htmlFor="max_seq_length" className="block text-sm font-medium text-gray-400 mb-1">
-                Max Sequence Length
-              </label>
+              <Tooltip id="max_seq_length">
+                <label htmlFor="max_seq_length" className="block text-sm font-medium text-gray-400 mb-1">
+                  Max Sequence Length
+                </label>
+              </Tooltip>
               <input
                 type="number"
                 id="max_seq_length"
@@ -227,9 +284,11 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
             </div>
 
             <div className="col-span-full">
-              <label htmlFor="dataset_file" className="block text-sm font-medium text-gray-400 mb-1">
-                Dataset File
-              </label>
+              <Tooltip id="dataset_file">
+                <label htmlFor="dataset_file" className="block text-sm font-medium text-gray-400 mb-1">
+                  Dataset File
+                </label>
+              </Tooltip>
               <div className="flex items-center">
                 <label className="w-full flex items-center justify-center px-4 py-2 border border-gray-700 rounded-lg cursor-pointer bg-gray-900 hover:bg-gray-800 transition">
                   <svg
@@ -291,35 +350,39 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
               <h3 className="text-lg font-medium text-white mb-4">LoRA Configuration</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label htmlFor="lora_r" className="block text-sm font-medium text-gray-400 mb-1">
-                  LoRA Rank (r)
+                <Tooltip id="lora_r">
+                  <label htmlFor="lora_r" className="block text-sm font-medium text-gray-400 mb-1">
+                    LoRA Rank (r)
                   </label>
-                  <select
-                    id="lora_r"
-                    name="lora_r"
-                    value={formState.lora_r || 16}
-                    onChange={handleInputChange}
-                    className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none" >
-                    <option value="8">8</option>
-                    <option value="16">16</option>
-                    <option value="32">32</option>
-                    <option value="64">64</option>
-                  </select>
-                </div>
-                <div>
+                </Tooltip>
+                <select
+                  id="lora_r"
+                  name="lora_r"
+                  value={formState.lora_r || 16}
+                  onChange={handleInputChange}
+                  className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none" >
+                  <option value="8">8</option>
+                  <option value="16">16</option>
+                  <option value="32">32</option>
+                  <option value="64">64</option>
+                </select>
+              </div>
+              <div>
+                <Tooltip id="lora_alpha">
                   <label htmlFor="lora_alpha" className="block text-sm font-medium text-gray-400 mb-1">
                     LoRA Alpha
                   </label>
-                  <input
-                    type="number"
-                    id="lora_alpha"
-                    name="lora_alpha"
-                    min="1"
-                    value={formState.lora_alpha || 32}
-                    onChange={handleInputChange}
-                    className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
-                  />
-                </div>
+                </Tooltip>
+                <input
+                  type="number"
+                  id="lora_alpha"
+                  name="lora_alpha"
+                  min="1"
+                  value={formState.lora_alpha || 32}
+                  onChange={handleInputChange}
+                  className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
+                />
+              </div>
               </div>
             </div>
 
@@ -328,7 +391,9 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
               <h3 className="text-lg font-medium text-white mb-4">Quantization Settings</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-400 mb-2">Precision</label>
+                  <Tooltip id="quantization">
+                    <label className="block text-sm font-medium text-gray-400 mb-2">Precision</label>
+                  </Tooltip>
                   <div className="space-y-3">
                     <label className="flex items-center">
                       <input
@@ -367,9 +432,11 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                 </div>
 
                 <div>
-                  <label htmlFor="bnb_4bit_compute_dtype" className="block text-sm font-medium text-gray-400 mb-1">
-                    Compute Dtype
-                  </label>
+                  <Tooltip id="bnb_4bit_compute_dtype">
+                    <label htmlFor="bnb_4bit_compute_dtype" className="block text-sm font-medium text-gray-400 mb-1">
+                      Compute Dtype
+                    </label>
+                  </Tooltip>
                   <select
                     id="bnb_4bit_compute_dtype"
                     name="bnb_4bit_compute_dtype"
@@ -390,9 +457,11 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
               <h3 className="text-lg font-medium text-white mb-4">Optimization Settings</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label htmlFor="optim" className="block text-sm font-medium text-gray-400 mb-1">
-                    Optimizer
-                  </label>
+                  <Tooltip id="optim">
+                    <label htmlFor="optim" className="block text-sm font-medium text-gray-400 mb-1">
+                      Optimizer
+                    </label>
+                  </Tooltip>
                   <select
                     id="optim"
                     name="optim"
@@ -406,9 +475,11 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                   </select>
                 </div>
                 <div>
-                  <label htmlFor="lr_scheduler_type" className="block text-sm font-medium text-gray-400 mb-1">
-                    Learning Rate Scheduler
-                  </label>
+                  <Tooltip id="lr_scheduler_type">
+                    <label htmlFor="lr_scheduler_type" className="block text-sm font-medium text-gray-400 mb-1">
+                      Learning Rate Scheduler
+                    </label>
+                  </Tooltip>
                   <select
                     id="lr_scheduler_type"
                     name="lr_scheduler_type"

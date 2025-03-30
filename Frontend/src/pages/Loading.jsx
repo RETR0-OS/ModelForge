@@ -38,17 +38,24 @@ const Loading = () => {
         });
         const result = await responseGet.json();
         
-        // Check if there's a progress value from backend
-        if (result.progress !== undefined) {
-          setBackendProgress(result.progress);
+        console.log('Status API response:', result);
+        
+        // First check if status is idle (process completed)
+        if (result.status === 'idle') {
+          console.log('Training completed! Status is idle.');
+          setIsIdle(true);
+          setProgress(100); // Force progress to 100%
+          setCurrentStep(steps.length - 1); // Set to final step
+          if (statusIntervalRef.current) {
+            clearInterval(statusIntervalRef.current);
+          }
+          return; // Exit early to avoid conflicting updates
         }
         
-        if (result.status === 'idle') {
-          // When done, set progress to 100% and clear interval
-          setIsIdle(true);
-          setProgress(100);
-          setCurrentStep(steps.length - 1);
-          clearInterval(statusIntervalRef.current);
+        // Only update progress if not idle and progress is provided
+        if (result.progress !== undefined) {
+          console.log('Backend progress:', result.progress);
+          setBackendProgress(Number(result.progress));
         }
       } catch (error) {
         console.error('Error checking status:', error);
@@ -58,8 +65,8 @@ const Loading = () => {
     // Initial check
     checkStatus();
     
-    // Setup interval for checking status
-    statusIntervalRef.current = setInterval(checkStatus, 30000); // Check every 30 seconds
+    // Setup interval for checking status - reduce to 5 seconds for more responsive updates
+    statusIntervalRef.current = setInterval(checkStatus, 5000);
 
     return () => {
       if (statusIntervalRef.current) {
@@ -174,8 +181,27 @@ const Loading = () => {
       
       setProgress(oldProgress => {
         // If we have backend progress, use that instead
-        if (backendProgress !== null) {
-          return backendProgress;
+        if (backendProgress !== null && !isNaN(backendProgress)) {
+          // Ensure backendProgress is a valid number between 0-100
+          const validProgress = Math.max(0, Math.min(100, Number(backendProgress)));
+          
+          // If backendProgress is very close to previous value, apply smoothing
+          if (Math.abs(validProgress - oldProgress) < 0.5) {
+            return oldProgress + 0.1; // Small increment for visual feedback
+          }
+          
+          // If backendProgress jumps backward (shouldn't happen but just in case)
+          if (validProgress < oldProgress) {
+            return oldProgress; // Don't go backward
+          }
+          
+          // Update step based on progress
+          const newStep = Math.floor(validProgress / (100 / steps.length));
+          if (newStep !== currentStep && newStep < steps.length) {
+            setCurrentStep(newStep);
+          }
+          
+          return validProgress;
         }
         
         // Don't exceed 95% for simulated progress
