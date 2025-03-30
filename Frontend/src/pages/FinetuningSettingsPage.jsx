@@ -61,6 +61,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
 
         // Create FormData to send multipart data
         const formData = new FormData();
+        navigate('/finetune/loading');
 
         // Append the selected file
         if (selectedFile) {

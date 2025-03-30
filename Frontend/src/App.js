@@ -5,6 +5,7 @@ import Navbar from './components/Navbar';
 import LandingPage from './pages/AppLanding';
 import DetectHardwarePage from './pages/DetectHardwarePage';
 import FinetuneSettings from './pages/FinetuningSettingsPage';
+import Loading from './pages/Loading';
 import './index.css';
 
 const RedirectToFastAPI = () => {
@@ -79,7 +80,7 @@ function App() {
 
   return (
     <Router>
-      <div className="bg-gray-900 text-white min-h-screen">
+      <div className="bg-[#1a202c] text-white min-h-screen">
         <Navbar />
         <Routes>
           <Route path="/" element={<LandingPage />} />
@@ -109,7 +110,12 @@ function App() {
             path="/app"
             element={<RedirectToFastAPI />}
           />
+          <Route 
+          path="/finetune/loading" 
+          element={<Loading />} 
+          />
         </Routes>
+
       </div>
     </Router>
   );
