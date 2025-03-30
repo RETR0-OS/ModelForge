@@ -18,11 +18,8 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
         
         // Update form state with fetched values
         setFormState(data.default_values);
-        setIsLoading(false);
       } catch (err) {
         console.error("Error fetching settings:", err);
-        setError(err.message);
-        setIsLoading(false);
       }
     };
 
@@ -108,7 +105,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
         });
         console.log("Response from GET request:", responseGet);
         setTimeout(() => {
-          navigate('/finetune/loading'); // change here 
+          navigate('//finetune/loading'); // change here 
         }, 1000);
 
         } catch (error) {
