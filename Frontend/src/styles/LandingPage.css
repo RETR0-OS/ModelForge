@@ -1,0 +1,173 @@
+/* Animation classes for the ModelForge platform */
+
+/* Dark background with subtle gradient */
+.bg-dark {
+    background: linear-gradient(to bottom, #0f1219, #161b26);
+    color: #f5f5f7;
+  }
+  
+  /* System hardware configuration section styling */
+  .hardware-detection-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+  
+  /* Heading animations and styling */
+  .section-heading {
+    font-weight: 700;
+    letter-spacing: -0.5px;
+    margin-bottom: 2rem;
+    position: relative;
+    animation: fadeInUp 0.8s ease-out;
+  }
+  
+  /* Task card styling */
+  .task-card {
+    background-color: rgba(30, 34, 45, 0.6);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    height: 100%;
+  }
+  
+  .task-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px -10px rgba(249, 115, 22, 0.2);
+    border: 1px solid rgba(249, 115, 22, 0.3);
+  }
+  
+  /* Task cards container */
+  .task-cards-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  /* Button styling */
+  .primary-button {
+    background-color: #f97316;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .primary-button:hover {
+    background-color: #ea580c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+  }
+  
+  .secondary-button {
+    background-color: rgba(255, 255, 255, 0.1);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+  }
+  
+  .secondary-button:hover {
+    background-color: rgba(255, 255, 255, 0.15);
+  }
+  
+  /* Icon styling */
+  .icon {
+    color: #f97316;
+    margin-right: 0.5rem;
+  }
+  
+  /* Navigation layout */
+  .nav-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 2rem;
+  }
+  
+  /* Fade and slide animations */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Media queries for responsiveness */
+  @media (max-width: 768px) {
+    .task-cards-grid {
+      grid-template-columns: 1fr;
+    }
+    
+    .nav-container {
+      flex-direction: column;
+      gap: 1rem;
+    }
+    
+    .primary-button, .secondary-button {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+  
+  /* Preserve the existing floating animations from your code */
+  .tech-cards-container {
+    position: relative;
+    width: 80%;
+    height: 300px;
+    margin: 0 auto;
+  }
+  
+  .tech-card-animate-left,
+  .tech-card-animate-center,
+  .tech-card-animate-right {
+    position: absolute;
+  }
+  
+  .tech-card-animate-left {
+    left: 10%;
+    top: 30px;
+    animation: float-left 6s ease-in-out infinite;
+  }
+  
+  .tech-card-animate-center {
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    animation: float-center 5s ease-in-out infinite;
+  }
+  
+  .tech-card-animate-right {
+    right: 10%;
+    top: 30px;
+    animation: float-right 7s ease-in-out infinite;
+  }
+  
+  @keyframes float-left {
+    0% { transform: translateY(0px); }
+    50% { transform: translateY(-15px); }
+    100% { transform: translateY(0px); }
+  }
+  
+  @keyframes float-center {
+    0% { transform: translate(-50%, 0px); }
+    50% { transform: translate(-50%, -15px); }
+    100% { transform: translate(-50%, 0px); }
+  }
+  
+  @keyframes float-right {
+    0% { transform: translateY(0px); }
+    60% { transform: translateY(-20px); }
+    100% { transform: translateY(0px); }
+  }

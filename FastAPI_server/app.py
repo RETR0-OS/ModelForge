@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
+from fastapi.middleware.cors import CORSMiddleware
 from utilities.hardware_detector import HardwareDetector
 from utilities.settings_builder import SettingsBuilder
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -13,6 +14,18 @@ hardware_detector = HardwareDetector()
 settings_builder = SettingsBuilder(None, None, None)
 settings_cache = {}
 app_name = "ModelForge"
+
+origins = [
+    "http://localhost:3000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=True,
+)
 
 class TaskFormData(BaseModel):
     task: str
