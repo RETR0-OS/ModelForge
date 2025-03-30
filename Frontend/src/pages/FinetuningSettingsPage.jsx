@@ -7,6 +7,27 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
   const [selectedFile, setSelectedFile] = useState(null);
   const [formState, setFormState] = useState({});
   const [settingsUpdated, setSettingsUpdated] = useState(false);
+  useEffect(() => {
+    const fetchDefaultSettings = async () => {
+      try {
+        const response = await fetch('http://localhost:8000/finetune/load_settings');
+        if (!response.ok) throw new Error('Failed to fetch settings');
+        
+        const data = await response.json();
+        console.log("Fetched default values:", data.default_values);
+        
+        // Update form state with fetched values
+        setFormState(data.default_values);
+        setIsLoading(false);
+      } catch (err) {
+        console.error("Error fetching settings:", err);
+        setError(err.message);
+        setIsLoading(false);
+      }
+    };
+
+    fetchDefaultSettings();
+  }, []);
 
   // Sync with props when they change
   useEffect(() => {
