@@ -82,6 +82,44 @@ const Loading = () => {
     return () => window.removeEventListener('beforeunload', handleBeforeUnload);
   }, [isIdle]);
 
+  const handleChatWithAI = async () => {
+    try {
+      // First, send GET request to get the model path
+      const modelPathResponse = await fetch('http://localhost:8000/playground/model_path', {
+        method: 'GET'
+      });
+  
+      if (!modelPathResponse.ok) {
+        throw new Error('Failed to get model path');
+      }
+  
+      // Extract the model path from the response
+      const modelPathData = await modelPathResponse.json();
+      const modelPath = modelPathData.model_path;
+  
+      console.log("Received model path:", modelPath);
+  
+      // Now send POST request with the model path
+      const response = await fetch('http://localhost:8000/playground/new', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          model_path: modelPath
+        })
+      });
+  
+      // After successful POST request, redirect to homepage
+      navigate('/');
+      
+    } catch (error) {
+      console.error('Error starting AI chat:', error);
+      // Show an error message to the user
+      alert('There was an error starting the AI chat. Please try again.');
+    }
+  };
+
   // Simulate progress with more realistic surging and shorter pausing
   useEffect(() => {
     if (isIdle) return; // Don't animate if we're done
@@ -263,7 +301,7 @@ const Loading = () => {
             
             <div className="flex justify-center">
               <button
-                onClick={() => navigate('/app')} 
+                onClick={handleChatWithAI} 
                 className="bg-orange-500 hover:bg-orange-600 px-8 py-4 rounded-lg text-white text-lg font-bold transition flex items-center pulse-button"
               >
                 <span className="mr-2">🚀</span>
