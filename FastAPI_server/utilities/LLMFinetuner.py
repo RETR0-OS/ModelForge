@@ -193,3 +193,10 @@ class LLMFinetuner:
         print(f"Model save to {self.fine_tuned_name}")
         print(f"Try out your new model in our chat playground!")
         print("*" * 100)
+        wandb_url = wandb.run.url if wandb.run else "W&B run not available"
+
+        try:
+            import webbrowser
+            webbrowser.open(wandb_url)
+        except Exception as e:
+            print(f"Could not automatically open browser. Please visit: {wandb_url}")
