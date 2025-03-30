@@ -220,7 +220,6 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                 type="number"
                 id="max_seq_length"
                 name="max_seq_length"
-                min="64"
                 value={formState.max_seq_length || 512}
                 onChange={handleInputChange}
                 className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
