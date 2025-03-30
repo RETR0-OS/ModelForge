@@ -15,7 +15,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
         
         const data = await response.json();
         console.log("Fetched default values:", data.default_values);
-        
+        defaultValues = data.default_values;
         // Update form state with fetched values
         setFormState(data.default_values);
       } catch (err) {
@@ -105,7 +105,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
         });
         console.log("Response from GET request:", responseGet);
         setTimeout(() => {
-          navigate('//finetune/loading'); // change here 
+          navigate('/finetune/loading'); // change here 
         }, 1000);
 
         } catch (error) {
@@ -220,7 +220,6 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                 type="number"
                 id="max_seq_length"
                 name="max_seq_length"
-                min="64"
                 value={formState.max_seq_length || 512}
                 onChange={handleInputChange}
                 className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
