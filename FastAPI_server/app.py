@@ -350,6 +350,7 @@ async def load_settings_page(request: Request):
 
 @app.post("/finetune/load_settings")
 async def load_settings(json_file: UploadFile = File(...), settings: str = Form(...)):
+    print("Loading settings...")
     global settings_builder, datasets_dir
     # Validate file type
     if json_file.content_type != "application/json" and json_file.content_type != "application/x-jsonlines" and not json_file.filename.endswith(('.json', '.jsonl')):

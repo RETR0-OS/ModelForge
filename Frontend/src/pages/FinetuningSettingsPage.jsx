@@ -27,21 +27,21 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
   const handleInputChange = (e) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
-    
+
     // Create a completely new object for state update
     const updatedState = {
       ...formState,
       [name]: type === 'number' ? Number(newValue) : newValue
     };
-    
+
     console.log(`Changing ${name} to:`, newValue);
     console.log("New form values:", updatedState);
-    
+
     // If task or model is changing, log it prominently
     if (name === 'task' || name === 'model_name') {
       console.log(`⚠️ IMPORTANT: ${name} changed to "${newValue}"`);
     }
-    
+
     setFormState(updatedState);
   };
 
@@ -52,34 +52,45 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
       load_in_8bit: value === '8bit',
       quantization: value
     };
-    
+
     setFormState(updatedState);
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // Create a new object to ensure React detects the change
-    const finalData = JSON.parse(JSON.stringify({
-      ...formState,
-      hardware_config: defaultValues.hardware_config,
-      dataset_file: selectedFile ? selectedFile.name : null
-    }));
-    
-    console.log("Submitting form with values:", finalData);
-    
-    // Update parent component state with direct object instead of function updater
-    console.log("Updating settings with direct object:", finalData);
-    updateSettings(finalData);
-    
-    // Show success message
-    setSettingsUpdated(true);
-    
-    // Navigate or show confirmation
-    setTimeout(() => {
-      navigate('/finetune/detect');
-    }, 1000);
-  };
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+
+        // Create FormData to send multipart data
+        const formData = new FormData();
+
+        // Append the selected file
+        if (selectedFile) {
+        formData.append("json_file", selectedFile, selectedFile.name);
+        }
+
+        // Append settings as a JSON string
+        formData.append("settings", JSON.stringify(formState));
+
+        console.log("Sending data to server:", formData);
+
+        try {
+        const response = await fetch('http://localhost:8000/finetune/load_settings', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!response.ok) {
+          throw new Error(`Server error: ${response.status}`);
+        }
+
+        const result = await response.json();
+        console.log("Server response:", result);
+        alert("Settings updated successfully!");
+        } catch (error) {
+        console.error("Error submitting form:", error);
+        alert("Failed to update settings.");
+        }
+    };
+
 
   return (
     <div className="container mx-auto px-4 py-8 max-w-4xl">
@@ -121,7 +132,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
             <div>
               <label className="block text-sm font-medium text-gray-400 mb-1">RAM</label>
               <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
-                {formState.hardware_config?.ram || defaultValues.hardware_config?.ram ? 
+                {formState.hardware_config?.ram || defaultValues.hardware_config?.ram ?
                   `${formState.hardware_config?.ram || defaultValues.hardware_config?.ram} GB` : 'N/A'}
               </div>
             </div>
@@ -218,7 +229,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                     type="file"
                     id="dataset_file"
                     name="dataset_file"
-                    accept=".json,.csv,.jsonl"
+                    accept=".json,.jsonl"
                     className="hidden"
                     onChange={handleFileChange}
                   />
@@ -342,8 +353,8 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                     onChange={handleInputChange}
                     className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
                   >
-                    <option value="nf4">nf4</option>
-                    <option value="fp4">fp4</option>
+                    <option value="float32">nf4</option>
+                    <option value="bfloat16">fp4</option>
                     <option value="float16">float16</option>
                   </select>
                 </div>

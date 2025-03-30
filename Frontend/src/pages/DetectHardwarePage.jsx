@@ -38,25 +38,22 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
     e.preventDefault();
     
     try {
-      // Mock API call - replace with actual fetch
-      const mockResponse = {
-        status_code: 200,
-        profile: "mid_range",
-        task: selectedTask,
-        gpu_name: "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
-        gpu_total_memory_gb: 6.0,
-        ram_total_gb: 16.0,
-        available_diskspace_gb: 533.81,
-        cpu_cores: 22,
-        model_recommendation: "mistralai/Mistral-7B-v0.1",
-        possible_options: [
-          "mistralai/Mistral-7B-v0.1",
-          "openai-community/gpt2"
-        ]
-      };
+        console.log('Selected Task:', selectedTask);
+        const resp = await fetch('http://localhost:8000/finetune/detect', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ task: selectedTask })
+        });
 
-      setHardwareData(mockResponse);
-      setShowResults(true);
+        const mockResponse = await resp.json()
+//         if (!mockResponse.ok){
+//             throw new Error('Failed to fetch hardware data');
+//         }
+
+        setHardwareData(mockResponse);
+        setShowResults(true);
       
       // Save both the task and hardware config in the same update
       const updatedSettings = {
