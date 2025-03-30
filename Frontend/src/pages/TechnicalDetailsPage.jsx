@@ -137,39 +137,6 @@ const TechnicalDetailsPage = () => {
 
   return (
     <div className="bg-gradient-to-b from-black via-gray-900 to-black min-h-screen text-white">
-      {/* Header Section */}
-      <header className="py-12 relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 to-black z-0"></div>
-        <div className="absolute inset-0 opacity-10 bg-grid-pattern z-0"></div>
-        
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="flex items-center justify-between">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="bg-gradient-to-r from-orange-400 to-orange-600 w-10 h-10 rounded-lg flex items-center justify-center">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                </svg>
-              </div>
-              <span className="text-2xl font-bold text-white">ModelForge</span>
-            </Link>
-            
-            <Link to="/" className="bg-gray-800 hover:bg-gray-700 px-4 py-2 rounded-lg text-white transition flex items-center gap-2">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" />
-              </svg>
-              Back to Home
-            </Link>
-          </div>
-          
-          <div className="mt-16 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-6">Technical Documentation</h1>
-            <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-              Comprehensive technical details for developers and ML engineers
-            </p>
-          </div>
-        </div>
-      </header>
-
       {/* Tab Navigation */}
       <div className="sticky top-0 bg-gray-900 z-20 border-b border-gray-800">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -237,7 +204,7 @@ const TechnicalDetailsPage = () => {
                     <p className="text-gray-300 mt-1">
                       The architecture uses a modular adapter approach that modifies only a small subset of
                       parameters during training, keeping the base model frozen. This approach dramatically
-                      reduces memory requirements and training time.
+                      reductes memory requirements and training time.
                     </p>
                   </div>
                 </div>
@@ -469,29 +436,6 @@ const TechnicalDetailsPage = () => {
           )}
         </div>
       </main>
-      
-      {/* Footer */}
-      <footer className="border-t border-gray-800 py-12 mt-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-center">
-            <div className="flex items-center mb-6 md:mb-0">
-              <div className="bg-gradient-to-r from-orange-400 to-orange-600 w-8 h-8 rounded-lg flex items-center justify-center mr-2">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                </svg>
-              </div>
-              <span className="text-xl font-bold text-white">ModelForge</span>
-            </div>
-            
-            <div className="text-center md:text-right">
-              <p className="text-gray-400">Efficient, no-code LLM finetuning for everyone</p>
-              <Link to="/" className="text-orange-500 hover:text-orange-400 transition mt-2 inline-block">
-                Return to Home
-              </Link>
-            </div>
-          </div>
-        </div>
-      </footer>
       
       {/* Styling for hiding scrollbars but keeping functionality */}
       <style jsx="true">{`
