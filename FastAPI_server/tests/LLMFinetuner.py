@@ -4,8 +4,10 @@ from trl import SFTTrainer
 from peft import LoraConfig, get_peft_model, TaskType
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, HfArgumentParser, TrainingArguments, pipeline, logging, DataCollatorForLanguageModeling
 import wandb
-import os
 
+
+
+import os
 os.environ["WANDB_PROJECT"] = "experiment"
 os.environ["WANDB_LOG_MODEL"] = "checkpoint"
 
@@ -111,7 +113,7 @@ class LLMFinetuner:
         self.per_device_eval_batch_size = kwargs.get('per_device_eval_batch_size')
         self.gradient_accumulation_steps = kwargs.get('gradient_accumulation_steps')
         self.save_steps = kwargs.get('save_steps') if kwargs.get('save_steps') else self.save_steps
-        self.logging_steps = kwargs.get('logging_steps') if kwargs.get('logging_steps') else self.logging_steps
+        self.logging_steps = 2
 
         # Optimization settings
         self.gradient_checkpointing = kwargs.get('gradient_checkpointing')
@@ -193,10 +195,3 @@ class LLMFinetuner:
         print(f"Model save to {self.fine_tuned_name}")
         print(f"Try out your new model in our chat playground!")
         print("*" * 100)
-        wandb_url = wandb.run.url if wandb.run else "W&B run not available"
-
-        try:
-            import webbrowser
-            webbrowser.open(wandb_url)
-        except Exception as e:
-            print(f"Could not automatically open browser. Please visit: {wandb_url}")
