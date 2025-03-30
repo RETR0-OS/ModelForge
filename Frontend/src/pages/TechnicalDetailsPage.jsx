@@ -175,10 +175,10 @@ const TechnicalDetailsPage = () => {
               </div>
               
               {technicalSpecs.architecture.map((spec, index) => (
-                <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border border-gray-700 hover:border-orange-500/30 transition group">
+                <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border border-gray-700 transition">
                   <div className="p-8">
                     <div className="mb-6">
-                      <h3 className="text-2xl font-bold text-white group-hover:text-orange-500 transition">{spec.title}</h3>
+                      <h3 className="text-2xl font-bold text-white">{spec.title}</h3>
                       <p className="text-gray-300 mt-2">{spec.description}</p>
                     </div>
                     
@@ -224,10 +224,10 @@ const TechnicalDetailsPage = () => {
               </div>
               
               {technicalSpecs.performance.map((spec, index) => (
-                <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border border-gray-700 hover:border-orange-500/30 transition group">
+                <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border border-gray-700 transition">
                   <div className="p-8">
                     <div className="mb-6">
-                      <h3 className="text-2xl font-bold text-white group-hover:text-orange-500 transition">{spec.title}</h3>
+                      <h3 className="text-2xl font-bold text-white">{spec.title}</h3>
                       <p className="text-gray-300 mt-2">{spec.description}</p>
                     </div>
                     
@@ -313,10 +313,10 @@ const TechnicalDetailsPage = () => {
               </div>
               
               {technicalSpecs.data.map((spec, index) => (
-                <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border border-gray-700 hover:border-orange-500/30 transition group">
+                <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border border-gray-700 transition">
                   <div className="p-8">
                     <div className="mb-6">
-                      <h3 className="text-2xl font-bold text-white group-hover:text-orange-500 transition">{spec.title}</h3>
+                      <h3 className="text-2xl font-bold text-white">{spec.title}</h3>
                       <p className="text-gray-300 mt-2">{spec.description}</p>
                     </div>
                     
@@ -397,10 +397,10 @@ const TechnicalDetailsPage = () => {
               </div>
               
               {technicalSpecs.hyperparameters.map((spec, index) => (
-                <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border border-gray-700 hover:border-orange-500/30 transition group">
+                <div key={index} className="bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden border border-gray-700 transition">
                   <div className="p-8">
                     <div className="mb-6">
-                      <h3 className="text-2xl font-bold text-white group-hover:text-orange-500 transition">{spec.title}</h3>
+                      <h3 className="text-2xl font-bold text-white">{spec.title}</h3>
                       <p className="text-gray-300 mt-2">{spec.description}</p>
                     </div>
                     
