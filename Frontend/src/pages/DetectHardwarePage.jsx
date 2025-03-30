@@ -247,14 +247,13 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
                 onChange={async (e) => {
                   console.log('Setting model to:', e.target.value);
                   setSelectedModel(e.target.value);
-                  await fetch(`http://localhost:8000/finetune/api/hardware/model/${e.target.value}`, {
+                  await fetch(`http://localhost:8000/finetune/set_model`, {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      model: e.target.value,
-                      hardware_data: hardwareData,
+                      selected_model: e.target.value,
                     }),
                   });
                 }}
