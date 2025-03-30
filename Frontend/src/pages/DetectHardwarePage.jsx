@@ -1,10 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const HardwareDetection = ({ currentSettings, updateSettings }) => {
+  const navigate = useNavigate();
   const [showResults, setShowResults] = useState(false);
   const [selectedTask, setSelectedTask] = useState(currentSettings.task || '');
   const [selectedModel, setSelectedModel] = useState(currentSettings.model_name || '');
   const [hardwareData, setHardwareData] = useState(null);
+  const [stateUpdated, setStateUpdated] = useState(false);
+
+  // Synchronize local state with props
+  useEffect(() => {
+    console.log("Current settings from props:", currentSettings);
+    setSelectedTask(currentSettings.task || '');
+    setSelectedModel(currentSettings.model_name || '');
+  }, [currentSettings]);
 
   const tasks = [
     {
@@ -24,7 +34,7 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
     }
   ];
 
-const handleSubmit = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     try {
@@ -47,19 +57,28 @@ const handleSubmit = async (e) => {
 
       setHardwareData(mockResponse);
       setShowResults(true);
+      
+      // Save both the task and hardware config in the same update
+      const updatedSettings = {
+        task: selectedTask,
+        hardware_config: {
+          gpu: mockResponse.gpu_name,
+          ram: mockResponse.ram_total_gb,
+          disk: mockResponse.available_diskspace_gb,
+          cpu_cores: mockResponse.cpu_cores,
+        }
+      };
+      
+      console.log('Updating both task and hardware config:', updatedSettings);
+      
       updateSettings((prevSettings) => {
-        console.log('Previous Settings:', prevSettings);
-        console.log('Mock Response:', mockResponse);
-        return {
+        console.log('Previous Settings in handleSubmit:', prevSettings);
+        const newSettings = {
           ...prevSettings,
-          hardware_config: {
-            ...prevSettings.hardware_config,
-            gpu: mockResponse.gpu_name,
-            ram: mockResponse.ram_total_gb,
-            disk: mockResponse.available_diskspace_gb,
-            cpu_cores: mockResponse.cpu_cores,
-          },
+          ...updatedSettings
         };
+        console.log('New Settings in handleSubmit:', newSettings);
+        return newSettings;
       });
     } catch (error) {
       console.error("Error:", error.message);
@@ -67,14 +86,25 @@ const handleSubmit = async (e) => {
   };
 
   const handleConfigureTraining = () => {
-    console.log('Selected Task:', selectedTask);
-    console.log('Selected Model:', selectedModel);
-    updateSettings((prevSettings) => ({
-      ...prevSettings,
+    console.log('Selected Task before update:', selectedTask);
+    console.log('Selected Model before update:', selectedModel);
+    
+    // Direct update (not using a function) to ensure immediate update
+    const updatedSettings = {
       task: selectedTask,
       model_name: selectedModel
-    }));
-    // window.location.href = '/finetune/load_settings';
+    };
+    
+    console.log('Updating task settings (direct update):', updatedSettings);
+    
+    // Update parent component state using direct object instead of function
+    updateSettings(updatedSettings);
+    
+    // Set state updated flag and navigate
+    setStateUpdated(true);
+    setTimeout(() => {
+      navigate('/finetune/load_settings');
+    }, 1000);
   };
 
   return (
@@ -85,6 +115,13 @@ const handleSubmit = async (e) => {
           Let's check your system to find the optimal configuration for LLM finetuning
         </p>
       </div>
+
+      {stateUpdated && (
+        <div className="bg-green-700 text-white p-4 rounded-lg mb-6 flex items-center justify-between">
+          <div>Settings updated successfully! Redirecting to configuration page...</div>
+          <div className="animate-spin h-5 w-5 border-2 border-white rounded-full border-t-transparent"></div>
+        </div>
+      )}
 
       <div className="bg-gray-800 rounded-xl p-6 md:p-8 shadow-lg mb-12">
         <h2 className="text-2xl font-semibold mb-6 flex items-center">
@@ -108,30 +145,30 @@ const handleSubmit = async (e) => {
         <form onSubmit={handleSubmit} className="mb-8">
           <h3 className="text-xl font-medium mb-4">Select Task</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {tasks.map((task) => (
-              <div
-                key={task.id}
-                className={`task-card border ${
-                  selectedTask === task.id ? 'border-orange-500' : 'border-gray-700'
-                } hover:border-orange-500 p-5 rounded-lg cursor-pointer transition-all`}
-                onClick={() => setSelectedTask(task.id)}
-              >
-                <input
-                  type="radio"
-                  name="task"
-                  value={task.id}
-                  id={task.id}
-                  className="hidden"
-                  checked={selectedTask === task.id}
-                  onChange={() => {}}
-                />
-                <label htmlFor={task.id} className="block h-full cursor-pointer">
-                  <h4 className="text-lg font-medium text-orange-500 mb-2">{task.title}</h4>
-                  <p className="text-gray-400 text-sm">{task.description}</p>
-                </label>
-              </div>
-            ))}
-          </div>
+  {tasks.map((task) => (
+    <div 
+      key={task.id}
+      onClick={() => setSelectedTask(task.id)}
+      className={`
+        task-card p-5 rounded-lg cursor-pointer transition-all
+        ${selectedTask === task.id 
+          ? 'bg-gray-800 border-2 border-orange-500' 
+          : 'bg-gray-800 border border-gray-700'}
+        hover:border-orange-500 hover:bg-gray-700
+      `}
+    >
+      <div className="flex items-center justify-between mb-2">
+        <h4 className="text-lg font-medium text-orange-500">{task.title}</h4>
+        {selectedTask === task.id && (
+          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-orange-500" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+          </svg>
+        )}
+      </div>
+      <p className="text-gray-400 text-sm">{task.description}</p>
+    </div>
+  ))}
+</div>
 
           <div className="mt-6 flex flex-col md:flex-row md:items-center md:justify-between">
             <button
@@ -193,7 +230,10 @@ const handleSubmit = async (e) => {
               <select
                 id="model-select"
                 value={selectedModel}
-                onChange={(e) => setSelectedModel(e.target.value)}
+                onChange={(e) => {
+                  console.log('Setting model to:', e.target.value);
+                  setSelectedModel(e.target.value);
+                }}
                 className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
               >
                 <option value="">Select a model</option>

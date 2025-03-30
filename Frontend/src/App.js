@@ -1,6 +1,6 @@
 // src/App.jsx
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useNavigate } from 'react-router-dom';
 import Navbar from './components/Navbar';
 import LandingPage from './pages/AppLanding';
 import DetectHardwarePage from './pages/DetectHardwarePage';
@@ -52,18 +52,28 @@ function App() {
     },
   });
   useEffect(() => {
-    console.log('Updated Settings:', finetuneSettings);
+    console.log('Settings updated in App.js:', finetuneSettings);
   }, [finetuneSettings]);
   // Function to update settings from child components
-  const updateSettings = (newSettings) => {
-    console.log('New Settings:', newSettings);
-    setFinetuneSettings((prev) => {
-      const updatedSettings = {
-        ...prev,
-        ...newSettings,
-      };
-      console.log('Updated Settings in State:', updatedSettings);
-      return updatedSettings;
+  const updateSettings = (newSettingsOrFunction) => {
+    // Log what we're trying to update with
+    console.log('Update triggered with:', 
+      typeof newSettingsOrFunction === 'function' 
+        ? 'Function updater' 
+        : newSettingsOrFunction
+    );
+    
+    setFinetuneSettings(prevSettings => {
+      // Handle both direct objects and function updates
+      const updatedSettings = typeof newSettingsOrFunction === 'function'
+        ? newSettingsOrFunction(prevSettings)
+        : { ...prevSettings, ...newSettingsOrFunction };
+      
+      // Create a completely new object to ensure state update triggers
+      const newState = JSON.parse(JSON.stringify(updatedSettings));
+      
+      console.log('Updating settings in App.js:', newState);
+      return newState;
     });
   };
 

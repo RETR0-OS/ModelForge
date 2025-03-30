@@ -1,9 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const FinetuneSettings = ({ defaultValues, updateSettings }) => {
+  const navigate = useNavigate();
   const [showAdvanced, setShowAdvanced] = useState(false);
   const [selectedFile, setSelectedFile] = useState(null);
-  const [formState, setFormState] = useState(defaultValues);
+  const [formState, setFormState] = useState({});
+  const [settingsUpdated, setSettingsUpdated] = useState(false);
+
+  // Sync with props when they change
+  useEffect(() => {
+    console.log("defaultValues changed in FinetuneSettings:", defaultValues);
+    if (defaultValues) {
+      // Create a deep copy to break any references
+      const values = JSON.parse(JSON.stringify(defaultValues));
+      console.log("Setting form values to:", values);
+      setFormState(values);
+    }
+  }, [defaultValues]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -14,13 +28,21 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
     const { name, value, type, checked } = e.target;
     const newValue = type === 'checkbox' ? checked : value;
     
+    // Create a completely new object for state update
     const updatedState = {
       ...formState,
       [name]: type === 'number' ? Number(newValue) : newValue
     };
     
+    console.log(`Changing ${name} to:`, newValue);
+    console.log("New form values:", updatedState);
+    
+    // If task or model is changing, log it prominently
+    if (name === 'task' || name === 'model_name') {
+      console.log(`⚠️ IMPORTANT: ${name} changed to "${newValue}"`);
+    }
+    
     setFormState(updatedState);
-    updateSettings(updatedState);
   };
 
   const handleQuantizationChange = (value) => {
@@ -32,18 +54,31 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
     };
     
     setFormState(updatedState);
-    updateSettings(updatedState);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const finalData = {
+    
+    // Create a new object to ensure React detects the change
+    const finalData = JSON.parse(JSON.stringify({
       ...formState,
       hardware_config: defaultValues.hardware_config,
-      dataset_file: selectedFile
-    };
-    console.log('Submitting training configuration:', finalData);
-    // Add actual API call here
+      dataset_file: selectedFile ? selectedFile.name : null
+    }));
+    
+    console.log("Submitting form with values:", finalData);
+    
+    // Update parent component state with direct object instead of function updater
+    console.log("Updating settings with direct object:", finalData);
+    updateSettings(finalData);
+    
+    // Show success message
+    setSettingsUpdated(true);
+    
+    // Navigate or show confirmation
+    setTimeout(() => {
+      navigate('/finetune/detect');
+    }, 1000);
   };
 
   return (
@@ -53,6 +88,13 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
         <p className="text-gray-400 mt-2">Configure your model training parameters</p>
       </div>
 
+      {settingsUpdated && (
+        <div className="bg-green-700 text-white p-4 rounded-lg mb-6 flex items-center justify-between">
+          <div>Settings updated successfully! Redirecting...</div>
+          <div className="animate-spin h-5 w-5 border-2 border-white rounded-full border-t-transparent"></div>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Configuration Summary */}
         <div className="bg-gray-800 rounded-lg p-6">
@@ -61,25 +103,26 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
             <div>
               <label className="block text-sm font-medium text-gray-400 mb-1">Task</label>
               <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
-                {defaultValues.task}
+                {formState.task || defaultValues.task || 'Not set'}
               </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-400 mb-1">Model Name</label>
               <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
-                {defaultValues.model_name}
+                {formState.model_name || defaultValues.model_name || 'Not set'}
               </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-400 mb-1">GPU</label>
               <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
-                {defaultValues.hardware_config?.gpu || 'N/A'}
+                {formState.hardware_config?.gpu || defaultValues.hardware_config?.gpu || 'N/A'}
               </div>
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-400 mb-1">RAM</label>
               <div className="bg-gray-900 border border-gray-700 rounded-lg p-3 text-white">
-                {defaultValues.hardware_config?.ram ? `${defaultValues.hardware_config.ram} GB` : 'N/A'}
+                {formState.hardware_config?.ram || defaultValues.hardware_config?.ram ? 
+                  `${formState.hardware_config?.ram || defaultValues.hardware_config?.ram} GB` : 'N/A'}
               </div>
             </div>
           </div>
@@ -99,7 +142,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                 name="num_train_epochs"
                 min="1"
                 max="100"
-                value={formState.num_train_epochs}
+                value={formState.num_train_epochs || 3}
                 onChange={handleInputChange}
                 className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
               />
@@ -114,7 +157,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                 id="learning_rate"
                 name="learning_rate"
                 step="0.000001"
-                value={formState.learning_rate}
+                value={formState.learning_rate || 0.0002}
                 onChange={handleInputChange}
                 className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
               />
@@ -129,7 +172,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                 id="per_device_train_batch_size"
                 name="per_device_train_batch_size"
                 min="1"
-                value={formState.per_device_train_batch_size}
+                value={formState.per_device_train_batch_size || 2}
                 onChange={handleInputChange}
                 className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
               />
@@ -144,7 +187,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                 id="max_seq_length"
                 name="max_seq_length"
                 min="64"
-                value={formState.max_seq_length}
+                value={formState.max_seq_length || 512}
                 onChange={handleInputChange}
                 className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
               />
@@ -223,7 +266,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                     id="lora_r"
                     name="lora_r"
                     min="1"
-                    value={formState.lora_r}
+                    value={formState.lora_r || 16}
                     onChange={handleInputChange}
                     className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
                   />
@@ -237,7 +280,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                     id="lora_alpha"
                     name="lora_alpha"
                     min="1"
-                    value={formState.lora_alpha}
+                    value={formState.lora_alpha || 32}
                     onChange={handleInputChange}
                     className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
                   />
@@ -295,7 +338,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                   <select
                     id="bnb_4bit_compute_dtype"
                     name="bnb_4bit_compute_dtype"
-                    value={formState.bnb_4bit_compute_dtype}
+                    value={formState.bnb_4bit_compute_dtype || 'nf4'}
                     onChange={handleInputChange}
                     className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
                   >
@@ -318,7 +361,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                   <select
                     id="optim"
                     name="optim"
-                    value={formState.optim}
+                    value={formState.optim || 'paged_adamw_32bit'}
                     onChange={handleInputChange}
                     className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
                   >
@@ -334,7 +377,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                   <select
                     id="lr_scheduler_type"
                     name="lr_scheduler_type"
-                    value={formState.lr_scheduler_type}
+                    value={formState.lr_scheduler_type || 'cosine'}
                     onChange={handleInputChange}
                     className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
                   >
