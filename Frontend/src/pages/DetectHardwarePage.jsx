@@ -9,6 +9,9 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
   const [hardwareData, setHardwareData] = useState(null);
   const [stateUpdated, setStateUpdated] = useState(false);
 
+  useEffect(() => {
+    setShowResults(false);
+  }, [selectedTask]);
   // Synchronize local state with props
   useEffect(() => {
     console.log("Current settings from props:", currentSettings);
@@ -51,7 +54,21 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
 //         if (!mockResponse.ok){
 //             throw new Error('Failed to fetch hardware data');
 //         }
-
+// const mockResponse = {
+//   status_code: 200,
+//   profile: "mid_range",
+//   task: selectedTask,
+//   gpu_name: "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+//   gpu_total_memory_gb: 6.0,
+//   ram_total_gb: 16.0,
+//   available_diskspace_gb: 533.81,
+//   cpu_cores: 22,
+//   model_recommendation: "mistralai/Mistral-7B-v0.1",
+//   possible_options: [
+//     "mistralai/Mistral-7B-v0.1",
+//     "openai-community/gpt2"
+//   ]
+// };
         setHardwareData(mockResponse);
         setShowResults(true);
       
@@ -227,9 +244,18 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
               <select
                 id="model-select"
                 value={selectedModel}
-                onChange={(e) => {
+                onChange={async (e) => {
                   console.log('Setting model to:', e.target.value);
                   setSelectedModel(e.target.value);
+                  await fetch(`http://localhost:8000/finetune/set_model`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      selected_model: e.target.value,
+                    }),
+                  });
                 }}
                 className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
               >
@@ -269,7 +295,7 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
         <button
           onClick={handleConfigureTraining}
           className="bg-orange-500 hover:bg-orange-600 px-6 py-3 rounded-lg font-medium transition inline-flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
-          disabled={!selectedModel}
+          disabled={!selectedModel || !showResults}
         >
           Configure Training
           <svg
