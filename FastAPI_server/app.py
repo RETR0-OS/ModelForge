@@ -19,6 +19,7 @@ settings_cache = {}
 app_name = "ModelForge"
 finetuning_status = {"status": "idle", "progress": 0, "message": ""}
 datasets_dir = "./datasets"
+model_path = os.path.join(os.path.dirname(__file__), "cache")
 
 origins = [
     "http://localhost:3000",
@@ -385,12 +386,13 @@ async def load_settings(json_file: UploadFile = File(...), settings: str = Form(
 
 
 def finetuning_task(llm_tuner):
-    global settings_builder, finetuning_status
+    global settings_builder, finetuning_status, model_path
     llm_tuner.load_dataset(settings_builder.dataset)
     llm_tuner.llm_finetuner()
     finetuning_status["status"] = "idle"
     finetuning_status["message"] = ""
     finetuning_status["progress"] = 0
+    model_path = os.path.join(model_path, llm_tuner.model_name.replace('/', "-"))
     del llm_tuner
     settings_builder = SettingsBuilder(None, None, None)
     settings_cache.clear()
@@ -447,6 +449,13 @@ async def new_playground(request: Request):
     command = f"start cmd /K python {chat_script} --model_path {model_path}"
     os.system(command)
 
+@app.get("/playground/model_path")
+async def get_model_path(request: Request):
+    global model_path
+    model_path = os.path.join(model_path, os.listdir(model_path)[0])
+    return JSONResponse({
+        "model_path": model_path
+    })
 
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8000)

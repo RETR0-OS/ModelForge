@@ -81,7 +81,7 @@ class LLMFinetuner:
         """
         # Basic settings
         self.fine_tuned_name = f"./finetuned_models/{self.model_name.replace('/', "-")}_{self.task}_{self.compute_specs}_finetuned"
-        self.output_dir = "./cache/" + kwargs.get('output_dir') if kwargs.get('output_dir') else "./cache"
+        self.output_dir = "./cache/" + self.model_name.replace('/', "-") if self.model_name else "./cache"
         self.num_train_epochs = kwargs.get('num_train_epochs')
         self.max_seq_length = kwargs.get('max_seq_length')
 
