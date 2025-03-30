@@ -1,0 +1,44 @@
+{
+  "os":  "Windows-11-10.0.26100-SP0",
+  "python":  "CPython 3.12.5",
+  "startedAt":  "2025-03-30T17:08:27.756057Z",
+  "args":  [
+    "app:app",
+    "--reload"
+  ],
+  "program":  "<python with no main file>",
+  "git":  {
+    "remote":  "https://github.com/RETR0-OS/DevHacks.git",
+    "commit":  "ec608fa9f10b73dac561151add9aa94e348806b4"
+  },
+  "email":  "ajinda17@asu.edu",
+  "root":  "C:\\Users\\aadit\\Projects\\ModelForge\\ModelForge\\FastAPI_server",
+  "host":  "Griffin-OS",
+  "executable":  "C:\\Users\\aadit\\Projects\\ModelForge\\.venv\\Scripts\\python.exe",
+  "cpu_count":  16,
+  "cpu_count_logical":  22,
+  "gpu":  "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+  "gpu_count":  1,
+  "disk":  {
+    "/":  {
+      "total":  "1022491955200",
+      "used":  "474013958144"
+    }
+  },
+  "memory":  {
+    "total":  "16690806784"
+  },
+  "cpu":  {
+    "count":  16,
+    "countLogical":  22
+  },
+  "gpu_nvidia":  [
+    {
+      "name":  "NVIDIA GeForce RTX 3050 6GB Laptop GPU",
+      "memoryTotal":  "6442450944",
+      "cudaCores":  2560,
+      "architecture":  "Ampere"
+    }
+  ],
+  "cudaVersion":  "12.7"
+}

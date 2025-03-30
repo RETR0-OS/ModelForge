@@ -1,0 +1,15 @@
+{"time":"2025-03-30T09:59:36.8126425-07:00","level":"INFO","msg":"stream: starting","core version":"0.19.8","symlink path":"C:\\Users\\aadit\\Projects\\ModelForge\\ModelForge\\FastAPI_server\\tests\\wandb\\run-20250330_095936-rizgin5k\\logs\\debug-core.log"}
+{"time":"2025-03-30T09:59:36.9587379-07:00","level":"INFO","msg":"created new stream","id":"rizgin5k"}
+{"time":"2025-03-30T09:59:36.959852-07:00","level":"INFO","msg":"stream: started","id":"rizgin5k"}
+{"time":"2025-03-30T09:59:36.959852-07:00","level":"INFO","msg":"handler: started","stream_id":"rizgin5k"}
+{"time":"2025-03-30T09:59:36.9606478-07:00","level":"INFO","msg":"writer: Do: started","stream_id":"rizgin5k"}
+{"time":"2025-03-30T09:59:36.9606478-07:00","level":"INFO","msg":"sender: started","stream_id":"rizgin5k"}
+{"time":"2025-03-30T09:59:37.3840115-07:00","level":"INFO","msg":"Starting system monitor"}
+{"time":"2025-03-30T10:00:07.1767841-07:00","level":"INFO","msg":"stream: closing","id":"rizgin5k"}
+{"time":"2025-03-30T10:00:07.1767841-07:00","level":"INFO","msg":"Stopping system monitor"}
+{"time":"2025-03-30T10:00:07.1801145-07:00","level":"INFO","msg":"Stopped system monitor"}
+{"time":"2025-03-30T10:00:11.7822045-07:00","level":"INFO","msg":"fileTransfer: Close: file transfer manager closed"}
+{"time":"2025-03-30T10:00:12.1428228-07:00","level":"INFO","msg":"handler: closed","stream_id":"rizgin5k"}
+{"time":"2025-03-30T10:00:12.1428228-07:00","level":"INFO","msg":"writer: Close: closed","stream_id":"rizgin5k"}
+{"time":"2025-03-30T10:00:12.1428228-07:00","level":"INFO","msg":"sender: closed","stream_id":"rizgin5k"}
+{"time":"2025-03-30T10:00:12.1434304-07:00","level":"INFO","msg":"stream: closed","id":"rizgin5k"}

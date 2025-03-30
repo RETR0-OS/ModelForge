@@ -1,0 +1,34 @@
+  0%|                                                                                                                | 0/27 [00:00<?, ?it/s]`loss_type=None` was set in the config but it is unrecognised.Using the default loss: `ForCausalLMLoss`.
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████| 27/27 [00:15<00:00,  3.06it/s][34m[1mwandb[0m: Adding directory to artifact (.\cache\openai-community-gpt2\checkpoint-27)... Done. 0.1s
+{'loss': 3.7463, 'grad_norm': 0.5781471729278564, 'learning_rate': 0.0001992708874098054, 'num_tokens': 1156.0, 'mean_token_accuracy': 0.49536558240652084, 'epoch': 0.22}
+[32mINFO[0m:     127.0.0.1:57377 - "[1mGET /finetune/status HTTP/1.1[0m" [32m200 OK[0m
+{'loss': 3.9296, 'grad_norm': 0.5945641398429871, 'learning_rate': 0.0001935016242685415, 'num_tokens': 2292.0, 'mean_token_accuracy': 0.47795495018363, 'epoch': 0.43}
+{'loss': 3.8168, 'grad_norm': 0.6850939989089966, 'learning_rate': 0.00018229838658936564, 'num_tokens': 3444.0, 'mean_token_accuracy': 0.48513757437467575, 'epoch': 0.65}
+{'loss': 3.9167, 'grad_norm': 0.7584099769592285, 'learning_rate': 0.00016631226582407952, 'num_tokens': 4623.0, 'mean_token_accuracy': 0.4803128242492676, 'epoch': 0.86}
+{'loss': 4.1952, 'grad_norm': 0.9715469479560852, 'learning_rate': 0.00014647231720437686, 'num_tokens': 5284.0, 'mean_token_accuracy': 0.48405675292015077, 'epoch': 1.0}
+[32mINFO[0m:     127.0.0.1:57377 - "[1mGET /finetune/status HTTP/1.1[0m" [32m200 OK[0m
+{'loss': 3.7584, 'grad_norm': 1.0343047380447388, 'learning_rate': 0.0001239315664287558, 'num_tokens': 6431.0, 'mean_token_accuracy': 0.4914429038763046, 'epoch': 1.22}
+{'loss': 3.6858, 'grad_norm': 1.1570264101028442, 'learning_rate': 0.0001, 'num_tokens': 7598.0, 'mean_token_accuracy': 0.4945957399904728, 'epoch': 1.43}
+{'loss': 3.6957, 'grad_norm': 1.2537178993225098, 'learning_rate': 7.606843357124426e-05, 'num_tokens': 8754.0, 'mean_token_accuracy': 0.4930998608469963, 'epoch': 1.65}
+{'loss': 3.6327, 'grad_norm': 1.2648614645004272, 'learning_rate': 5.3527682795623146e-05, 'num_tokens': 9931.0, 'mean_token_accuracy': 0.5117911323904991, 'epoch': 1.86}
+{'loss': 4.0343, 'grad_norm': 1.297238826751709, 'learning_rate': 3.36877341759205e-05, 'num_tokens': 10568.0, 'mean_token_accuracy': 0.4730831205844879, 'epoch': 2.0}
+{'loss': 3.6186, 'grad_norm': 1.2720166444778442, 'learning_rate': 1.7701613410634365e-05, 'num_tokens': 11705.0, 'mean_token_accuracy': 0.5030086524784565, 'epoch': 2.22}
+[32mINFO[0m:     127.0.0.1:57390 - "[1mGET /finetune/status HTTP/1.1[0m" [32m200 OK[0m
+{'loss': 3.6942, 'grad_norm': 1.4489209651947021, 'learning_rate': 6.498375731458528e-06, 'num_tokens': 12882.0, 'mean_token_accuracy': 0.49535906314849854, 'epoch': 2.43}
+{'loss': 3.6578, 'grad_norm': 1.3494410514831543, 'learning_rate': 7.291125901946027e-07, 'num_tokens': 14018.0, 'mean_token_accuracy': 0.49702316522598267, 'epoch': 2.65}
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████| 27/27 [00:15<00:00,  3.06it/s]No label_names provided for model class `PeftModelForCausalLM`. Since `PeftModel` hides base models input arguments, if label_names is not given, label_names can't be set automatically within `Trainer`. Note that empty label_names list will be used instead.
+{'train_runtime': 17.2985, 'train_samples_per_second': 25.32, 'train_steps_per_second': 1.561, 'train_loss': 3.7930124159212464, 'num_tokens': 14658.0, 'mean_token_accuracy': 0.5042395889759064, 'epoch': 2.76}
+100%|███████████████████████████████████████████████████████████████████████████████████████████████████████| 27/27 [00:17<00:00,  1.51it/s]
+****************************************************************************************************
+Model fine-tuned successfully!
+Model save to ./finetuned_models/openai-community-gpt2_TaskType.CAUSAL_LM_mid_range_finetuned
+Try out your new model in our chat playground!
+****************************************************************************************************
+[32mINFO[0m:     127.0.0.1:57390 - "[1mGET /finetune/status HTTP/1.1[0m" [32m200 OK[0m
+[32mINFO[0m:     127.0.0.1:57391 - "[1mGET /playground/model_path HTTP/1.1[0m" [32m200 OK[0m
+[32mINFO[0m:     127.0.0.1:57391 - "[1mOPTIONS /playground/new HTTP/1.1[0m" [32m200 OK[0m
+[32mINFO[0m:     127.0.0.1:57391 - "[1mPOST /playground/new HTTP/1.1[0m" [32m200 OK[0m
+[32mINFO[0m:     Shutting down
+[32mINFO[0m:     Waiting for application shutdown.
+[32mINFO[0m:     Application shutdown complete.
+[32mINFO[0m:     Finished server process [[36m2576[0m]

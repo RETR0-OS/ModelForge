@@ -3,6 +3,11 @@ from datasets import load_dataset
 from trl import SFTTrainer
 from peft import LoraConfig, get_peft_model, TaskType
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, HfArgumentParser, TrainingArguments, pipeline, logging, DataCollatorForLanguageModeling
+import wandb
+import os
+
+os.environ["WANDB_PROJECT"] = "experiment"
+os.environ["WANDB_LOG_MODEL"] = "checkpoint"
 
 class LLMFinetuner:
     def __init__(self, task, model_name, compute_specs="low_end"):
@@ -167,6 +172,7 @@ class LLMFinetuner:
             max_steps=self.max_steps,
             group_by_length=self.group_by_length,
             lr_scheduler_type=self.lr_scheduler_type,
+            report_to="wandb",
         )
 
         model = get_peft_model(model, peft_config)
