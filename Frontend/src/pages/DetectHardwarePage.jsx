@@ -244,8 +244,17 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
               <select
                 id="model-select"
                 value={selectedModel}
-                onChange={(e) => {
+                onChange={async (e) => {
                   console.log('Setting model to:', e.target.value);
+                  await fetch(`http://localhost:8000/finetune/set_model`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                      selected_model: e.target.value,
+                    }),
+                  });
                   setSelectedModel(e.target.value);
                 }}
                 className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
