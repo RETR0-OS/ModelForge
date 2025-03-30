@@ -117,7 +117,7 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
     // Set state updated flag and navigate
     setStateUpdated(true);
     setTimeout(() => {
-      navigate('http://localhost:3000/finetune/load_settings');
+      navigate('http://localhost:3000/finetune/load_settings'); 
     }, 1000);
   };
 
