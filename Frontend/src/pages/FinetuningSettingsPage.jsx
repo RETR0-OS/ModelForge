@@ -291,19 +291,21 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
             <div className="bg-gray-800 rounded-lg p-6">
               <h3 className="text-lg font-medium text-white mb-4">LoRA Configuration</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                  <label htmlFor="lora_r" className="block text-sm font-medium text-gray-400 mb-1">
-                    LoRA Rank (r)
+              <div>
+                <label htmlFor="lora_r" className="block text-sm font-medium text-gray-400 mb-1">
+                  LoRA Rank (r)
                   </label>
-                  <input
-                    type="number"
+                  <select
                     id="lora_r"
                     name="lora_r"
-                    min="1"
                     value={formState.lora_r || 16}
                     onChange={handleInputChange}
-                    className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
-                  />
+                    className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none" >
+                    <option value="8">8</option>
+                    <option value="16">16</option>
+                    <option value="32">32</option>
+                    <option value="64">64</option>
+                  </select>
                 </div>
                 <div>
                   <label htmlFor="lora_alpha" className="block text-sm font-medium text-gray-400 mb-1">
@@ -376,8 +378,8 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                     onChange={handleInputChange}
                     className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
                   >
-                    <option value="float32">nf4</option>
-                    <option value="bfloat16">fp4</option>
+                    <option value="float32">float32</option>
+                    <option value="bfloat16">bfloat16</option>
                     <option value="float16">float16</option>
                   </select>
                 </div>

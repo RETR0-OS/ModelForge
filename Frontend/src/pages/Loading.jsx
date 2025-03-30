@@ -33,7 +33,7 @@ const Loading = () => {
   useEffect(() => {
     const checkStatus = async () => {
       try {
-        const responseGet = await fetch('http://localhost:8000/finetune/start', {
+        const responseGet = await fetch('http://localhost:8000/finetune/status', {
           method: 'GET',
         });
         const result = await responseGet.json();
