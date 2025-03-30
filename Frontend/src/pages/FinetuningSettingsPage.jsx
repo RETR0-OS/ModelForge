@@ -15,7 +15,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
         
         const data = await response.json();
         console.log("Fetched default values:", data.default_values);
-        
+        defaultValues = data.default_values;
         // Update form state with fetched values
         setFormState(data.default_values);
       } catch (err) {
