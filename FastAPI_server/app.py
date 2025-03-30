@@ -391,6 +391,9 @@ def finetuning_task(llm_tuner):
     finetuning_status["status"] = "idle"
     finetuning_status["message"] = ""
     finetuning_status["progress"] = 0
+    del llm_tuner
+    settings_builder = SettingsBuilder(None, None, None)
+    settings_cache.clear()
 
 @app.get("/finetune/status")
 async def finetuning_status_page(request: Request):
@@ -433,7 +436,16 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
         "message": "Finetuning process started.",
     })
 
+@app.post("/playground/new")
+async def new_playground(request: Request):
+    form = await request.json();
+    model_path = form["model_path"]
 
+    base_path = os.path.join(os.path.dirname(__file__), "utilities")
+
+    chat_script = os.path.join(base_path, "chat_llm.py")
+    command = f"start cmd /K python {chat_script} --model_path {model_path}"
+    os.system(command)
 
 
 if __name__ == '__main__':
