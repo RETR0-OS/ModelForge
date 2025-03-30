@@ -105,7 +105,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
         });
         console.log("Response from GET request:", responseGet);
         setTimeout(() => {
-          navigate('//finetune/loading'); // change here 
+          navigate('/finetune/loading'); // change here 
         }, 1000);
 
         } catch (error) {

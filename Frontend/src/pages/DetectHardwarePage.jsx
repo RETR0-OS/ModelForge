@@ -117,7 +117,7 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
     // Set state updated flag and navigate
     setStateUpdated(true);
     setTimeout(() => {
-      navigate('http://localhost:3000/finetune/load_settings'); 
+      navigate('/finetune/load_settings');
     }, 1000);
   };
 
@@ -246,16 +246,17 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
                 value={selectedModel}
                 onChange={async (e) => {
                   console.log('Setting model to:', e.target.value);
-                  setSelectedModel(e.target.value);
-                  await fetch(`http://localhost:8000/finetune/set_model`, {
+                  await fetch(`http://localhost:8000/finetune/api/hardware/model/${e.target.value}`, {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                      selected_model: e.target.value,
+                      model: e.target.value,
+                      hardware_data: hardwareData,
                     }),
                   });
+                  setSelectedModel(e.target.value);
                 }}
                 className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none"
               >
