@@ -61,7 +61,6 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
 
         // Create FormData to send multipart data
         const formData = new FormData();
-        navigate('/finetune/loading');
 
         // Append the selected file
         if (selectedFile) {
@@ -83,9 +82,14 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
           throw new Error(`Server error: ${response.status}`);
         }
 
-        const result = await response.json();
-        console.log("Server response:", result);
-        alert("Settings updated successfully!");
+        const responseGet = await fetch('http://localhost:8000/finetune/start', {
+          method: 'GET',
+        });
+        console.log("Response from GET request:", responseGet);
+        setTimeout(() => {
+          navigate('/finetune/loading'); // change here 
+        }, 1000);
+
         } catch (error) {
         console.error("Error submitting form:", error);
         alert("Failed to update settings.");
