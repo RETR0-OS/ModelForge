@@ -5,7 +5,7 @@ import '../styles/Loading.css';
 const Loading = () => {
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState(0);
-  
+  const [isIdle, setIsIdle] = useState(false);
   const steps = [
     "Initializing model...",
     "Loading dataset...",
@@ -14,6 +14,44 @@ const Loading = () => {
     "Starting training loop...",
     "Training in progress..."
   ];
+  let statusInterval;
+  useEffect(() => {
+    const checkStatus = async () => {
+      try {
+        const responseGet = await fetch('http://localhost:8000/finetune/start', {
+          method: 'GET',
+        });
+        const result = await responseGet.json();
+        
+        if (result.status === 'idle') {
+          // Handle idle status
+          setIsIdle(true);
+          clearInterval(statusInterval);
+          alert("yay done") // or wherever you want to redirect
+        }
+      } catch (error) {
+        console.error('Error checking status:', error);
+      }
+    };
+
+    const statusInterval = setInterval(checkStatus, 30000);
+
+    return () => {
+      clearInterval(statusInterval);
+    };
+  }, []);
+    // Block window/tab closure
+    useEffect(() => {
+      const handleBeforeUnload = (e) => {
+        if (!isIdle) {
+          e.preventDefault();
+          e.returnValue = '';
+        }
+      };
+  
+      window.addEventListener('beforeunload', handleBeforeUnload);
+      return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+    }, [isIdle]);
 
   useEffect(() => {
     // Simulate progress
