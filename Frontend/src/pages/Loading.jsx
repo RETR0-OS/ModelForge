@@ -244,7 +244,7 @@ const Loading = () => {
 
   return (
     <div className="loading-container relative">
-      {/* Training completion demo button */}
+      {/* Training completion demo button
       {!isIdle && (
         <button 
           onClick={setTrainingComplete}
@@ -252,7 +252,7 @@ const Loading = () => {
         >
           Demo: Complete Training
         </button>
-      )}
+      )} */}
     
       <div className="loading-card">
         {!isIdle ? (
