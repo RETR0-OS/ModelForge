@@ -7,9 +7,16 @@ class PlaygroundModel:
         self.tokenizer = AutoTokenizer.from_pretrained(model_path)
         self.model = AutoModelForCausalLM.from_pretrained(model_path).to(self.device)
 
-    def generate_response(self, prompt: str):
+    def generate_response(self, prompt: str, max_length=1000, temperature=0.4, top_p=0.9):
         inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
-        outputs = self.model.generate(**inputs)
+        outputs = self.model.generate(
+            **inputs,
+            max_length=max_length,
+            temperature=temperature,
+            top_p=top_p,
+            do_sample=True,
+            pad_token_id=self.tokenizer.eos_token_id
+        )
         response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
         return response
 
@@ -24,9 +31,15 @@ class PlaygroundModel:
             print(f"Model>> {response}")
         print("Chat ended.")
 
+    def clean_up(self):
+        self.model.cpu()
+        del self.model
+        del self.tokenizer
+        print("Model and tokenizer cleaned up.")
+
 parser = argparse.ArgumentParser(description="Chat with a fine-tuned model")
 parser.add_argument("--model_path", type=str, required=True, help="Path to the fine-tuned model")
 args = parser.parse_args()
-
+print(f"Loading model from {args.model_path}...")
 model = PlaygroundModel(model_path=args.model_path)
 model.chat()
