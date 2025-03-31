@@ -2,7 +2,8 @@
 
 **Finetune Mistral-7B or TinyLlama on your laptop’s GPU—no code, no PhD, no hassle.**  
 
-![Demo GIF](https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExcW0yN2cyb2VkOGVnbGJ6cmVjZGNzOHJtY3BneGJ0eW1iZ2R6eGJ0biZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3ohs4kI2X9y7M4N3WU/giphy.gif) *(placeholder: replace with your demo GIF)*  
+![logo](https://github.com/user-attachments/assets/12b3545d-0e8b-4460-9291-d0786c9cb0fa)
+
 
 ## 🚀 **Features**  
 - **GPU-Powered Finetuning**: Optimized for NVIDIA GPUs (even 4GB VRAM).  
