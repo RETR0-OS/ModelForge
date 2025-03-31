@@ -1,6 +1,6 @@
 # ModelForge 🔧⚡
 
-**Finetune Mistral-7B or TinyLlama on your laptop’s GPU—no code, no PhD, no hassle.**  
+**Finetune LLMs on your laptop’s GPU—no code, no PhD, no hassle.**  
 
 ![logo](https://github.com/user-attachments/assets/12b3545d-0e8b-4460-9291-d0786c9cb0fa)
 
