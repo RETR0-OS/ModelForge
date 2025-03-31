@@ -4,7 +4,7 @@ class SettingsBuilder:
         self.model_name = model_name
         self.task = task
         self.fine_tuned_name = None
-        self.output_dir = f"../cache/{model_name}_{task}"
+        self.output_dir = f"../model_checkpoints/{model_name}_{task}"
         self.num_train_epochs = 1
         self.dataset = None
         self.compute_profile = compute_profile
