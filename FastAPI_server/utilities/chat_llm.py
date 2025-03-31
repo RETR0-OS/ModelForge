@@ -21,15 +21,21 @@ class PlaygroundModel:
         return response
 
     def chat(self):
-        print("Chat with the model! Type '/bye' to stop.")
-        while True:
-            user_input = input("You>> ")
-            if user_input.lower() == "/bye":
-                print("Ending chat.")
-                break
-            response = self.generate_response(user_input)
-            print(f"Model>> {response}")
-        print("Chat ended.")
+        try:
+            print("Chat with the model! Type '/bye' to stop.")
+            while True:
+                user_input = input("You>> ")
+                if user_input.lower() == "/bye":
+                    print("Ending chat.")
+                    break
+                response = self.generate_response(user_input)
+                print(f"Model>> {response}")
+            print("Chat ended.")
+            clean_up()
+        except Exception as e:
+            print("An error occured!")
+            print(e)
+            clean_up()
 
     def clean_up(self):
         self.model.cpu()
