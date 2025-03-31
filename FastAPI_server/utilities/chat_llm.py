@@ -31,11 +31,11 @@ class PlaygroundModel:
                 response = self.generate_response(user_input)
                 print(f"Model>> {response}")
             print("Chat ended.")
-            clean_up()
+            self.clean_up()
         except Exception as e:
             print("An error occured!")
             print(e)
-            clean_up()
+            self.clean_up()
 
     def clean_up(self):
         self.model.cpu()
