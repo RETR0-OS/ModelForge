@@ -28,8 +28,8 @@
 ## 📂 **Dataset Format**  
 ```json
 [
-  {"instruction": "Summarize this", "response": "Short summary."},
-  {"instruction": "Write a poem", "response": "Roses are red..."}
+  {"instruction": "Summarize this", "input": "Enter a really long article here...", "response": "Short summary."},
+  {"instruction": "Write a poem", "input": "Enter the poem topic here...", "response": "Roses are red..."}
 ]
 ```
 
