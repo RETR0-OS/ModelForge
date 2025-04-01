@@ -1,13 +1,15 @@
+import webbrowser
 import torch
 from datasets import load_dataset
 from trl import SFTTrainer
 from peft import LoraConfig, get_peft_model, TaskType
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, HfArgumentParser, TrainingArguments, pipeline, logging, DataCollatorForLanguageModeling
-import wandb
-import os
+# import wandb
+# import os
+import tensorboard
 
-os.environ["WANDB_PROJECT"] = "experiment"
-os.environ["WANDB_LOG_MODEL"] = "checkpoint"
+# os.environ["WANDB_PROJECT"] = "experiment"
+# os.environ["WANDB_LOG_MODEL"] = "checkpoint"
 
 class LLMFinetuner:
     def __init__(self, task, model_name, compute_specs="low_end"):
@@ -51,6 +53,7 @@ class LLMFinetuner:
         self.dataset = None
         # self.task = task
         self.model_name = model_name
+        self.logging_dir = "./training_logs"
 
     @staticmethod
     def format_example(example, task, specs):
@@ -172,7 +175,8 @@ class LLMFinetuner:
             max_steps=self.max_steps,
             group_by_length=self.group_by_length,
             lr_scheduler_type=self.lr_scheduler_type,
-            report_to="wandb",
+            report_to="tensorboard",
+            logging_dir=self.logging_dir,
         )
 
         model = get_peft_model(model, peft_config)
@@ -187,16 +191,23 @@ class LLMFinetuner:
         trainer.model.save_pretrained(self.fine_tuned_name)
         self.report_finish()
 
+    def initiate_tensorboard(self):
+        """
+        Initialize TensorBoard for logging.
+        """
+        try:
+            tb = tensorboard.program.TensorBoard()
+            tb.configure(argv=[None, '--logdir', self.logging_dir])
+            url = tb.launch()
+            webbrowser.open(url)
+        except Exception as e:
+            print("Error starting TensorBoard:", e)
+
+
     def report_finish(self):
         print("*" * 100)
         print("Model fine-tuned successfully!")
         print(f"Model save to {self.fine_tuned_name}")
         print(f"Try out your new model in our chat playground!")
         print("*" * 100)
-        wandb_url = wandb.run.url if wandb.run else "W&B run not available"
-
-        try:
-            import webbrowser
-            webbrowser.open(wandb_url)
-        except Exception as e:
-            print(f"Could not automatically open browser. Please visit: {wandb_url}")
+        self.initiate_tensorboard()

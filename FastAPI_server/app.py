@@ -12,14 +12,13 @@ from utilities.settings_builder import SettingsBuilder
 from utilities.LLMFinetuner import LLMFinetuner
 
 app = FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
 hardware_detector = HardwareDetector()
 settings_builder = SettingsBuilder(None, None, None)
 settings_cache = {}
 app_name = "ModelForge"
 finetuning_status = {"status": "idle", "progress": 0, "message": ""}
 datasets_dir = "./datasets"
-model_path = os.path.join(os.path.dirname(__file__), "cache")
+model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
 
 origins = [
     "http://localhost:3000",
@@ -386,16 +385,18 @@ async def load_settings(json_file: UploadFile = File(...), settings: str = Form(
 
 
 def finetuning_task(llm_tuner):
-    global settings_builder, finetuning_status, model_path
-    llm_tuner.load_dataset(settings_builder.dataset)
-    llm_tuner.llm_finetuner()
-    finetuning_status["status"] = "idle"
-    finetuning_status["message"] = ""
-    finetuning_status["progress"] = 0
-    model_path = os.path.join(model_path, llm_tuner.model_name.replace('/', "-"))
-    del llm_tuner
-    settings_builder = SettingsBuilder(None, None, None)
-    settings_cache.clear()
+    try:
+        global settings_builder, finetuning_status, model_path, settings_cache
+        llm_tuner.load_dataset(settings_builder.dataset)
+        llm_tuner.llm_finetuner()
+    finally:
+        settings_cache.clear()
+        finetuning_status["status"] = "idle"
+        finetuning_status["message"] = ""
+        finetuning_status["progress"] = 0
+        model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
+        settings_builder = SettingsBuilder(None, None, None)
+        del llm_tuner
 
 @app.get("/finetune/status")
 async def finetuning_status_page(request: Request):
