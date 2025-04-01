@@ -29,7 +29,7 @@
 ```json
 [
   {"instruction": "Summarize this", "input": "Enter a really long article here...", "response": "Short summary."},
-  {"instruction": "Write a poem", "input": "Enter another really long article here...", "response": "Roses are red..."}
+  {"instruction": "Write a poem", "input": "Enter the poem topic here...", "response": "Roses are red..."}
 ]
 ```
 
