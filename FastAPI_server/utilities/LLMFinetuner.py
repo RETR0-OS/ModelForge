@@ -3,13 +3,8 @@ import torch
 from datasets import load_dataset
 from trl import SFTTrainer
 from peft import LoraConfig, get_peft_model, TaskType
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, HfArgumentParser, TrainingArguments, pipeline, logging, DataCollatorForLanguageModeling
-# import wandb
-# import os
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling
 import tensorboard
-
-# os.environ["WANDB_PROJECT"] = "experiment"
-# os.environ["WANDB_LOG_MODEL"] = "checkpoint"
 
 class LLMFinetuner:
     def __init__(self, task, model_name, compute_specs="low_end"):
@@ -51,7 +46,6 @@ class LLMFinetuner:
         self.output_dir = None
         self.fine_tuned_name = None
         self.dataset = None
-        # self.task = task
         self.model_name = model_name
         self.logging_dir = "./training_logs"
 
