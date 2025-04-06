@@ -4,12 +4,12 @@ class SettingsBuilder:
         self.model_name = model_name
         self.task = task
         self.fine_tuned_name = None
-        self.output_dir = f"../model_checkpoints/{model_name}_{task}"
+        self.output_dir = f"../model_checkpoints/{model_name}"
         self.num_train_epochs = 1
         self.dataset = None
         self.compute_profile = compute_profile
         self.lora_r = 16
-        self.lora_alpha = 16
+        self.lora_alpha = 32
         self.lora_dropout = 0.1
         self.use_4bit = True
         self.bnb_4bit_compute_dtype = "float16"

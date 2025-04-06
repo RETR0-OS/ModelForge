@@ -394,7 +394,7 @@ def finetuning_task(llm_tuner):
         finetuning_status["status"] = "idle"
         finetuning_status["message"] = ""
         finetuning_status["progress"] = 0
-        model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
+        model_path = os.path.join(os.path.dirname(__file__), "finetuned_models")
         settings_builder = SettingsBuilder(None, None, None)
         del llm_tuner
 

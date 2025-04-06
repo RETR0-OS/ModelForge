@@ -16,10 +16,10 @@ class HardwareDetector:
                                  }
           },
           "mid_range": {
-            "text-generation": "mistralai/Mistral-7B-v0.1",
+            "text-generation": "mistralai/Mistral-7B-Instruct-v0.3",
             "summarization": "facebook/bart-base",
             "question-answering": "facebook/bart-base",
-            "possible_options": {"text-generation": ["mistralai/Mistral-7B-v0.1", "openai-community/gpt2"],
+            "possible_options": {"text-generation": ["mistralai/Mistral-7B-Instruct-v0.3", "openai-community/gpt2"],
                                  "summarization": ["facebook/bart-base", "google/t5-small"],
                                  "question-answering": ["facebook/bart-base", "google/t5-small"]
                                  }
@@ -28,7 +28,7 @@ class HardwareDetector:
             "text-generation": "bigscience/bloom-7b1",
             "summarization": "google-t5/t5-base",
             "question-answering": "google-t5/t5-base",
-            "possible_options": {"text-generation": ["bigscience/bloom-7b1", "mistralai/Mistral-7B-v0.1", "openai-community/gpt2"],
+            "possible_options": {"text-generation": ["bigscience/bloom-7b1", "mistralai/Mistral-7B-Instruct-v0.3", "openai-community/gpt2"],
                                  "summarization": ["google/t5-base", "facebook/bart-base", "google/t5-small"],
                                  "question-answering": ["google/t5-base", "facebook/bart-base", "google/t5-small"]
                                  }
