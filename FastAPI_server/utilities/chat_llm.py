@@ -3,12 +3,17 @@ import argparse
 
 class PlaygroundModel:
     def __init__(self, model_path: str):
-        self.device = "cuda"
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-        self.model = AutoModelForCausalLM.from_pretrained(model_path).to(self.device)
+        self.device = "cpu"
+        print("Loading model...")
+        try:
+            self.tokenizer = AutoTokenizer.from_pretrained(model_path)
+            self.model = AutoModelForCausalLM.from_pretrained(model_path).to(self.device)
+            print("Model loaded successfully.")
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
-    def generate_response(self, prompt: str, max_length=1000, temperature=0.4, top_p=0.9):
-        inputs = self.tokenizer(prompt, return_tensors="pt").to(self.device)
+    def generate_response(self, prompt: str, max_length=100, temperature=0.2, top_p=0.9):
+        inputs = self.tokenizer(prompt, return_tensors="pt", padding=True).to(self.device)
         outputs = self.model.generate(
             **inputs,
             max_length=max_length,

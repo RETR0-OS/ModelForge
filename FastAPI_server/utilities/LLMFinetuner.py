@@ -61,7 +61,7 @@ class LLMFinetuner:
             if specs == "low_end":
                 return {"text": f"Input: {example['input']}\nOutput: {example['output']}"}
             elif specs == "mid_range":
-                return {"text": f"Instruction:{example['instruction']}\nInput: {example['input']}\nOutput: {example['output']}"}
+                return {"text": f"Input: {example['input']}\nOutput: {example['output']}"}
             elif specs == "high_end":
                 return {"text": f"System:{example['system']}\nInstruction:{example['instruction']}\nInput: {example['input']}\nOutput: {example['output']}"}
         elif task == TaskType.SEQ_2_SEQ_LM:
@@ -82,7 +82,7 @@ class LLMFinetuner:
         Groups settings by category for better organization.
         """
         # Basic settings
-        self.fine_tuned_name = f"./finetuned_models/{self.model_name.replace('/', "-")}_{self.task}_{self.compute_specs}_finetuned"
+        self.fine_tuned_name = f"./finetuned_models/{self.model_name.replace('/', "-")}"
         self.output_dir = "./model_checkpoints/" + self.model_name.replace('/', "-") if self.model_name else "./model_checkpoints"
         self.num_train_epochs = kwargs.get('num_train_epochs')
         self.max_seq_length = kwargs.get('max_seq_length')
@@ -183,6 +183,8 @@ class LLMFinetuner:
         )
         trainer.train()
         trainer.model.save_pretrained(self.fine_tuned_name)
+        tokenizer.save_pretrained(self.fine_tuned_name)
+        print(f"Model saved to: {self.fine_tuned_name}")
         self.report_finish()
 
     def initiate_tensorboard(self):
