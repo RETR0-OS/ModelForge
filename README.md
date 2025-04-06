@@ -14,7 +14,7 @@
 ## ⚡ **Quick Start**  
 1. **Install** (Python 3.10+):  
    ```bash
-   pip install -r requirements.txt  # Includes transformers, peft, gradio
+   pip install -r requirements.txt  # Includes transformers, peft
    ```  
 2. **Run**:  
    ```bash
