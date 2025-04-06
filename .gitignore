@@ -1,4 +1,0 @@
-./FastAPI_server/finetuned_models/*
-./FastAPI_server/utilities/__pycache__/*
-./FastAPI_server/utilities/training_logs/*
-./FastAPI_server/training_logs/finetuned_models/*
