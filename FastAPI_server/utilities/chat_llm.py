@@ -1,9 +1,13 @@
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import argparse
+import torch.cuda as cuda
 
 class PlaygroundModel:
     def __init__(self, model_path: str):
-        self.device = "cpu"
+        self.device = "cuda"
+        if not cuda.is_available():
+            print("CUDA is not available. Exiting...")
+            exit(1)
         print("Loading model...")
         try:
             self.tokenizer = AutoTokenizer.from_pretrained(model_path)
