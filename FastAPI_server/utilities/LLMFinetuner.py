@@ -43,6 +43,7 @@ class LLMFinetuner:
         self.device_map = None
         self.num_train_epochs = None
         self.use_4bit = None
+        self.use_8bit = None
         self.output_dir = None
         self.fine_tuned_name = None
         self.dataset = None
@@ -94,6 +95,7 @@ class LLMFinetuner:
 
         # Quantization settings
         self.use_4bit = kwargs.get('use_4bit')
+        self.use_8bit = kwargs.get('use_8bit')
         self.bnb_4bit_compute_dtype = kwargs.get('bnb_4bit_compute_dtype')
         self.bnb_4bit_use_quant_type = kwargs.get('bnb_4bit_use_quant_type')
         self.use_nested_quant = kwargs.get('use_nested_quant')

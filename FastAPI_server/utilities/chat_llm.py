@@ -1,3 +1,4 @@
+import torch
 from transformers import AutoModelForCausalLM, AutoTokenizer
 import argparse
 import torch.cuda as cuda
@@ -10,9 +11,11 @@ class PlaygroundModel:
             exit(1)
         print("Loading model...")
         try:
-            self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-            self.model = AutoModelForCausalLM.from_pretrained(model_path).to(self.device)
+            self.tokenizer = AutoTokenizer.from_pretrained(model_path, torch_dtype=torch.bfloat16)
+            self.model = AutoModelForCausalLM.from_pretrained(model_path, torch_dtype=torch.bfloat16).to(self.device)
             print("Model loaded successfully.")
+            print(f"Model Max Mem: {torch.cuda.max_memory_allocated(0) / (1024 ** 3)} GB")
+            print(f"Model Total Mem: {self.model.get_memory_footprint() / (1024 ** 3)} GB")
         except Exception as e:
             print(f"An error occurred: {e}")
 

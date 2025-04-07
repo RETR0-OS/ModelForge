@@ -1,5 +1,6 @@
 import psutil
 import pynvml
+from typing import Dict, List, Tuple, Union
 
 
 class HardwareDetector:
@@ -7,30 +8,30 @@ class HardwareDetector:
     def __init__(self):
         self.model_profiles = {
           "low_end": {
-            "text-generation": "openai-community/gpt2",
-            "summarization": "google-t5/t5-small",
-            "question-answering": "google-t5/t5-small",
-            "possible_options": {"text-generation": ["openai-community/gpt2"],
-                                 "summarization": ["google/t5-small"],
-                                 "question-answering": ["google/t5-small"]
+            "text-generation": "meta-llama/Llama-3.2-1B",
+            "summarization": "google-t5/t5-large",
+            "question-answering": "google-t5/t5-large",
+            "possible_options": {"text-generation": ["meta-llama/Llama-3.2-1B"],
+                                 "summarization": ["google-t5/t5-large"],
+                                 "question-answering": ["google-t5/t5-large"]
                                  }
           },
           "mid_range": {
             "text-generation": "mistralai/Mistral-7B-Instruct-v0.3",
             "summarization": "facebook/bart-base",
             "question-answering": "facebook/bart-base",
-            "possible_options": {"text-generation": ["mistralai/Mistral-7B-Instruct-v0.3", "openai-community/gpt2"],
-                                 "summarization": ["facebook/bart-base", "google/t5-small"],
-                                 "question-answering": ["facebook/bart-base", "google/t5-small"]
+            "possible_options": {"text-generation": ["mistralai/Mistral-7B-Instruct-v0.3", "meta-llama/Llama-3.2-1B"],
+                                 "summarization": ["facebook/bart-base", "google-t5/t5-large"],
+                                 "question-answering": ["facebook/bart-base", "google-t5/t5-large"]
                                  }
           },
           "high_end": {
             "text-generation": "bigscience/bloom-7b1",
-            "summarization": "google-t5/t5-base",
-            "question-answering": "google-t5/t5-base",
-            "possible_options": {"text-generation": ["bigscience/bloom-7b1", "mistralai/Mistral-7B-Instruct-v0.3", "openai-community/gpt2"],
-                                 "summarization": ["google/t5-base", "facebook/bart-base", "google/t5-small"],
-                                 "question-answering": ["google/t5-base", "facebook/bart-base", "google/t5-small"]
+            "summarization": "IlyaGusev/mbart_ru_sum_gazeta",
+            "question-answering": "IlyaGusev/mbart_ru_sum_gazeta",
+            "possible_options": {"text-generation": ["bigscience/bloom-7b1", "mistralai/Mistral-7B-Instruct-v0.3", "meta-llama/Llama-3.2-1B"],
+                                 "summarization": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "google-t5/t5-large"],
+                                 "question-answering": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "google-t5/t5-large"]
                                  }
           }
         }
@@ -38,7 +39,7 @@ class HardwareDetector:
         self.model_requirements = {}
         self.model_recommendation = ""
 
-    def get_gpu_specs(self):
+    def get_gpu_specs(self) -> None:
         pynvml.nvmlInit()
         device_count = pynvml.nvmlDeviceGetCount()
         if device_count == 0:
@@ -52,7 +53,7 @@ class HardwareDetector:
         self.hardware_profile['gpu_total_memory_gb'] = round(gpu_total_mem, 2)
         pynvml.nvmlShutdown()
 
-    def get_computer_specs(self):
+    def get_computer_specs(self) -> None:
         memory = psutil.virtual_memory()
         ram_total = memory.total
         available_diskspace = psutil.disk_usage('/').free / (1024 ** 3)
@@ -61,13 +62,13 @@ class HardwareDetector:
         self.hardware_profile['available_diskspace_gb'] = round(available_diskspace, 2)
         self.hardware_profile['cpu_cores'] = cpu_cores
 
-    def run(self, task):
+    def run(self, task) -> Tuple[Dict[str, Union[str, float]], Dict[str, Union[str, float]], str, List[str]]:
         self.model_requirements['task'] = task
         self.get_computer_specs()
         self.get_gpu_specs()
-        if self.hardware_profile['gpu_total_memory_gb'] < 3.2:
+        if self.hardware_profile['gpu_total_memory_gb'] < 7.2:
             self.model_requirements['profile'] = 'low_end'
-        elif self.hardware_profile['gpu_total_memory_gb'] < 7.2:
+        elif self.hardware_profile['gpu_total_memory_gb'] < 15.2:
             if self.hardware_profile['ram_total_gb'] < 15.2:
                 self.model_requirements['profile'] = 'low_end'
             else:

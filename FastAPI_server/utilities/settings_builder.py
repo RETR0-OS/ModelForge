@@ -1,6 +1,9 @@
+from typing import Dict, Union
+
+
 class SettingsBuilder:
 
-    def __init__(self, task, model_name, compute_profile):
+    def __init__(self, task, model_name, compute_profile) -> None:
         self.model_name = model_name
         self.task = task
         self.fine_tuned_name = None
@@ -42,7 +45,7 @@ class SettingsBuilder:
         self.packing = False
         self.device_map = {"": 0}
 
-    def set_settings(self, settings_dict):
+    def set_settings(self, settings_dict) -> None:
         """
         Update settings from a dictionary
         """
@@ -70,7 +73,7 @@ class SettingsBuilder:
                 else:
                     setattr(self, key, value)
 
-    def get_settings(self):
+    def get_settings(self) -> Dict[str, Union[str, float]]:
         return {
             "task": self.task,
             "model_name": self.model_name,
