@@ -90,7 +90,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
     // Append settings as a JSON string
     formData.append("settings", JSON.stringify(formState));
 
-    console.log("Sending data to server:", formData);
+    console.log("Sending data to server:",JSON.stringify(formState));
 
     try {
       const response = await fetch('http://localhost:8000/finetune/load_settings', {
@@ -361,10 +361,10 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
                   value={formState.lora_r || 16}
                   onChange={handleInputChange}
                   className="bg-gray-900 border border-gray-700 rounded-lg p-3 w-full text-white focus:border-orange-500 focus:outline-none" >
+                  <option value="2">4</option>
                   <option value="8">8</option>
                   <option value="16">16</option>
                   <option value="32">32</option>
-                  <option value="64">64</option>
                 </select>
               </div>
               <div>

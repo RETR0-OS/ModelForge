@@ -9,6 +9,7 @@ from pydantic import BaseModel, field_validator
 from utilities.hardware_detector import HardwareDetector
 from utilities.settings_builder import SettingsBuilder
 from utilities.LLMFinetuner import LLMFinetuner
+from utilities.CausalLLMTuner import CausalLLMFinetuner
 
 app = FastAPI()
 hardware_detector = HardwareDetector()
@@ -387,7 +388,7 @@ def finetuning_task(llm_tuner) -> None:
     global settings_builder, finetuning_status, model_path, settings_cache
     try:
         llm_tuner.load_dataset(settings_builder.dataset)
-        llm_tuner.llm_finetuner()
+        llm_tuner.finetune()
     finally:
         settings_cache.clear()
         finetuning_status["status"] = "idle"
@@ -410,6 +411,8 @@ async def finetuning_status_page(request: Request) -> JSONResponse:
 async def start_finetuning_page(request: Request, background_task: BackgroundTasks) -> JSONResponse:
     global settings_builder, settings_cache, finetuning_status
 
+    print(settings_builder.get_settings())
+
     if not settings_cache:
         raise HTTPException(
             status_code=400,
@@ -423,11 +426,19 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
         )
     finetuning_status["status"] = "initializing"
     finetuning_status["message"] = "Starting finetuning process..."
-    llm_tuner = LLMFinetuner(
-        task=settings_builder.task,
-        model_name=settings_builder.model_name,
-        compute_specs=settings_builder.compute_profile
-    )
+    llm_tuner = None
+    if settings_builder.task == "text-generation":
+        llm_tuner = CausalLLMFinetuner(
+            model_name=settings_builder.model_name,
+            compute_specs=settings_builder.compute_profile
+        )
+    else:
+        llm_tuner = LLMFinetuner(
+            task=settings_builder.task,
+            model_name=settings_builder.model_name,
+            compute_specs=settings_builder.compute_profile
+        )
+
     llm_tuner.set_settings(**settings_builder.get_settings())
 
     background_task.add_task(finetuning_task, llm_tuner)

@@ -24,7 +24,10 @@ class SettingsBuilder:
         self.bnb_4bit_use_quant_type = True
         self.use_nested_quant = False
         self.bnb_4bit_quant_type = "nf4"
-
+        self.bnb_8bit_quant_type = "FP8"
+        self.use_8bit = None
+        self.load_in_4bit = None
+        self.load_in_8bit = None
         # Trainer Advanced
         self.fp16 = False
         self.bf16 = False
@@ -57,6 +60,24 @@ class SettingsBuilder:
                     self.max_seq_length = None
                 else:
                     self.max_seq_length = value
+            elif key == "quantization":
+                # Handle quantization settings
+                if value == "4bit":
+                    self.use_4bit = True
+                    self.use_8bit = False
+                    self.load_in_4bit = True
+                    self.load_in_8bit = False
+
+                elif value == "8bit":
+                    self.use_4bit = False
+                    self.use_8bit = True
+                    self.load_in_4bit = False
+                    self.load_in_8bit = True
+                else:
+                    self.use_4bit = False
+                    self.use_8bit = False
+                    self.load_in_4bit = False
+                    self.load_in_8bit = False
             elif hasattr(self, key):
                 # Convert string representations to appropriate types
                 if isinstance(getattr(self, key), bool) and isinstance(value, str):
@@ -87,6 +108,13 @@ class SettingsBuilder:
             "bnb_4bit_use_quant_type": self.bnb_4bit_use_quant_type,
             "use_nested_quant": self.use_nested_quant,
             "bnb_4bit_quant_type": self.bnb_4bit_quant_type,
+            "use_8bit": self.use_8bit,
+            "load_in_4bit": self.load_in_4bit,
+            "load_in_8bit": self.load_in_8bit,
+            "bnb_8bit_quant_type": self.bnb_8bit_quant_type,
+            "save_steps": self.save_steps,
+            "output_dir": self.output_dir,
+            "fine_tuned_name": self.fine_tuned_name,
             "fp16": self.fp16,
             "bf16": self.bf16,
             "per_device_train_batch_size": self.per_device_train_batch_size,

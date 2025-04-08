@@ -346,7 +346,6 @@ const TechnicalDetailsPage = () => {
                   <h4 className="text-xl font-medium text-white mb-4">Text Generation</h4>
                   <pre className="text-gray-300 font-mono text-sm mb-8">
 {`{
-  "instruction": "Write a short story about a robot learning to paint.",
   "input": "The robot's name is Canvas-3000.",
   "output": "Canvas-3000 whirred softly as its optical sensors focused on the blank paper..."
 }`}
@@ -355,9 +354,8 @@ const TechnicalDetailsPage = () => {
                   <h4 className="text-xl font-medium text-white mb-4">Summarization</h4>
                   <pre className="text-gray-300 font-mono text-sm mb-8">
 {`{
-  "article": "Scientists have discovered a new species of deep-sea creature living near hydrothermal vents...",
-  "instruction": "Summarize this scientific discovery in simple terms.",
-  "summary": "Scientists found a new creature living near underwater hot springs in the deep ocean..."
+  "input": "Scientists have discovered a new species of deep-sea creature living near hydrothermal vents...",
+  "output": "Scientists found a new creature living near underwater hot springs in the deep ocean..."
 }`}
                   </pre>
                   
@@ -365,21 +363,11 @@ const TechnicalDetailsPage = () => {
                   <pre className="text-gray-300 font-mono text-sm mb-8">
 {`{
   "context": "The Great Barrier Reef is the world's largest coral reef system. It is located off the coast of Queensland, Australia...",
-  "question": "Where is the Great Barrier Reef located?",
-  "answer": "The Great Barrier Reef is located off the coast of Queensland, Australia."
+  "input": "Where is the Great Barrier Reef located?",
+  "output": "The Great Barrier Reef is located off the coast of Queensland, Australia."
 }`}
                   </pre>
-                  
-                  <h4 className="text-xl font-medium text-white mb-4">Conversation</h4>
-                  <pre className="text-gray-300 font-mono text-sm">
-{`{
-  "conversations": [
-    {"role": "system", "content": "You are a helpful AI assistant."},
-    {"role": "user", "content": "Can you explain how neural networks work?"},
-    {"role": "assistant", "content": "Neural networks are computing systems inspired by biological neural networks..."}
-  ]
-}`}
-                  </pre>
+
                 </div>
               </div>
             </div>

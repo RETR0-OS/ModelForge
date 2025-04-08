@@ -101,10 +101,8 @@ class Finetuner(ABC):
         self.fine_tuned_name = f"./finetuned_models/{self.model_name.replace('/', "-")}"
         self.output_dir = "./model_checkpoints/" + self.model_name.replace('/', "-") if self.model_name else "./model_checkpoints"
         self.num_train_epochs = kwargs.get('num_train_epochs')
-        if kwargs.get('max_seq_length') == -1:
-            self.max_seq_length = None
-        else:
-            self.max_seq_length = kwargs.get('max_seq_length')
+
+        self.max_seq_length = kwargs.get('max_seq_length')
 
         # LoRA settings
         self.lora_r = kwargs.get('lora_r')
@@ -113,11 +111,18 @@ class Finetuner(ABC):
 
         # Quantization settings
         self.use_4bit = kwargs.get('use_4bit')
-        self.use_8bit = kwargs.get('use_8bit')
+        self.load_in_4bit = kwargs.get('load_in_4bit')
         self.bnb_4bit_compute_dtype = kwargs.get('bnb_4bit_compute_dtype')
-        self.bnb_4bit_use_quant_type = kwargs.get('bnb_4bit_use_quant_type')
-        self.use_nested_quant = kwargs.get('use_nested_quant')
         self.bnb_4bit_quant_type = kwargs.get('bnb_4bit_quant_type')
+        self.bnb_4bit_use_quant_type = kwargs.get('bnb_4bit_use_quant_type')
+
+        self.use_8bit = kwargs.get('use_8bit')
+        self.load_in_8bit = kwargs.get('load_in_8bit')
+        self.bnb_8bit_compute_dtype = kwargs.get('bnb_8bit_compute_dtype')
+        self.bnb_8bit_quant_type = kwargs.get('bnb_8bit_quant_type')
+        self.bnb_8bit_use_quant_type = kwargs.get('bnb_8bit_use_quant_type')
+
+        self.use_nested_quant = kwargs.get('use_nested_quant')
 
         # Training precision
         self.fp16 = kwargs.get('fp16')

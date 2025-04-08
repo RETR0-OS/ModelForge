@@ -1,10 +1,10 @@
 import torch
 from datasets import load_dataset
 from trl import SFTTrainer
-from peft import LoraConfig, get_peft_model, TaskType
+from peft import LoraConfig, get_peft_model, TaskType, PeftModel
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling
 from typing import Dict, Optional
-from Finetuner import Finetuner
+from .Finetuner import Finetuner
 
 
 class CausalLLMFinetuner(Finetuner):
@@ -43,9 +43,10 @@ class CausalLLMFinetuner(Finetuner):
             """}
 
     def load_dataset(self, dataset_path:str) -> None:
-        dataset = load_dataset("json", data_files={"train": dataset_path})
-        dataset = dataset.map(lambda example: self.format_example(example, self.compute_specs))['train']
-        print(dataset)
+        dataset = load_dataset("json", data_files=dataset_path, split="train")
+        dataset = dataset.rename_column("input", "prompt")
+        dataset = dataset.rename_column("output", "completion")
+        print(dataset[0])
         self.dataset = dataset
 
     def set_settings(self, **kwargs) -> None:
@@ -56,6 +57,7 @@ class CausalLLMFinetuner(Finetuner):
         super().set_settings(**kwargs)
 
     def finetune(self) -> bool:
+        print("Starting Causal LM fine-tuning process...")
         try:
             compute_dtype = getattr(torch, self.bnb_4bit_compute_dtype)
 
@@ -100,6 +102,8 @@ class CausalLLMFinetuner(Finetuner):
                 task_type=self.task,
             )
 
+            print("Setting training args")
+
             training_arguments = TrainingArguments(
                 output_dir=self.output_dir,
                 num_train_epochs=self.num_train_epochs,
@@ -123,18 +127,20 @@ class CausalLLMFinetuner(Finetuner):
 
             model = get_peft_model(model, peft_config)
 
+            print("building trainer")
+
             trainer = SFTTrainer(
                 model=model,
                 train_dataset=self.dataset,
                 args=training_arguments,
-                data_collator=DataCollatorForLanguageModeling(tokenizer=tokenizer, mlm=False),
+                peft_config=peft_config,
             )
 
             trainer.train()
             trainer.model.save_pretrained(self.fine_tuned_name)
-            tokenizer.save_pretrained(self.fine_tuned_name)
             print(f"Model saved to: {self.fine_tuned_name}")
             super().report_finish()
+
             return True
         except Exception as e:
             print(f"An error occurred during training: {e}")
