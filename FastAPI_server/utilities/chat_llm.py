@@ -1,6 +1,5 @@
 import torch
-from torch.xpu import device
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, pipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer, TextStreamer, pipeline
 from peft import PeftConfig, PeftModel, AutoPeftModelForCausalLM
 import argparse
 
@@ -15,31 +14,36 @@ class PlaygroundModel:
         print("Loading model...")
         try:
             config = PeftConfig.from_pretrained(model_path)
-            self.model = AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path, return_dict=True, device_map="auto")
-            self.tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path, trust_remote_code=True)
-            self.tokenizer.pad_token = self.tokenizer.eos_token
-            self.model.eval()
+            model = AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path, device_map=0, torch_dtype=torch.float16)
+            tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path, trust_remote_code=True)
+            streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+            tokenizer.pad_token = tokenizer.eos_token
+
+            self.generator = pipeline(
+                "text-generation",
+                model=model,
+                tokenizer=tokenizer,
+                device=0,
+                streamer=streamer,
+            )
+            peft_model = AutoPeftModelForCausalLM.from_pretrained(model, config)
+            self.generator.model=peft_model
 
         except Exception as e:
             print(f"Error loading model: {e}")
             exit(1)
 
-    def generate_response(self, prompt: str, temperature=0.2, top_p=0.9):
+    def generate_response(self, prompt: str, temperature=0.2, top_p=0.92, top_k=50, repetition_penalty=1.3):
         try:
-            # Tokenize with attention mask
-            inputs = self.tokenizer(
+            response = self.generator(
                 prompt,
-                return_tensors="pt",
-            ).to(self.device)
-
-            outputs = self.model.generate(
-                **inputs,
-            )
-
-            response = self.tokenizer.decode(
-                outputs[0],
-            )
-
+                max_length=1000,
+                do_sample=True,
+                temperature=temperature,
+                top_p=top_p,
+                top_k=top_k,
+                repetition_penalty=repetition_penalty,
+            )[0]['generated_text']
             return response
 
         except KeyboardInterrupt:
