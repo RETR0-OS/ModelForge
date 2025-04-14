@@ -14,20 +14,17 @@ class PlaygroundModel:
         print("Loading model...")
         try:
             config = PeftConfig.from_pretrained(model_path)
-            model = AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path, device_map=0, torch_dtype=torch.float16)
+            # model = AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path, device_map=0, torch_dtype=torch.float16)
             tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path, trust_remote_code=True)
             streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
             tokenizer.pad_token = tokenizer.eos_token
-
+            peft_model = AutoPeftModelForCausalLM.from_pretrained(model_path, config=config, is_trainable=False)
             self.generator = pipeline(
                 "text-generation",
-                model=model,
-                tokenizer=tokenizer,
-                device=0,
                 streamer=streamer,
+                model = peft_model,
+                tokenizer = tokenizer
             )
-            peft_model = AutoPeftModelForCausalLM.from_pretrained(model, config)
-            self.generator.model=peft_model
 
         except Exception as e:
             print(f"Error loading model: {e}")
