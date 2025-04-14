@@ -4,12 +4,12 @@ import uuid
 import json
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.staticfiles import StaticFiles
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, field_validator
 from utilities.hardware_detector import HardwareDetector
 from utilities.settings_builder import SettingsBuilder
 from utilities.LLMFinetuner import LLMFinetuner
+from utilities.CausalLLMTuner import CausalLLMFinetuner
 
 app = FastAPI()
 hardware_detector = HardwareDetector()
@@ -244,7 +244,7 @@ class SettingsFormData(BaseModel):
 
 
 @app.get("/")
-async def home(request: Request):
+async def home(request: Request) -> JSONResponse:
     return JSONResponse({
         "app_name": app_name,
         "app_description": "No-code LLM finetuning for CUDA environments",
@@ -256,12 +256,12 @@ async def home(request: Request):
         ]
     })
 
-def gen_uuid(filename):
+def gen_uuid(filename) -> str:
     extension = filename.split(".")[-1]
     return str(uuid.uuid4()).replace("-", "") + "." + extension
 
 @app.get("/finetune/detect")
-async def detect_hardware_page(request: Request):
+async def detect_hardware_page(request: Request) -> JSONResponse:
     global settings_cache
     settings_cache.clear()  # Clear the cache to ensure fresh detection
     return JSONResponse({
@@ -270,7 +270,7 @@ async def detect_hardware_page(request: Request):
     })
 
 @app.post("/finetune/detect", response_class=JSONResponse)
-async def detect_hardware(request: Request):
+async def detect_hardware(request: Request) -> JSONResponse:
     global settings_cache
     try:
         form = await request.json()
@@ -321,7 +321,7 @@ async def detect_hardware(request: Request):
         )
 
 @app.post("/finetune/set_model")
-async def set_model(request: Request):
+async def set_model(request: Request) -> JSONResponse:
     global settings_cache
     try:
         form = await request.json()
@@ -336,7 +336,7 @@ async def set_model(request: Request):
         )
 
 @app.get("/finetune/load_settings")
-async def load_settings_page(request: Request):
+async def load_settings_page(request: Request) -> JSONResponse:
     global settings_cache
     if not settings_cache:
         raise HTTPException(
@@ -349,7 +349,7 @@ async def load_settings_page(request: Request):
     })
 
 @app.post("/finetune/load_settings")
-async def load_settings(json_file: UploadFile = File(...), settings: str = Form(...)):
+async def load_settings(json_file: UploadFile = File(...), settings: str = Form(...)) -> None:
     print("Loading settings...")
     global settings_builder, datasets_dir
     # Validate file type
@@ -384,11 +384,11 @@ async def load_settings(json_file: UploadFile = File(...), settings: str = Form(
     settings_builder.set_settings(settings_data)
 
 
-def finetuning_task(llm_tuner):
+def finetuning_task(llm_tuner) -> None:
+    global settings_builder, finetuning_status, model_path, settings_cache
     try:
-        global settings_builder, finetuning_status, model_path, settings_cache
         llm_tuner.load_dataset(settings_builder.dataset)
-        llm_tuner.llm_finetuner()
+        llm_tuner.finetune()
     finally:
         settings_cache.clear()
         finetuning_status["status"] = "idle"
@@ -399,7 +399,7 @@ def finetuning_task(llm_tuner):
         del llm_tuner
 
 @app.get("/finetune/status")
-async def finetuning_status_page(request: Request):
+async def finetuning_status_page(request: Request) -> JSONResponse:
     global finetuning_status
     return JSONResponse({
         "status": finetuning_status["status"],
@@ -408,8 +408,10 @@ async def finetuning_status_page(request: Request):
     })
 
 @app.get("/finetune/start")
-async def start_finetuning_page(request: Request, background_task: BackgroundTasks):
+async def start_finetuning_page(request: Request, background_task: BackgroundTasks) -> JSONResponse:
     global settings_builder, settings_cache, finetuning_status
+
+    print(settings_builder.get_settings())
 
     if not settings_cache:
         raise HTTPException(
@@ -424,11 +426,19 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
         )
     finetuning_status["status"] = "initializing"
     finetuning_status["message"] = "Starting finetuning process..."
-    llm_tuner = LLMFinetuner(
-        task=settings_builder.task,
-        model_name=settings_builder.model_name,
-        compute_specs=settings_builder.compute_profile
-    )
+    llm_tuner = None
+    if settings_builder.task == "text-generation":
+        llm_tuner = CausalLLMFinetuner(
+            model_name=settings_builder.model_name,
+            compute_specs=settings_builder.compute_profile
+        )
+    else:
+        llm_tuner = LLMFinetuner(
+            task=settings_builder.task,
+            model_name=settings_builder.model_name,
+            compute_specs=settings_builder.compute_profile
+        )
+
     llm_tuner.set_settings(**settings_builder.get_settings())
 
     background_task.add_task(finetuning_task, llm_tuner)
@@ -440,7 +450,7 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
     })
 
 @app.post("/playground/new")
-async def new_playground(request: Request):
+async def new_playground(request: Request) -> None:
     form = await request.json();
     model_path = form["model_path"]
 
@@ -451,7 +461,7 @@ async def new_playground(request: Request):
     os.system(command)
 
 @app.get("/playground/model_path")
-async def get_model_path(request: Request):
+async def get_model_path(request: Request) -> JSONResponse:
     global model_path
     model_path = os.path.join(model_path, os.listdir(model_path)[0])
     return JSONResponse({

@@ -1,60 +1,82 @@
-from transformers import AutoModelForCausalLM, AutoTokenizer
+import torch
+from transformers import AutoModelForCausalLM, AutoTokenizer, TextStreamer, pipeline
+from peft import PeftConfig, PeftModel, AutoPeftModelForCausalLM
 import argparse
-import torch.cuda as cuda
+
 
 class PlaygroundModel:
     def __init__(self, model_path: str):
-        self.device = "cuda"
-        if not cuda.is_available():
+        self.device = "cuda" if torch.cuda.is_available() else "cpu"
+        if self.device == "cpu":
             print("CUDA is not available. Exiting...")
             exit(1)
+
         print("Loading model...")
         try:
-            self.tokenizer = AutoTokenizer.from_pretrained(model_path)
-            self.model = AutoModelForCausalLM.from_pretrained(model_path).to(self.device)
-            print("Model loaded successfully.")
-        except Exception as e:
-            print(f"An error occurred: {e}")
+            config = PeftConfig.from_pretrained(model_path)
+            # model = AutoModelForCausalLM.from_pretrained(config.base_model_name_or_path, device_map=0, torch_dtype=torch.float16)
+            tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path, trust_remote_code=True)
+            streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
+            tokenizer.pad_token = tokenizer.eos_token
+            peft_model = AutoPeftModelForCausalLM.from_pretrained(model_path, config=config, is_trainable=False)
+            self.generator = pipeline(
+                "text-generation",
+                streamer=streamer,
+                model = peft_model,
+                tokenizer = tokenizer
+            )
 
-    def generate_response(self, prompt: str, max_length=100, temperature=0.2, top_p=0.9):
-        inputs = self.tokenizer(prompt, return_tensors="pt", padding=True).to(self.device)
-        outputs = self.model.generate(
-            **inputs,
-            max_length=max_length,
-            temperature=temperature,
-            top_p=top_p,
-            do_sample=True,
-            pad_token_id=self.tokenizer.eos_token_id
-        )
-        response = self.tokenizer.decode(outputs[0], skip_special_tokens=True)
-        return response
+        except Exception as e:
+            print(f"Error loading model: {e}")
+            exit(1)
+
+    def generate_response(self, prompt: str, temperature=0.2, top_p=0.92, top_k=50, repetition_penalty=1.3):
+        try:
+            response = self.generator(
+                prompt,
+                max_length=1000,
+                do_sample=True,
+                temperature=temperature,
+                top_p=top_p,
+                top_k=top_k,
+                repetition_penalty=repetition_penalty,
+            )[0]['generated_text']
+            return response
+
+        except KeyboardInterrupt:
+            self.clean_up()
+
 
     def chat(self):
+        print("Chat started. Type '/bye' to exit")
         try:
-            print("Chat with the model! Type '/bye' to stop.")
             while True:
-                user_input = input("You>> ")
+                user_input = input("You: ")
                 if user_input.lower() == "/bye":
-                    print("Ending chat.")
                     break
+
                 response = self.generate_response(user_input)
-                print(f"Model>> {response}")
-            print("Chat ended.")
-            self.clean_up()
-        except Exception as e:
-            print("An error occured!")
-            print(e)
+                print(f"Assistant: {response}")
+
+        except KeyboardInterrupt:
+            print("\nInterrupted by user")
+        finally:
             self.clean_up()
 
     def clean_up(self):
-        self.model.cpu()
-        del self.model
-        del self.tokenizer
-        print("Model and tokenizer cleaned up.")
+        if hasattr(self, 'model'):
+            del self.model
+        if hasattr(self, 'tokenizer'):
+            del self.tokenizer
+        torch.cuda.empty_cache()
+        print("Resources cleaned")
 
-parser = argparse.ArgumentParser(description="Chat with a fine-tuned model")
-parser.add_argument("--model_path", type=str, required=True, help="Path to the fine-tuned model")
-args = parser.parse_args()
-print(f"Loading model from {args.model_path}...")
-model = PlaygroundModel(model_path=args.model_path)
-model.chat()
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Chat with QLoRA fine-tuned model")
+    parser.add_argument("--model_path", type=str, required=True,
+                        help="Path to saved PEFT model directory")
+    args = parser.parse_args()
+
+    bot = PlaygroundModel(model_path=args.model_path)
+    bot.chat()
