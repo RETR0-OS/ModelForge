@@ -1,13 +1,11 @@
-from typing import Dict, List
-
+from typing import Dict
 import torch
+from attr.validators import max_len
 from datasets import load_dataset
-from trl import SFTTrainer
-
-from Finetuner import Finetuner
-from peft import LoraConfig, TaskType, get_peft_model_state_dict, get_peft_model
-from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, Seq2SeqTrainingArguments, Seq2SeqTrainer, \
-    BitsAndBytesConfig
+from trl import SFTTrainer, SFTConfig
+from .Finetuner import Finetuner
+from peft import LoraConfig, TaskType, get_peft_model
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, TrainingArguments, BitsAndBytesConfig
 
 
 class Seq2SeqFinetuner(Finetuner):
@@ -21,34 +19,34 @@ class Seq2SeqFinetuner(Finetuner):
         # Concatenate the context, question, and answer into a single text field.
         if specs == "low_end":
             return {
-                "messages": [
-                    {"role": "system", "content": f"You are a text summarization assistant."},
-                    {"role": "user", "content": f"{example['article']}"},
-                    {"role": "assistant", "content": f"{example['summary']}"}
-                ]
+                "text": f'''
+                    ["role": "system", "content": "You are a text summarization assistant."],
+                    [role": "user", "content": {example['article']}],
+                    ["role": "assistant", "content": {example['summary']}]
+                '''
             }
         elif specs == "mid_range":
             return {
-                "messages": [
-                    {"role": "system", "content": f"You are a text summarization assistant."},
-                    {"role": "user", "content": f"{example['article']}"},
-                    {"role": "assistant", "content": f"{example['summary']}"}
-                ]
+                "text": f'''
+                            ["role": "system", "content": "You are a text summarization assistant."],
+                            [role": "user", "content": {example['article']}],
+                            ["role": "assistant", "content": {example['summary']}]
+                        '''
             }
         elif specs == "high_end":
             return {
-                "messages": [
-                    {"role": "system", "content": f"You are a text summarization assistant."},
-                    {"role": "user", "content": f"{example['article']}"},
-                    {"role": "assistant", "content": f"{example['summary']}"}
-                ]
+                "text": f'''
+                            ["role": "system", "content": "You are a text summarization assistant."],
+                            [role": "user", "content": {example['article']}],
+                            ["role": "assistant", "content": {example['summary']}]
+                        '''
             }
 
     def load_dataset(self, dataset_path: str) -> None:
         dataset = load_dataset("json", data_files=dataset_path, split="train")
         dataset = dataset.map(lambda example: self.format_example(example, self.compute_specs))
         dataset = dataset.remove_columns(['article', 'summary'])
-        print(dataset)
+        print(dataset[0])
         self.dataset = dataset
 
     def set_settings(self, **kwargs) -> None:
@@ -88,8 +86,10 @@ class Seq2SeqFinetuner(Finetuner):
                     use_cache=False,
                 )
             tokenizer = AutoTokenizer.from_pretrained(self.model_name)
+            # print(tokenizer.chat_template)
             tokenizer.pad_token = tokenizer.eos_token
             tokenizer.padding_side = "right"
+            tokenizer.max_seq_length = tokenizer.model_max_length
 
             peft_config = LoraConfig(
                 task_type=TaskType.SEQ_2_SEQ_LM,
@@ -100,7 +100,7 @@ class Seq2SeqFinetuner(Finetuner):
                 bias="none",
             )
 
-            training_args = Seq2SeqTrainingArguments(
+            training_args = SFTConfig(
                 output_dir=self.output_dir,
                 num_train_epochs=self.num_train_epochs,
                 per_device_train_batch_size=self.per_device_train_batch_size,
@@ -119,6 +119,7 @@ class Seq2SeqFinetuner(Finetuner):
                 lr_scheduler_type=self.lr_scheduler_type,
                 report_to="tensorboard",
                 logging_dir=self.logging_dir,
+                max_length=None
             )
 
             model = get_peft_model(model, peft_config)

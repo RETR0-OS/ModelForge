@@ -434,7 +434,7 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
             compute_specs=settings_builder.compute_profile
         )
     elif settings_builder.task == "summarization":
-        llm_tuner = LLMFinetuner(
+        llm_tuner = Seq2SeqFinetuner(
             model_name=settings_builder.model_name,
             compute_specs=settings_builder.compute_profile
         )
