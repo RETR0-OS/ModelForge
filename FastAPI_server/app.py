@@ -10,6 +10,7 @@ from utilities.hardware_detector import HardwareDetector
 from utilities.settings_builder import SettingsBuilder
 from utilities.LLMFinetuner import LLMFinetuner
 from utilities.CausalLLMTuner import CausalLLMFinetuner
+from utilities.Seq2SeqLMTuner import Seq2SeqFinetuner
 
 app = FastAPI()
 hardware_detector = HardwareDetector()
@@ -429,6 +430,11 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
     llm_tuner = None
     if settings_builder.task == "text-generation":
         llm_tuner = CausalLLMFinetuner(
+            model_name=settings_builder.model_name,
+            compute_specs=settings_builder.compute_profile
+        )
+    elif settings_builder.task == "summarization":
+        llm_tuner = LLMFinetuner(
             model_name=settings_builder.model_name,
             compute_specs=settings_builder.compute_profile
         )
