@@ -20,6 +20,7 @@ app_name = "ModelForge"
 finetuning_status = {"status": "idle", "progress": 0, "message": ""}
 datasets_dir = "./datasets"
 model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
+task = None
 
 origins = [
     "http://localhost:3000",
@@ -322,7 +323,7 @@ async def detect_hardware(request: Request) -> JSONResponse:
         )
 
 @app.post("/finetune/set_model")
-async def set_model(request: Request) -> JSONResponse:
+async def set_model(request: Request) -> None:
     global settings_cache
     try:
         form = await request.json()
@@ -384,7 +385,6 @@ async def load_settings(json_file: UploadFile = File(...), settings: str = Form(
     settings_data["dataset"] = file_path
     settings_builder.set_settings(settings_data)
 
-
 def finetuning_task(llm_tuner) -> None:
     global settings_builder, finetuning_status, model_path, settings_cache
     try:
@@ -410,7 +410,7 @@ async def finetuning_status_page(request: Request) -> JSONResponse:
 
 @app.get("/finetune/start")
 async def start_finetuning_page(request: Request, background_task: BackgroundTasks) -> JSONResponse:
-    global settings_builder, settings_cache, finetuning_status
+    global settings_builder, settings_cache, finetuning_status, task
 
     print(settings_builder.get_settings())
 
@@ -429,11 +429,13 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
     finetuning_status["message"] = "Starting finetuning process..."
     llm_tuner = None
     if settings_builder.task == "text-generation":
+        task = "causal-lm"
         llm_tuner = CausalLLMFinetuner(
             model_name=settings_builder.model_name,
             compute_specs=settings_builder.compute_profile
         )
     elif settings_builder.task == "summarization":
+        task = "seq2seq-lm"
         llm_tuner = Seq2SeqFinetuner(
             model_name=settings_builder.model_name,
             compute_specs=settings_builder.compute_profile
@@ -457,13 +459,18 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
 
 @app.post("/playground/new")
 async def new_playground(request: Request) -> None:
-    form = await request.json();
+    global task
+    form = await request.json()
+    print(form)
     model_path = form["model_path"]
 
     base_path = os.path.join(os.path.dirname(__file__), "utilities")
-
-    chat_script = os.path.join(base_path, "chat_llm.py")
+    if task == 'causal-lm':
+        chat_script = os.path.join(base_path, "chat_llm.py")
+    else:
+        chat_script = os.path.join(base_path, "chat_seq2seq.py")
     command = f"start cmd /K python {chat_script} --model_path {model_path}"
+    print(command)
     os.system(command)
 
 @app.get("/playground/model_path")
