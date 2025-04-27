@@ -1,4 +1,9 @@
-./FastAPI_server/finetuned_models/*
-./FastAPI_server/model_checkpoints/*
-./FastAPI_server/datasets/*
+FastAPI_server/finetuned_models/*
+FastAPI_server/model_checkpoints/*
+FastAPI_server/datasets/*
+FastAPI_server/training_logs/
 */__pycache__/*
+FastAPI_server/__pycache__/
+FastAPI_server/utilities/__pycache__/*
+FastAPI_server/utilities/tests/
+*.pyc

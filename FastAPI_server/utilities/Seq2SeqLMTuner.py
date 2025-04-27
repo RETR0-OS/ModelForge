@@ -85,7 +85,6 @@ class Seq2SeqFinetuner(Finetuner):
                     use_cache=False,
                 )
             tokenizer = AutoTokenizer.from_pretrained(self.model_name)
-            # print(tokenizer.chat_template)
             tokenizer.pad_token = tokenizer.eos_token
             tokenizer.padding_side = "right"
             tokenizer.max_seq_length = tokenizer.model_max_length
