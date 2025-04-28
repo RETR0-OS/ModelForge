@@ -1,6 +1,6 @@
 import torch
 from transformers import AutoTokenizer, TextStreamer, pipeline
-from peft import PeftConfig, AutoPeftModelForCausalLM
+from peft import PeftConfig, AutoPeftModelForSeq2SeqLM
 import argparse
 
 
@@ -17,9 +17,9 @@ class PlaygroundModel:
             tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path, trust_remote_code=True)
             streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
             tokenizer.pad_token = tokenizer.eos_token
-            peft_model = AutoPeftModelForCausalLM.from_pretrained(model_path, config=config, is_trainable=False)
+            peft_model = AutoPeftModelForSeq2SeqLM.from_pretrained(model_path, config=config, is_trainable=False)
             self.generator = pipeline(
-                "text-generation",
+                "text2text-generation",
                 streamer=streamer,
                 model = peft_model,
                 tokenizer = tokenizer
@@ -53,9 +53,9 @@ class PlaygroundModel:
                 user_input = input("You: ")
                 if user_input.lower() == "/bye":
                     break
-
+                print("Assistant:", end=" ")
                 response = self.generate_response(user_input)
-                print(f"Assistant: {response}")
+                # print(f"Assistant: {response}")
 
         except KeyboardInterrupt:
             print("\nInterrupted by user")

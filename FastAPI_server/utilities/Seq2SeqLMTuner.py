@@ -1,25 +1,50 @@
+from typing import Dict
 import torch
 from datasets import load_dataset
-from trl import SFTTrainer
-from peft import LoraConfig, get_peft_model, TaskType, PeftModel
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling
-from typing import Dict, Optional
+from trl import SFTTrainer, SFTConfig
 from .Finetuner import Finetuner
+from peft import LoraConfig, TaskType, get_peft_model
+from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, BitsAndBytesConfig
 
 
-class CausalLLMFinetuner(Finetuner):
+class Seq2SeqFinetuner(Finetuner):
+
     def __init__(self, model_name: str, compute_specs="low_end") -> None:
         super().__init__(model_name, compute_specs)
-        self.task = TaskType.CAUSAL_LM
+        self.task = TaskType.SEQ_2_SEQ_LM
 
     @staticmethod
-    def format_example(example: dict, specs: str) -> Dict[str, Optional[str]]:
-        pass
+    def format_example(example: dict, specs: str) -> Dict | None:
+        # Concatenate the context, question, and answer into a single text field.
+        if specs == "low_end":
+            return {
+                "text": f'''
+                    ["role": "system", "content": "You are a text summarization assistant."],
+                    [role": "user", "content": {example['article']}],
+                    ["role": "assistant", "content": {example['summary']}]
+                '''
+            }
+        elif specs == "mid_range":
+            return {
+                "text": f'''
+                            ["role": "system", "content": "You are a text summarization assistant."],
+                            [role": "user", "content": {example['article']}],
+                            ["role": "assistant", "content": {example['summary']}]
+                        '''
+            }
+        elif specs == "high_end":
+            return {
+                "text": f'''
+                            ["role": "system", "content": "You are a text summarization assistant."],
+                            [role": "user", "content": {example['article']}],
+                            ["role": "assistant", "content": {example['summary']}]
+                        '''
+            }
 
-    def load_dataset(self, dataset_path:str) -> None:
+    def load_dataset(self, dataset_path: str) -> None:
         dataset = load_dataset("json", data_files=dataset_path, split="train")
-        dataset = dataset.rename_column("input", "prompt")
-        dataset = dataset.rename_column("output", "completion")
+        dataset = dataset.map(lambda example: self.format_example(example, self.compute_specs))
+        dataset = dataset.remove_columns(['article', 'summary'])
         print(dataset[0])
         self.dataset = dataset
 
@@ -30,52 +55,50 @@ class CausalLLMFinetuner(Finetuner):
         """
         super().set_settings(**kwargs)
 
+
     def finetune(self) -> bool:
-        print("Starting Causal LM fine-tuning process...")
+        print("Starting Seq2Seq fine-tuning process...")
         try:
-            compute_dtype = getattr(torch, self.bnb_4bit_compute_dtype)
             bits_n_bytes_config = None
             if self.use_4bit:
                 bits_n_bytes_config = BitsAndBytesConfig(
                     load_in_4bit=self.use_4bit,
                     bnb_4bit_quant_type=self.bnb_4bit_quant_type,
-                    bnb_4bit_compute_dtype=compute_dtype,
+                    bnb_4bit_compute_dtype=torch.float16,
                     bnb_4bit_use_double_quant=self.use_nested_quant,
                 )
             elif self.use_8bit:
                 bits_n_bytes_config = BitsAndBytesConfig(
                     load_in_8bit=self.use_8bit,
                 )
-
             if self.use_4bit or self.use_8bit:
-                model = AutoModelForCausalLM.from_pretrained(
+                model = AutoModelForSeq2SeqLM.from_pretrained(
                     self.model_name,
                     quantization_config=bits_n_bytes_config,
                     device_map=self.device_map,
                     use_cache=False,
                 )
             else:
-                model = AutoModelForCausalLM.from_pretrained(
+                model = AutoModelForSeq2SeqLM.from_pretrained(
                     self.model_name,
                     device_map=self.device_map,
                     use_cache=False,
                 )
-
-            tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
+            tokenizer = AutoTokenizer.from_pretrained(self.model_name)
             tokenizer.pad_token = tokenizer.eos_token
             tokenizer.padding_side = "right"
+            tokenizer.max_seq_length = tokenizer.model_max_length
 
             peft_config = LoraConfig(
+                task_type=TaskType.SEQ_2_SEQ_LM,
+                inference_mode=False,
+                r=self.lora_r,
                 lora_alpha=self.lora_alpha,
                 lora_dropout=self.lora_dropout,
-                r=self.lora_r,
                 bias="none",
-                task_type=self.task,
             )
 
-            print("Setting training args")
-
-            training_arguments = TrainingArguments(
+            training_args = SFTConfig(
                 output_dir=self.output_dir,
                 num_train_epochs=self.num_train_epochs,
                 per_device_train_batch_size=self.per_device_train_batch_size,
@@ -94,17 +117,15 @@ class CausalLLMFinetuner(Finetuner):
                 lr_scheduler_type=self.lr_scheduler_type,
                 report_to="tensorboard",
                 logging_dir=self.logging_dir,
+                max_length=None
             )
 
             model = get_peft_model(model, peft_config)
 
-            print("building trainer")
-
             trainer = SFTTrainer(
                 model=model,
+                args=training_args,
                 train_dataset=self.dataset,
-                args=training_arguments,
-                peft_config=peft_config,
             )
 
             trainer.train()
@@ -114,6 +135,13 @@ class CausalLLMFinetuner(Finetuner):
 
             return True
         except Exception as e:
-            print(f"An error occurred during training: {e}")
-            super().report_finish(error=True, message=e)
+            print(f"Error during fine-tuning: {e}")
             return False
+
+
+        
+## Unit Test
+if __name__ == "__main__":
+    finetuner = Seq2SeqFinetuner("google/flan-t5-base", "low_end")
+    finetuner.load_dataset("C:/Users/aadit/Projects/ModelForge/ModelForge/FastAPI_server/test_datasets/low_summarization_train_set.jsonl")
+    print(finetuner.dataset)
