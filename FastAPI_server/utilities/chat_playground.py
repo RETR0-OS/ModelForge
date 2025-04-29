@@ -43,21 +43,20 @@ class PlaygroundModel:
             tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path, trust_remote_code=True)
             streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
             tokenizer.pad_token = tokenizer.eos_token
-            try:
-                module = getattr(peft, self.modelforge_config["model_class"])
-                peft_model = module.from_pretrained(model_path, config=config, is_trainable=False)
-                self.generator = pipeline(
-                    self.modelforge_config["pipeline_task"],
-                    streamer=streamer,
-                    model=peft_model,
-                    tokenizer=tokenizer
-                )
-            except AttributeError:
-                print(f"Model class {self.modelforge_config['model_class']} not found in peft module.")
-                exit(1)
-            except KeyError:
-                print(f"Pipeline task {self.modelforge_config['pipeline_task']} not found in definitions for the pipeline object of transformers.")
-                exit(1)
+            module = getattr(peft, self.modelforge_config["model_class"])
+            peft_model = module.from_pretrained(model_path, config=config, is_trainable=False)
+            self.generator = pipeline(
+                self.modelforge_config["pipeline_task"],
+                streamer=streamer,
+                model=peft_model,
+                tokenizer=tokenizer
+            )
+        except AttributeError:
+            print(f"Model class {self.modelforge_config['model_class']} not found in peft module.")
+            exit(1)
+        except KeyError:
+            print(f"Pipeline task {self.modelforge_config['pipeline_task']} not found in definitions for the pipeline object of transformers.")
+            exit(1)
         except Exception as e:
             print(traceback.format_exc())
             exit(1)
