@@ -1,21 +1,23 @@
+import os
 from abc import ABC, abstractmethod
 import webbrowser
 import tensorboard
 from typing import Dict, List, Optional, Union
+import json
 
 class Finetuner(ABC):
     """
     Abstract base class for finetuning models.
     """
-    def __init__(self, model_name: str, compute_specs: str) -> None:
+    def __init__(self, model_name: str, compute_specs: str, pipeline_task) -> None:
         """
         Initialize the Finetuner with model name and logging directory.
 
-        Args:
-            model_name (str): The name of the model to be finetuned.
-            logging_dir (str): Directory for logging.
-            **kwargs: Additional arguments for configuration.
+        :param model_name: The name of the model to be finetuned.
+        :param compute_specs: Directory for logging.
         """
+
+        self.pipeline_task = pipeline_task
         self.compute_specs = compute_specs
 
         # BitsAndBytesConfig settings
@@ -73,30 +75,28 @@ class Finetuner(ABC):
     def format_example(example: dict, specs: str) -> Dict:
         """
         Format the example for training with the chat templates of the expected models.
-
-        Args:
-            example: The example to be formatted.
-            specs: The computational environment specs (low_end, mid_range, or high_end).
-
-        Returns:
-            A dictionary of the formatted example with the correct keys.
+        :param example: The example to be formatted.
+        :param specs: The computational environment specs (low_end, mid_range, or high_end).
+        :return: A dictionary of the formatted example with the correct keys.
         """
         pass
 
     @abstractmethod
-    def load_dataset(self, dataset_path:str) -> None:
+    def load_dataset(self, dataset_path: str) -> None:
         """
         Load the dataset from the specified path.
-
-        Args:
-            dataset_path (str): Path to the dataset file.
-
-        Returns:
-            None
+        :param dataset_path: Path to the dataset file.
+        :return: None
         """
         pass
 
-    def set_settings(self, **kwargs):
+    def set_settings(self, **kwargs) -> None:
+        """
+        Set the settings for the finetuner based on the provided keyword arguments.
+        :param kwargs: The keyword arguments to set the settings.
+        :return: None
+        """
+
         # Basic settings
         self.fine_tuned_name = f"./finetuned_models/{self.model_name.replace('/', "-")}"
         self.output_dir = "./model_checkpoints/" + self.model_name.replace('/', "-") if self.model_name else "./model_checkpoints"
@@ -151,18 +151,41 @@ class Finetuner(ABC):
         self.device_map = kwargs.get('device_map')
 
     @abstractmethod
-    def finetune(self) -> bool:
+    def finetune(self) -> bool | str:
         """
         Finetune the model with the provided data.
-
-        Returns:
-            True if model is successfully fine-tuned, False otherwise.
+        :return: True if model is successfully fine-tuned, False otherwise.
         """
         pass
+
+    @staticmethod
+    def build_config_file(config_dir: str, pipeline_task:str, model_class: str) -> bool:
+        """
+        Builds the chat playground configuration file for the fine-tuned model.
+        :param config_dir: Path to the model adapter settings directory. This is where the configurations file will also be saved.
+        :param pipeline_task: The pipeline task flag for the model, as defined by huggingface. eg "text-generation".
+        :param model_class: The model class name for the model, as defined by huggingface. eg "AutoModelForCausalLM".
+        :return: True if the configuration file is successfully created, False otherwise.
+        """
+        print(config_dir)
+        try:
+            with open(config_dir + "/modelforge_config.json", "w") as f:
+                configs = {
+                    "model_class": model_class,
+                    "pipeline_task": pipeline_task,
+                }
+                configs = json.dumps(configs, indent=4)
+                f.write(configs)
+            print(f"Configuration file saved to {config_dir}/modelforge_config.json")
+            return True
+        except Exception as e:
+            print(f"Error saving configuration file: {e}")
+            return False
 
     def initiate_tensorboard(self) -> None:
         """
         Initialize TensorBoard for logging.
+        :return: None
         """
         try:
             tb = tensorboard.program.TensorBoard()
@@ -173,6 +196,12 @@ class Finetuner(ABC):
             print("Error starting TensorBoard:", e)
 
     def report_finish(self, message=None, error=False) -> None:
+        """
+        Report the finish of the fine-tuning process.
+        :param message: Error message if finetuning fails.
+        :param error: True if an error occurred, False otherwise.
+        :return: None
+        """
         print("*" * 100)
         if not error:
             print("Model fine-tuned successfully!")

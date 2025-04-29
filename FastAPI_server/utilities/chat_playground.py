@@ -1,8 +1,30 @@
 import torch
 from transformers import AutoTokenizer, TextStreamer, pipeline
-from peft import PeftConfig, AutoPeftModelForSeq2SeqLM
+# import importlib
+from peft import PeftConfig
 import argparse
+import os
+import json
+from pydantic import BaseModel, field_validator
+import traceback
+import peft
 
+class ModelForgeConfig(BaseModel):
+    model_class: str
+    pipeline_task: str
+
+    @field_validator("model_class")
+    def validate_model_class(cls, v):
+        if v is None:
+            raise ValueError("model_class must be defined")
+        if not isinstance(v, str):
+            raise ValueError("model_class must be a string")
+    @field_validator("pipeline_task")
+    def validate_pipeline_task(cls, v):
+        if v is None:
+            raise ValueError("pipeline_task must be defined")
+        if not isinstance(v, str):
+            raise ValueError("pipeline_task must be a string")
 
 class PlaygroundModel:
     def __init__(self, model_path: str):
@@ -13,20 +35,31 @@ class PlaygroundModel:
 
         print("Loading model...")
         try:
+            file_path = os.path.join(model_path, "modelforge_config.json")
+            with open(file_path, "r") as f:
+                self.modelforge_config = json.loads(f.read())
+
             config = PeftConfig.from_pretrained(model_path)
             tokenizer = AutoTokenizer.from_pretrained(config.base_model_name_or_path, trust_remote_code=True)
             streamer = TextStreamer(tokenizer, skip_prompt=True, skip_special_tokens=True)
             tokenizer.pad_token = tokenizer.eos_token
-            peft_model = AutoPeftModelForSeq2SeqLM.from_pretrained(model_path, config=config, is_trainable=False)
-            self.generator = pipeline(
-                "text2text-generation",
-                streamer=streamer,
-                model = peft_model,
-                tokenizer = tokenizer
-            )
-
+            try:
+                module = getattr(peft, self.modelforge_config["model_class"])
+                peft_model = module.from_pretrained(model_path, config=config, is_trainable=False)
+                self.generator = pipeline(
+                    self.modelforge_config["pipeline_task"],
+                    streamer=streamer,
+                    model=peft_model,
+                    tokenizer=tokenizer
+                )
+            except AttributeError:
+                print(f"Model class {self.modelforge_config['model_class']} not found in peft module.")
+                exit(1)
+            except KeyError:
+                print(f"Pipeline task {self.modelforge_config['pipeline_task']} not found in definitions for the pipeline object of transformers.")
+                exit(1)
         except Exception as e:
-            print(f"Error loading model: {e}")
+            print(traceback.format_exc())
             exit(1)
 
     def generate_response(self, prompt: str, temperature=0.2, top_p=0.92, top_k=50, repetition_penalty=1.3):
@@ -39,6 +72,7 @@ class PlaygroundModel:
                 top_p=top_p,
                 top_k=top_k,
                 repetition_penalty=repetition_penalty,
+                num_beams=1,
             )[0]['generated_text']
             return response
 
@@ -53,9 +87,9 @@ class PlaygroundModel:
                 user_input = input("You: ")
                 if user_input.lower() == "/bye":
                     break
-                print("Assistant:", end=" ")
+
                 response = self.generate_response(user_input)
-                # print(f"Assistant: {response}")
+                print(f"Assistant: {response}")
 
         except KeyboardInterrupt:
             print("\nInterrupted by user")
