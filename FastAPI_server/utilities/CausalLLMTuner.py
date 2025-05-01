@@ -1,8 +1,8 @@
 import torch
 from datasets import load_dataset
-from trl import SFTTrainer
+from trl import SFTTrainer, SFTConfig
 from peft import LoraConfig, get_peft_model, TaskType, PeftModel
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from typing import Dict, Optional
 from .Finetuner import Finetuner
 import os
@@ -76,7 +76,7 @@ class CausalLLMFinetuner(Finetuner):
 
             print("Setting training args")
 
-            training_arguments = TrainingArguments(
+            training_arguments = SFTConfig(
                 output_dir=self.output_dir,
                 num_train_epochs=self.num_train_epochs,
                 per_device_train_batch_size=self.per_device_train_batch_size,
@@ -95,6 +95,7 @@ class CausalLLMFinetuner(Finetuner):
                 lr_scheduler_type=self.lr_scheduler_type,
                 report_to="tensorboard",
                 logging_dir=self.logging_dir,
+                max_length=None,
             )
 
             model = get_peft_model(model, peft_config)

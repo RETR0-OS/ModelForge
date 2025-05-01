@@ -1,6 +1,5 @@
 import torch
 from transformers import AutoTokenizer, TextStreamer, pipeline
-# import importlib
 from peft import PeftConfig
 import argparse
 import os
@@ -53,13 +52,15 @@ class PlaygroundModel:
             )
         except AttributeError:
             print(f"Model class {self.modelforge_config['model_class']} not found in peft module.")
-            exit(1)
+            # exit(1)
         except KeyError:
             print(f"Pipeline task {self.modelforge_config['pipeline_task']} not found in definitions for the pipeline object of transformers.")
-            exit(1)
+#             exit(1)
         except Exception as e:
             print(traceback.format_exc())
-            exit(1)
+#             exit(1)
+        finally:
+            self.clean_up()
 
     def generate_response(self, prompt: str, temperature=0.2, top_p=0.92, top_k=50, repetition_penalty=1.3):
         try:
@@ -78,15 +79,21 @@ class PlaygroundModel:
         except KeyboardInterrupt:
             self.clean_up()
 
-
     def chat(self):
         print("Chat started. Type '/bye' to exit")
         try:
             while True:
-                user_input = input("You: ")
+                user_input = input("You: ").strip()
                 if user_input.lower() == "/bye":
                     break
-
+                if user_input.lower() == "/view_settings":
+                    print(f"ModelForge settings:\n{self.modelforge_config}")
+                    print()
+                    print(f"Model configurations:\n{self.generator.model.config}")
+                    print()
+                    print(f"Model tokenizer configurations:\n{self.generator.tokenizer}")
+                    print()
+                    continue
                 response = self.generate_response(user_input)
                 print(f"Assistant: {response}")
 
