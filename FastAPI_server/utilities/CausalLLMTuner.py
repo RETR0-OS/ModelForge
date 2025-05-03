@@ -1,15 +1,16 @@
 import torch
 from datasets import load_dataset
-from trl import SFTTrainer
+from trl import SFTTrainer, SFTConfig
 from peft import LoraConfig, get_peft_model, TaskType, PeftModel
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from typing import Dict, Optional
 from .Finetuner import Finetuner
+import os
 
 
 class CausalLLMFinetuner(Finetuner):
-    def __init__(self, model_name: str, compute_specs="low_end") -> None:
-        super().__init__(model_name, compute_specs)
+    def __init__(self, model_name: str, compute_specs="low_end", pipeline_task="text-generation") -> None:
+        super().__init__(model_name, compute_specs, pipeline_task)
         self.task = TaskType.CAUSAL_LM
 
     @staticmethod
@@ -30,7 +31,7 @@ class CausalLLMFinetuner(Finetuner):
         """
         super().set_settings(**kwargs)
 
-    def finetune(self) -> bool:
+    def finetune(self) -> bool | str:
         print("Starting Causal LM fine-tuning process...")
         try:
             compute_dtype = getattr(torch, self.bnb_4bit_compute_dtype)
@@ -75,7 +76,7 @@ class CausalLLMFinetuner(Finetuner):
 
             print("Setting training args")
 
-            training_arguments = TrainingArguments(
+            training_arguments = SFTConfig(
                 output_dir=self.output_dir,
                 num_train_epochs=self.num_train_epochs,
                 per_device_train_batch_size=self.per_device_train_batch_size,
@@ -94,6 +95,7 @@ class CausalLLMFinetuner(Finetuner):
                 lr_scheduler_type=self.lr_scheduler_type,
                 report_to="tensorboard",
                 logging_dir=self.logging_dir,
+                max_length=None,
             )
 
             model = get_peft_model(model, peft_config)
@@ -106,13 +108,16 @@ class CausalLLMFinetuner(Finetuner):
                 args=training_arguments,
                 peft_config=peft_config,
             )
-
             trainer.train()
             trainer.model.save_pretrained(self.fine_tuned_name)
-            print(f"Model saved to: {self.fine_tuned_name}")
+            modelforge_config_file = os.path.abspath(self.fine_tuned_name)
+            config_file_result = self.build_config_file(modelforge_config_file, self.pipeline_task,
+                                                        "AutoPeftModelForCausalLM")
+            if not config_file_result:
+                raise Warning("Error building config file.\nRetry finetuning. This might cause problems in the model playground.")
             super().report_finish()
-
-            return True
+            # print("Returning", (self.fine_tuned_name.replace("/", "-")).replace("/", "\\"))
+            return "finetuned_models/" + self.model_name.replace("/", "-")
         except Exception as e:
             print(f"An error occurred during training: {e}")
             super().report_finish(error=True, message=e)

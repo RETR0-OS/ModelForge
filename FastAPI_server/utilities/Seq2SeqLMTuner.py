@@ -5,12 +5,11 @@ from trl import SFTTrainer, SFTConfig
 from .Finetuner import Finetuner
 from peft import LoraConfig, TaskType, get_peft_model
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, BitsAndBytesConfig
-
+import os
 
 class Seq2SeqFinetuner(Finetuner):
-
-    def __init__(self, model_name: str, compute_specs="low_end") -> None:
-        super().__init__(model_name, compute_specs)
+    def __init__(self, model_name: str, compute_specs="low_end", pipeline_task="summarization") -> None:
+        super().__init__(model_name, compute_specs, pipeline_task)
         self.task = TaskType.SEQ_2_SEQ_LM
 
     @staticmethod
@@ -56,7 +55,7 @@ class Seq2SeqFinetuner(Finetuner):
         super().set_settings(**kwargs)
 
 
-    def finetune(self) -> bool:
+    def finetune(self) -> bool | str:
         print("Starting Seq2Seq fine-tuning process...")
         try:
             bits_n_bytes_config = None
@@ -131,17 +130,16 @@ class Seq2SeqFinetuner(Finetuner):
             trainer.train()
             trainer.model.save_pretrained(self.fine_tuned_name)
             print(f"Model saved to: {self.fine_tuned_name}")
+            modelforge_config_file = os.path.abspath(self.fine_tuned_name)
+            config_file_result = self.build_config_file(modelforge_config_file, self.pipeline_task,
+                                                        "AutoPeftModelForSeq2SeqLM")
+            if not config_file_result:
+                raise Warning(
+                    "Error building config file.\nRetry finetuning. This might cause problems in the model playground.")
+
             super().report_finish()
 
-            return True
+            return self.fine_tuned_name
         except Exception as e:
             print(f"Error during fine-tuning: {e}")
             return False
-
-
-        
-## Unit Test
-if __name__ == "__main__":
-    finetuner = Seq2SeqFinetuner("google/flan-t5-base", "low_end")
-    finetuner.load_dataset("C:/Users/aadit/Projects/ModelForge/ModelForge/FastAPI_server/test_datasets/low_summarization_train_set.jsonl")
-    print(finetuner.dataset)

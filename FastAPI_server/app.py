@@ -20,7 +20,6 @@ app_name = "ModelForge"
 finetuning_status = {"status": "idle", "progress": 0, "message": ""}
 datasets_dir = "./datasets"
 model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
-task = None
 
 origins = [
     "http://localhost:3000",
@@ -389,13 +388,13 @@ def finetuning_task(llm_tuner) -> None:
     global settings_builder, finetuning_status, model_path, settings_cache
     try:
         llm_tuner.load_dataset(settings_builder.dataset)
-        llm_tuner.finetune()
+        path = llm_tuner.finetune()
+        model_path = os.path.join(os.path.dirname(__file__), path.replace("./", ""))
     finally:
         settings_cache.clear()
         finetuning_status["status"] = "idle"
         finetuning_status["message"] = ""
         finetuning_status["progress"] = 0
-        model_path = os.path.join(os.path.dirname(__file__), "finetuned_models")
         settings_builder = SettingsBuilder(None, None, None)
         del llm_tuner
 
@@ -410,7 +409,7 @@ async def finetuning_status_page(request: Request) -> JSONResponse:
 
 @app.get("/finetune/start")
 async def start_finetuning_page(request: Request, background_task: BackgroundTasks) -> JSONResponse:
-    global settings_builder, settings_cache, finetuning_status, task
+    global settings_builder, settings_cache, finetuning_status
 
     print(settings_builder.get_settings())
 
@@ -427,18 +426,17 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
         )
     finetuning_status["status"] = "initializing"
     finetuning_status["message"] = "Starting finetuning process..."
-    llm_tuner = None
     if settings_builder.task == "text-generation":
-        task = "causal-lm"
         llm_tuner = CausalLLMFinetuner(
             model_name=settings_builder.model_name,
-            compute_specs=settings_builder.compute_profile
+            compute_specs=settings_builder.compute_profile,
+            pipeline_task="text-generation"
         )
     elif settings_builder.task == "summarization":
-        task = "seq2seq-lm"
         llm_tuner = Seq2SeqFinetuner(
             model_name=settings_builder.model_name,
-            compute_specs=settings_builder.compute_profile
+            compute_specs=settings_builder.compute_profile,
+            pipeline_task="summarization"
         )
     else:
         llm_tuner = LLMFinetuner(
@@ -459,16 +457,17 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
 
 @app.post("/playground/new")
 async def new_playground(request: Request) -> None:
-    global task
+    global model_path
     form = await request.json()
     print(form)
     model_path = form["model_path"]
 
     base_path = os.path.join(os.path.dirname(__file__), "utilities")
-    if task == 'causal-lm':
-        chat_script = os.path.join(base_path, "chat_llm.py")
-    else:
-        chat_script = os.path.join(base_path, "chat_seq2seq.py")
+    # if task == 'causal-lm':
+    #     chat_script = os.path.join(base_path, "chat_llm.py")
+    # else:
+    #     chat_script = os.path.join(base_path, "chat_seq2seq.py")
+    chat_script = os.path.join(base_path, "chat_playground.py")
     command = f"start cmd /K python {chat_script} --model_path {model_path}"
     print(command)
     os.system(command)
@@ -476,7 +475,7 @@ async def new_playground(request: Request) -> None:
 @app.get("/playground/model_path")
 async def get_model_path(request: Request) -> JSONResponse:
     global model_path
-    model_path = os.path.join(model_path, os.listdir(model_path)[0])
+    # model_path = os.path.join(model_path, os.listdir(model_path)[0])
     return JSONResponse({
         "model_path": model_path
     })
