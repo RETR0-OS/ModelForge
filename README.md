@@ -11,6 +11,11 @@
 - **Hardware-Aware**: Auto-detects your GPU/CPU and recommends models.  
 - **React UI**: No CLI or notebooks—just a friendly interface.  
 
+## 📖 Supported Tasks
+- **Text-Generation**: Generates answers in the form of text based on prior and fine-tuned knowledge. Ideal for use cases like customer support chatbots, story generators, social media script writers, code generators, and general-purpose chatbots.
+- **Summarization**: Generates summaries for long articles and texts. Ideal for use cases like news article summarization, law document summarization, and medical article summarization.
+- **Extractive Question Answering**: Finds the answers relevant to a query from a given context. Best for use cases like Retrieval Augmented Generation (RAG), and enterprise document search (for example, searching for information in internal documentation).
+
 ## ⚡ **Quick Start**  
 1. **Install** (Python 3.10+):  
    ```bash
@@ -49,5 +54,3 @@ A: GPU required for now—stay tuned for CPU support!
 A: Reduce epochs/batch size in training configuraiton step.  
 
 ---
-
-*Built in 48 hours at DevhacksXStrategy.* 🚀  
