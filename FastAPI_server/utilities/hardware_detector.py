@@ -9,29 +9,35 @@ class HardwareDetector:
         self.model_profiles = {
           "low_end": {
             "text-generation": "meta-llama/Llama-3.2-1B",
-            "summarization": "google-t5/t5-large",
-            "question-answering": "google-t5/t5-large",
+            "summarization": "google-t5/t5-small",
+            "question-answering": "google-t5/t5-small",
+            "extractive-question-answering": "google-t5/t5-small",
             "possible_options": {"text-generation": ["meta-llama/Llama-3.2-1B"],
-                                 "summarization": ["google-t5/t5-large"],
-                                 "question-answering": ["google-t5/t5-large"]
+                                 "summarization": ["google-t5/t5-small"],
+                                 "question-answering": ["google-t5/t5-small"],
+                                 "extractive-question-answering": ["google-t5/t5-small"]
                                  }
           },
           "mid_range": {
             "text-generation": "mistralai/Mistral-7B-Instruct-v0.3",
             "summarization": "facebook/bart-base",
             "question-answering": "facebook/bart-base",
+            "extractive-question-answering": "facebook/bart-base",
             "possible_options": {"text-generation": ["mistralai/Mistral-7B-Instruct-v0.3", "meta-llama/Llama-3.2-1B"],
-                                 "summarization": ["facebook/bart-base", "google-t5/t5-large"],
-                                 "question-answering": ["facebook/bart-base", "google-t5/t5-large"]
+                                 "summarization": ["facebook/bart-base", "google-t5/t5-small"],
+                                 "question-answering": ["facebook/bart-base", "google-t5/t5-small"],
+                                 "extractive-question-answering": ["facebook/bart-base", "google-t5/t5-small"]
                                  }
           },
           "high_end": {
             "text-generation": "bigscience/bloom-7b1",
             "summarization": "IlyaGusev/mbart_ru_sum_gazeta",
             "question-answering": "IlyaGusev/mbart_ru_sum_gazeta",
+            "extractive-question-answering": "IlyaGusev/mbart_ru_sum_gazeta",
             "possible_options": {"text-generation": ["bigscience/bloom-7b1", "mistralai/Mistral-7B-Instruct-v0.3", "meta-llama/Llama-3.2-1B"],
-                                 "summarization": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "google-t5/t5-large"],
-                                 "question-answering": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "google-t5/t5-large"]
+                                 "summarization": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "google-t5/t5-small"],
+                                 "question-answering": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "google-t5/t5-small"],
+                                 "extractive-question-answering": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "google-t5/t5-small"]
                                  }
           }
         }

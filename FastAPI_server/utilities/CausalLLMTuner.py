@@ -116,7 +116,6 @@ class CausalLLMFinetuner(Finetuner):
             if not config_file_result:
                 raise Warning("Error building config file.\nRetry finetuning. This might cause problems in the model playground.")
             super().report_finish()
-            # print("Returning", (self.fine_tuned_name.replace("/", "-")).replace("/", "\\"))
             return "finetuned_models/" + self.model_name.replace("/", "-")
         except Exception as e:
             print(f"An error occurred during training: {e}")

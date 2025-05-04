@@ -109,6 +109,7 @@ class PlaygroundModel:
             del self.tokenizer
         torch.cuda.empty_cache()
         print("Resources cleaned")
+        exit(1)
 
 
 if __name__ == "__main__":

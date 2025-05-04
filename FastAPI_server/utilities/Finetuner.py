@@ -72,7 +72,7 @@ class Finetuner(ABC):
 
     @staticmethod
     @abstractmethod
-    def format_example(example: dict, specs: str) -> Dict:
+    def format_example(example: dict, specs: str, **kwargs) -> Dict:
         """
         Format the example for training with the chat templates of the expected models.
         :param example: The example to be formatted.
