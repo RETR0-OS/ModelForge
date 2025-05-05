@@ -23,7 +23,7 @@
    ```  
 2. **Run**:  
    ```bash
-   python app.py  # Launches FastAPI server at localhost:8000
+   uvicorn app:app --reload  # Launches FastAPI server at localhost:8000
    ```
    ```bash
    npm start # Launches the React app at localhost:3000
