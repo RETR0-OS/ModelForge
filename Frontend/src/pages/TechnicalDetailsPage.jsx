@@ -354,8 +354,8 @@ const TechnicalDetailsPage = () => {
                   <h4 className="text-xl font-medium text-white mb-4">Summarization</h4>
                   <pre className="text-gray-300 font-mono text-sm mb-8">
 {`{
-  "input": "Scientists have discovered a new species of deep-sea creature living near hydrothermal vents...",
-  "output": "Scientists found a new creature living near underwater hot springs in the deep ocean..."
+  "article": "Scientists have discovered a new species of deep-sea creature living near hydrothermal vents...",
+  "summary": "Scientists found a new creature living near underwater hot springs in the deep ocean..."
 }`}
                   </pre>
                   
@@ -363,8 +363,8 @@ const TechnicalDetailsPage = () => {
                   <pre className="text-gray-300 font-mono text-sm mb-8">
 {`{
   "context": "The Great Barrier Reef is the world's largest coral reef system. It is located off the coast of Queensland, Australia...",
-  "input": "Where is the Great Barrier Reef located?",
-  "output": "The Great Barrier Reef is located off the coast of Queensland, Australia."
+  "question": "Where is the Great Barrier Reef located?",
+  "answers": {"text":"off the coast of Queensland, Australia", "answer_start": [60]}
 }`}
                   </pre>
 
