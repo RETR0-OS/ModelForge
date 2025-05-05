@@ -8,9 +8,10 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, field_validator
 from utilities.hardware_detector import HardwareDetector
 from utilities.settings_builder import SettingsBuilder
-from utilities.LLMFinetuner import LLMFinetuner
 from utilities.CausalLLMTuner import CausalLLMFinetuner
 from utilities.Seq2SeqLMTuner import Seq2SeqFinetuner
+import traceback
+from utilities.QuestionAnsweringTuner import QuestionAnsweringTuner
 
 app = FastAPI()
 hardware_detector = HardwareDetector()
@@ -37,8 +38,8 @@ class TaskFormData(BaseModel):
     task: str
     @field_validator("task")
     def validate_task(cls, task):
-        if task not in ["text-generation", "summarization", "question-answering"]:
-            raise ValueError("Invalid task. Must be one of 'text-generation', 'summarization', or 'question-answering'.")
+        if task not in ["text-generation", "summarization", "extractive-question-answering"]:
+            raise ValueError("Invalid task. Must be one of 'text-generation', 'summarization', or 'extractive-question-answering'.")
         return task
 
 class SelectedModelFormData(BaseModel):
@@ -242,8 +243,6 @@ class SettingsFormData(BaseModel):
             raise ValueError("Dataset cannot be empty.")
         return dataset
 
-
-
 @app.get("/")
 async def home(request: Request) -> JSONResponse:
     return JSONResponse({
@@ -315,7 +314,8 @@ async def detect_hardware(request: Request) -> JSONResponse:
             detail="Invalid task. Must be one of 'text-generation', 'summarization', or 'question-answering'."
         )
     except Exception as e:
-        print(e)
+        print("General exception triggered")
+        print(traceback.format_exc())
         raise HTTPException(
             status_code=500,
             detail="Error detecting hardware. Please try again later."
@@ -438,11 +438,16 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
             compute_specs=settings_builder.compute_profile,
             pipeline_task="summarization"
         )
-    else:
-        llm_tuner = LLMFinetuner(
-            task=settings_builder.task,
+    elif settings_builder.task == "extractive-question-answering":
+        llm_tuner = QuestionAnsweringTuner(
             model_name=settings_builder.model_name,
-            compute_specs=settings_builder.compute_profile
+            compute_specs=settings_builder.compute_profile,
+            pipeline_task="question-answering"
+        )
+    else:
+        raise HTTPException(
+            status_code=400,
+            detail="Invalid task. Must be one of 'text-generation', 'summarization', or 'question-answering'."
         )
 
     llm_tuner.set_settings(**settings_builder.get_settings())

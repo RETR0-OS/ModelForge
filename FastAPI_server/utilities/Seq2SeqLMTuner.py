@@ -13,37 +13,41 @@ class Seq2SeqFinetuner(Finetuner):
         self.task = TaskType.SEQ_2_SEQ_LM
 
     @staticmethod
-    def format_example(example: dict, specs: str) -> Dict | None:
+    def format_example(example: dict, specs: str, keys=None) -> Dict | None:
         # Concatenate the context, question, and answer into a single text field.
+        if keys is None:
+            keys = ["article", "summary"]
+            
         if specs == "low_end":
             return {
                 "text": f'''
                     ["role": "system", "content": "You are a text summarization assistant."],
-                    [role": "user", "content": {example['article']}],
-                    ["role": "assistant", "content": {example['summary']}]
+                    [role": "user", "content": {example[keys[0]]}],
+                    ["role": "assistant", "content": {example[keys[1]]}]
                 '''
             }
         elif specs == "mid_range":
             return {
                 "text": f'''
                             ["role": "system", "content": "You are a text summarization assistant."],
-                            [role": "user", "content": {example['article']}],
-                            ["role": "assistant", "content": {example['summary']}]
+                            [role": "user", "content": {example[keys[0]]}],
+                            ["role": "assistant", "content": {example[keys[1]]}]
                         '''
             }
         elif specs == "high_end":
             return {
                 "text": f'''
                             ["role": "system", "content": "You are a text summarization assistant."],
-                            [role": "user", "content": {example['article']}],
-                            ["role": "assistant", "content": {example['summary']}]
+                            [role": "user", "content": {example[keys[0]]}],
+                            ["role": "assistant", "content": {example[keys[1]]}]
                         '''
             }
 
     def load_dataset(self, dataset_path: str) -> None:
         dataset = load_dataset("json", data_files=dataset_path, split="train")
-        dataset = dataset.map(lambda example: self.format_example(example, self.compute_specs))
-        dataset = dataset.remove_columns(['article', 'summary'])
+        keys = dataset.column_names
+        dataset = dataset.map(lambda example: self.format_example(example, self.compute_specs, keys))
+        dataset = dataset.remove_columns(keys)
         print(dataset[0])
         self.dataset = dataset
 
@@ -83,6 +87,7 @@ class Seq2SeqFinetuner(Finetuner):
                     device_map=self.device_map,
                     use_cache=False,
                 )
+            print(model.dtype)
             tokenizer = AutoTokenizer.from_pretrained(self.model_name)
             tokenizer.pad_token = tokenizer.eos_token
             tokenizer.padding_side = "right"

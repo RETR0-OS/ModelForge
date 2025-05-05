@@ -23,18 +23,18 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
     {
       id: 'text-generation',
       title: 'Text Generation',
-      description: 'Create models for generating coherent and contextually relevant text'
+      description: 'Create models for generating coherent and relevant answers to queries based on old knowledge, like Customer Support Bots'
     },
     {
       id: 'summarization',
       title: 'Summarization',
-      description: 'Train models that can condense long documents into concise summaries'
+      description: 'Train models that can condense long documents into concise summaries.'
     },
     {
-      id: 'question-answering',
-      title: 'Question Answering',
-      description: 'Build models that provide accurate answers to specific questions'
-    }
+      id: 'extractive-question-answering',
+      title: 'Extractive Question Answering',
+      description: 'Build models that extract relevant answers from large texts based on user queries, like for RAG.'
+    },
   ];
 
   const handleSubmit = async (e) => {

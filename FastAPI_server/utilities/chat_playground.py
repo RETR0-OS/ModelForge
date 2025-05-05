@@ -52,53 +52,78 @@ class PlaygroundModel:
             )
         except AttributeError:
             print(f"Model class {self.modelforge_config['model_class']} not found in peft module.")
-            # exit(1)
+            exit(1)
         except KeyError:
             print(f"Pipeline task {self.modelforge_config['pipeline_task']} not found in definitions for the pipeline object of transformers.")
-#             exit(1)
+            exit(1)
         except Exception as e:
             print(traceback.format_exc())
-#             exit(1)
-        finally:
-            self.clean_up()
+            exit(1)
 
-    def generate_response(self, prompt: str, temperature=0.2, top_p=0.92, top_k=50, repetition_penalty=1.3):
+    def generate_response(self, prompt: str, context=None, temperature=0.2, top_p=0.92, top_k=50, repetition_penalty=1.3):
         try:
-            response = self.generator(
-                prompt,
-                max_length=1000,
-                do_sample=True,
-                temperature=temperature,
-                top_p=top_p,
-                top_k=top_k,
-                repetition_penalty=repetition_penalty,
-                num_beams=1,
-            )[0]['generated_text']
+            if context is None:
+                response = self.generator(
+                    prompt,
+                    max_length=1000,
+                    do_sample=True,
+                    temperature=temperature,
+                    top_p=top_p,
+                    top_k=top_k,
+                    repetition_penalty=repetition_penalty,
+                    num_beams=1,
+                )[0]['generated_text']
+            else:
+                response = self.generator(
+                    question=prompt,
+                    context=context,
+                )["answer"]
             return response
-
         except KeyboardInterrupt:
             self.clean_up()
 
     def chat(self):
         print("Chat started. Type '/bye' to exit")
         try:
-            while True:
-                user_input = input("You: ").strip()
-                if user_input.lower() == "/bye":
-                    break
-                if user_input.lower() == "/view_settings":
-                    print(f"ModelForge settings:\n{self.modelforge_config}")
-                    print()
-                    print(f"Model configurations:\n{self.generator.model.config}")
-                    print()
-                    print(f"Model tokenizer configurations:\n{self.generator.tokenizer}")
-                    print()
-                    continue
-                response = self.generate_response(user_input)
-                print(f"Assistant: {response}")
-
+            if self.modelforge_config["pipeline_task"] == "question-answering":
+                while True:
+                    context = input("Enter Context: ").strip()
+                    query = input("Enter Query: ").strip()
+                    if query.lower() == "/bye":
+                        break
+                    elif query.lower() == "/view_settings":
+                        print(f"ModelForge settings:\n{self.modelforge_config}")
+                        print()
+                        print(f"Model configurations:\n{self.generator.model.config}")
+                        print()
+                        print(f"Model tokenizer configurations:\n{self.generator.tokenizer}")
+                        print()
+                        continue
+                    elif context == "":
+                        print("Context cannot be empty.")
+                        continue
+                    response = self.generate_response(prompt=query, context=context)
+                    print(f"Assistant: {response}")
+            else:
+                while True:
+                    user_input = input("You: ").strip()
+                    if user_input.lower() == "/bye":
+                        break
+                    if user_input.lower() == "/view_settings":
+                        print(f"ModelForge settings:\n{self.modelforge_config}")
+                        print()
+                        print(f"Model configurations:\n{self.generator.model.config}")
+                        print()
+                        print(f"Model tokenizer configurations:\n{self.generator.tokenizer}")
+                        print()
+                        continue
+                    response = self.generate_response(user_input)
+                    print(f"Assistant: {response}")
         except KeyboardInterrupt:
             print("\nInterrupted by user")
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            print(traceback.format_exc())
         finally:
             self.clean_up()
 
@@ -109,6 +134,7 @@ class PlaygroundModel:
             del self.tokenizer
         torch.cuda.empty_cache()
         print("Resources cleaned")
+        exit(1)
 
 
 if __name__ == "__main__":
