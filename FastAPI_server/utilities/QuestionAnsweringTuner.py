@@ -22,7 +22,7 @@ class QuestionAnsweringTuner(Finetuner):
         inputs = self.tokenizer(
             question,
             context,
-            max_length= 1024 if kwargs.get("context_len") is None else kwargs.get("context_len"),
+            max_length= 512 if kwargs.get("context_len") is None else kwargs.get("context_len"),
             truncation="only_second",
             return_offsets_mapping=True,
             padding="max_length",
@@ -61,8 +61,7 @@ class QuestionAnsweringTuner(Finetuner):
         return inputs
 
     def load_dataset(self, dataset_path: str) -> None:
-        # dataset = load_dataset("json", data_files=dataset_path, split="train")
-        dataset = load_dataset(dataset_path, split="train[:100]")
+        dataset = load_dataset("json", data_files=dataset_path, split="train")
         self.dataset = dataset.map(self.format_example, remove_columns=dataset.column_names, fn_kwargs={"specs":"low"})
         print(self.dataset)
 
@@ -147,7 +146,7 @@ class QuestionAnsweringTuner(Finetuner):
             trainer.model.save_pretrained(self.fine_tuned_name)
             modelforge_config_file = os.path.abspath(self.fine_tuned_name)
             config_file_result = self.build_config_file(modelforge_config_file, self.pipeline_task,
-                                                        "AutoModelForQuestionAnswering")
+                                                        "AutoPeftModelForQuestionAnswering")
             if not config_file_result:
                 raise Warning(
                     "Error building config file.\nRetry finetuning. This might cause problems in the model playground.")

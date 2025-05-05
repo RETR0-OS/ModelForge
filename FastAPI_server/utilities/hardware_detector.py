@@ -11,11 +11,10 @@ class HardwareDetector:
             "text-generation": "meta-llama/Llama-3.2-1B",
             "summarization": "google-t5/t5-small",
             "question-answering": "google-t5/t5-small",
-            "extractive-question-answering": "google-t5/t5-small",
+            "extractive-question-answering": "deepset/roberta-base-squad2",
             "possible_options": {"text-generation": ["meta-llama/Llama-3.2-1B"],
                                  "summarization": ["google-t5/t5-small"],
-                                 "question-answering": ["google-t5/t5-small"],
-                                 "extractive-question-answering": ["google-t5/t5-small"]
+                                 "extractive-question-answering": ["deepset/roberta-base-squad2"]
                                  }
           },
           "mid_range": {
@@ -25,8 +24,7 @@ class HardwareDetector:
             "extractive-question-answering": "facebook/bart-base",
             "possible_options": {"text-generation": ["mistralai/Mistral-7B-Instruct-v0.3", "meta-llama/Llama-3.2-1B"],
                                  "summarization": ["facebook/bart-base", "google-t5/t5-small"],
-                                 "question-answering": ["facebook/bart-base", "google-t5/t5-small"],
-                                 "extractive-question-answering": ["facebook/bart-base", "google-t5/t5-small"]
+                                 "extractive-question-answering": ["facebook/bart-base", "deepset/roberta-base-squad2"]
                                  }
           },
           "high_end": {
@@ -36,8 +34,7 @@ class HardwareDetector:
             "extractive-question-answering": "IlyaGusev/mbart_ru_sum_gazeta",
             "possible_options": {"text-generation": ["bigscience/bloom-7b1", "mistralai/Mistral-7B-Instruct-v0.3", "meta-llama/Llama-3.2-1B"],
                                  "summarization": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "google-t5/t5-small"],
-                                 "question-answering": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "google-t5/t5-small"],
-                                 "extractive-question-answering": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "google-t5/t5-small"]
+                                 "extractive-question-answering": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "deepset/roberta-base-squad2"]
                                  }
           }
         }

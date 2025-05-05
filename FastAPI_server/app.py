@@ -8,7 +8,6 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, field_validator
 from utilities.hardware_detector import HardwareDetector
 from utilities.settings_builder import SettingsBuilder
-from utilities.LLMFinetuner import LLMFinetuner
 from utilities.CausalLLMTuner import CausalLLMFinetuner
 from utilities.Seq2SeqLMTuner import Seq2SeqFinetuner
 import traceback
