@@ -1,3 +1,7 @@
+*{
+    overflow-x: clip;
+}
+
 .App {
   text-align: center;
 }

@@ -1,5 +1,9 @@
 /* src/styles/LandingPage.css */
 
+*{
+    overflow-x: clip;
+}
+
 /* Base animations */
 @keyframes fadeInUp {
   from {
