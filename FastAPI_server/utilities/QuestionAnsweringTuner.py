@@ -158,32 +158,3 @@ class QuestionAnsweringTuner(Finetuner):
             print(traceback.format_exc())
             super().report_finish(error=True, message=e)
             return False
-
-# ## test
-# model = QuestionAnsweringTuner("google-t5/t5-small")
-# model.load_dataset("squad")
-# print(model.dataset)
-# model.set_settings(
-#     use_4bit=True,
-#     use_8bit=False,
-#     bnb_4bit_compute_dtype="float16",
-#     lora_r=16,
-#     lora_alpha=32,
-#     lora_dropout=0.1,
-#     gradient_accumulation_steps=2,
-#     per_device_train_batch_size=8,
-#     max_grad_norm=1.0,
-#     weight_decay=0.01,
-#     learning_rate=5e-5,
-#     num_train_epochs=5,
-#     optim="paged_adamw_32bit",
-#     save_steps=2,
-#     logging_steps=2,
-#     warmup_ratio=0.1,
-#     fp16=False,
-#     bnb_4bit_quant_type="nf4",
-#     use_nested_quant=False,
-#     lr_scheduler_type="cosine",
-# )
-#
-# model.finetune()
