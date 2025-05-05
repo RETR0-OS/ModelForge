@@ -6,6 +6,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from typing import Dict, Optional
 from .Finetuner import Finetuner
 import os
+from huggingface_hub import errors as hf_errors
+import traceback
 
 
 class CausalLLMFinetuner(Finetuner):
@@ -30,6 +32,7 @@ class CausalLLMFinetuner(Finetuner):
         Groups settings by category for better organization.
         """
         super().set_settings(**kwargs)
+
 
     def finetune(self) -> bool | str:
         print("Starting Causal LM fine-tuning process...")
@@ -120,4 +123,14 @@ class CausalLLMFinetuner(Finetuner):
         except Exception as e:
             print(f"An error occurred during training: {e}")
             super().report_finish(error=True, message=e)
+            return False
+        except hf_errors.GatedRepoError as e:
+            super().invalid_access()
+            super().report_finish(error=True, message="You do not have access to this model.")
+            return False
+        except hf_errors.HfHubHTTPError as e:
+            print("An unknown huggingface error occurred.")
+            print("Error traceback:")
+            print(traceback.format_exc())
+            super().report_finish(error=True, message="Unknown HuggingFace network error")
             return False

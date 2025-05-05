@@ -150,6 +150,12 @@ class Finetuner(ABC):
         self.packing = kwargs.get('packing')
         self.device_map = kwargs.get('device_map')
 
+    def invalid_access(self):
+        print("*"*100)
+        print("You do not have access to this model.")
+        print(f"Please visit https://huggingface.co/{self.model_name} to request access.")
+        print("*" * 100)
+
     @abstractmethod
     def finetune(self) -> bool | str:
         """

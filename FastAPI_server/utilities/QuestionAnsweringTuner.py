@@ -6,6 +6,7 @@ from typing import Dict
 from .Finetuner import Finetuner
 import os
 import traceback
+import huggingface_hub.errors as hf_errors
 
 class QuestionAnsweringTuner(Finetuner):
     def __init__(self, model_name: str, compute_specs="low_end", pipeline_task="question-answering") -> None:
@@ -153,6 +154,16 @@ class QuestionAnsweringTuner(Finetuner):
             super().report_finish()
             return "finetuned_models/" + self.model_name.replace("/", "-")
 
+        except hf_errors.GatedRepoError as e:
+            super().invalid_access()
+            super().report_finish(error=True, message="You do not have access to this model.")
+            return False
+        except hf_errors.HfHubHTTPError as e:
+            print("An unknown huggingface error occurred.")
+            print("Error traceback:")
+            print(traceback.format_exc())
+            super().report_finish(error=True, message="Unknown HuggingFace network error")
+            return False
         except Exception as e:
             print(f"An error occurred during training:")
             print(traceback.format_exc())
