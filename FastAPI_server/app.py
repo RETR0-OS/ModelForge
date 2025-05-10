@@ -58,7 +58,7 @@ finetuning_status = {"status": "idle", "progress": 0, "message": ""}
 datasets_dir = "./datasets"
 model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
 origins = [
-    "http://localhost:3000",
+    "http://0.0.0.0:3000",
 ]
 app.add_middleware(
     CORSMiddleware,
