@@ -1,9 +1,15 @@
-FROM ubuntu
+FROM node:24-alpine
 
-RUN apt-get update
-RUN apt-get install -y nodejs npm
+WORKDIR /frontend
 
-COPY . /opt/ModelForge/Frontend
-RUN cd /opt/ModelForge/Frontend && npm install
+COPY package*.json .
 
-RUN npm start
+COPY tailwind.config.js .
+
+RUN npm install
+
+COPY . .
+
+EXPOSE 3000
+
+CMD ["npm", "start"]
