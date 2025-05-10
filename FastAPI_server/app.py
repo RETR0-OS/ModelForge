@@ -1,18 +1,54 @@
 import os
+import signal
+from huggingface_hub import HfApi
+from huggingface_hub import errors as hf_errors
 import uvicorn
+
+## Validate HuggingFace login
+try:
+    api = HfApi()
+    api.whoami()
+except hf_errors.LocalTokenNotFoundError:
+    print(f"""
+    {'*' * 100}
+    You are not logged in to the Hugging Face Hub. 
+    1) Create an account on https://huggingface.co/
+    2) Generate a finegrained API token from your account settings (https://huggingface.co/docs/hub/en/security-tokens).
+    3) Run the command below to login:
+        huggingface-cli login
+    4) Paste the token when prompted.
+    {'*' * 100}
+    """)
+    os.kill(os.getpid(), signal.SIGTERM)
+except hf_errors.HTTPError:
+    print(f"""
+    {"*"*100}
+    You are not connected to the internet.
+    Please check your internet connection and try again.
+    {"*" * 100}
+    """)
+    os.kill(os.getpid(), signal.SIGTERM)
+
+
+## Standard Python imports
 import uuid
 import json
+import traceback
+from pydantic import BaseModel, field_validator
+
+## FastAPI imports
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, File, UploadFile, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
-from pydantic import BaseModel, field_validator
+
+## ModelForge Utility Classes imports
 from utilities.hardware_detector import HardwareDetector
 from utilities.settings_builder import SettingsBuilder
 from utilities.CausalLLMTuner import CausalLLMFinetuner
 from utilities.Seq2SeqLMTuner import Seq2SeqFinetuner
-import traceback
 from utilities.QuestionAnsweringTuner import QuestionAnsweringTuner
 
+## Server Global Configurations
 app = FastAPI()
 hardware_detector = HardwareDetector()
 settings_builder = SettingsBuilder(None, None, None)
@@ -21,11 +57,9 @@ app_name = "ModelForge"
 finetuning_status = {"status": "idle", "progress": 0, "message": ""}
 datasets_dir = "./datasets"
 model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
-
 origins = [
     "http://localhost:3000",
 ]
-
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -34,6 +68,8 @@ app.add_middleware(
     allow_credentials=True,
 )
 
+
+## Pydantic Data Validator Classes
 class TaskFormData(BaseModel):
     task: str
     @field_validator("task")
@@ -243,6 +279,8 @@ class SettingsFormData(BaseModel):
             raise ValueError("Dataset cannot be empty.")
         return dataset
 
+
+## Server endpoints
 @app.get("/")
 async def home(request: Request) -> JSONResponse:
     return JSONResponse({

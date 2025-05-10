@@ -6,6 +6,8 @@ from .Finetuner import Finetuner
 from peft import LoraConfig, TaskType, get_peft_model
 from transformers import AutoModelForSeq2SeqLM, AutoTokenizer, BitsAndBytesConfig
 import os
+from huggingface_hub import errors as hf_errors
+import traceback
 
 class Seq2SeqFinetuner(Finetuner):
     def __init__(self, model_name: str, compute_specs="low_end", pipeline_task="summarization") -> None:
@@ -143,8 +145,17 @@ class Seq2SeqFinetuner(Finetuner):
                     "Error building config file.\nRetry finetuning. This might cause problems in the model playground.")
 
             super().report_finish()
-
             return self.fine_tuned_name
+        except hf_errors.GatedRepoError as e:
+            super().invalid_access()
+            super().report_finish(error=True, message="You do not have access to this model.")
+            return False
+        except hf_errors.HfHubHTTPError as e:
+            print("An unknown huggingface error occurred.")
+            print("Error traceback:")
+            print(traceback.format_exc())
+            super().report_finish(error=True, message="Unknown HuggingFace network error")
+            return False
         except Exception as e:
             print(f"Error during fine-tuning: {e}")
             return False
