@@ -13,9 +13,6 @@ RUN /backend/venv/bin/pip install --upgrade pip && \
     /backend/venv/bin/pip install -r docker_requirements.txt && \
     /backend/venv/bin/pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
 
-#ARG HUGGINGFACE_TOKEN
-#RUN /backend/venv/bin/huggingface-cli login --token ${HUGGINGFACE_TOKEN}
-
 COPY . .
 
 COPY entry_script.sh /entrypoint.sh

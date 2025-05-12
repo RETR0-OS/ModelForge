@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import '../styles/Loading.css';
+import { config } from '../services/api';
 
 const Loading = () => {
   const [progress, setProgress] = useState(0);
@@ -33,7 +34,7 @@ const Loading = () => {
   useEffect(() => {
     const checkStatus = async () => {
       try {
-        const responseGet = await fetch('http://localhost:8000/finetune/status', {
+        const responseGet = await fetch('$${config.baseURL}/finetune/status', {
           method: 'GET',
         });
         const result = await responseGet.json();
@@ -92,7 +93,7 @@ const Loading = () => {
   const handleChatWithAI = async () => {
     try {
       // First, send GET request to get the model path
-      const modelPathResponse = await fetch('http://localhost:8000/playground/model_path', {
+      const modelPathResponse = await fetch(`${config.baseURL}/playground/model_path`, {
         method: 'GET'
       });
   
@@ -107,7 +108,7 @@ const Loading = () => {
       console.log("Received model path:", modelPath);
   
       // Now send POST request with the model path
-      const response = await fetch('http://localhost:8000/playground/new', {
+      const response = await fetch(`${config.baseURL}/playground/new`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

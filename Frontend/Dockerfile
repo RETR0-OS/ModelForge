@@ -6,6 +6,8 @@ COPY package*.json .
 
 COPY tailwind.config.js .
 
+RUN apk add --no-cache curl
+
 RUN npm install
 
 COPY . .
