@@ -34,7 +34,7 @@ const Loading = () => {
   useEffect(() => {
     const checkStatus = async () => {
       try {
-        const responseGet = await fetch('$${config.baseURL}/finetune/status', {
+        const responseGet = await fetch(`${config.baseURL}/finetune/status`, {
           method: 'GET',
         });
         const result = await responseGet.json();

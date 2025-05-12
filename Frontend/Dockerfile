@@ -1,17 +1,12 @@
-FROM node:24-alpine
-
+FROM node:24-alpine as builder
 WORKDIR /frontend
-
-COPY package*.json .
-
-COPY tailwind.config.js .
-
-RUN apk add --no-cache curl
-
+COPY ./Frontend/package*.json .
+#COPY ./tailwind.config.js .
 RUN npm install
-
-COPY . .
-
+COPY ./Frontend .
 EXPOSE 3000
+RUN npm run build
 
-CMD ["npm", "start"]
+FROM nginx:alpine
+COPY --from=builder /frontend/build /usr/share/nginx/html
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf
