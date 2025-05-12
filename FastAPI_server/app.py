@@ -58,7 +58,7 @@ finetuning_status = {"status": "idle", "progress": 0, "message": ""}
 datasets_dir = "./datasets"
 model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
 origins = [
-    "http://localhost:3000",
+    "*",
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -281,7 +281,7 @@ class SettingsFormData(BaseModel):
 
 
 ## Server endpoints
-@app.get("/")
+@app.get("/api")
 async def home(request: Request) -> JSONResponse:
     return JSONResponse({
         "app_name": app_name,
@@ -298,7 +298,7 @@ def gen_uuid(filename) -> str:
     extension = filename.split(".")[-1]
     return str(uuid.uuid4()).replace("-", "") + "." + extension
 
-@app.get("/finetune/detect")
+@app.get("/api/finetune/detect")
 async def detect_hardware_page(request: Request) -> JSONResponse:
     global settings_cache
     settings_cache.clear()  # Clear the cache to ensure fresh detection
@@ -307,7 +307,7 @@ async def detect_hardware_page(request: Request) -> JSONResponse:
         "message": "Ready to detect hardware"
     })
 
-@app.post("/finetune/detect", response_class=JSONResponse)
+@app.post("/api/finetune/detect", response_class=JSONResponse)
 async def detect_hardware(request: Request) -> JSONResponse:
     global settings_cache
     try:
@@ -359,7 +359,7 @@ async def detect_hardware(request: Request) -> JSONResponse:
             detail="Error detecting hardware. Please try again later."
         )
 
-@app.post("/finetune/set_model")
+@app.post("/api/finetune/set_model")
 async def set_model(request: Request) -> None:
     global settings_cache
     try:
@@ -374,7 +374,7 @@ async def set_model(request: Request) -> None:
             detail="Error setting model. Please try again later."
         )
 
-@app.get("/finetune/load_settings")
+@app.get("/api/finetune/load_settings")
 async def load_settings_page(request: Request) -> JSONResponse:
     global settings_cache
     if not settings_cache:
@@ -387,7 +387,7 @@ async def load_settings_page(request: Request) -> JSONResponse:
         "default_values": settings_builder.get_settings()
     })
 
-@app.post("/finetune/load_settings")
+@app.post("/api/finetune/load_settings")
 async def load_settings(json_file: UploadFile = File(...), settings: str = Form(...)) -> None:
     print("Loading settings...")
     global settings_builder, datasets_dir
@@ -436,7 +436,7 @@ def finetuning_task(llm_tuner) -> None:
         settings_builder = SettingsBuilder(None, None, None)
         del llm_tuner
 
-@app.get("/finetune/status")
+@app.get("/api/finetune/status")
 async def finetuning_status_page(request: Request) -> JSONResponse:
     global finetuning_status
     return JSONResponse({
@@ -445,7 +445,7 @@ async def finetuning_status_page(request: Request) -> JSONResponse:
         "message": finetuning_status["message"]
     })
 
-@app.get("/finetune/start")
+@app.get("/api/finetune/start")
 async def start_finetuning_page(request: Request, background_task: BackgroundTasks) -> JSONResponse:
     global settings_builder, settings_cache, finetuning_status
 
@@ -498,7 +498,7 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
         "message": "Finetuning process started.",
     })
 
-@app.post("/playground/new")
+@app.post("/api/playground/new")
 async def new_playground(request: Request) -> None:
     global model_path
     form = await request.json()
@@ -506,16 +506,12 @@ async def new_playground(request: Request) -> None:
     model_path = form["model_path"]
 
     base_path = os.path.join(os.path.dirname(__file__), "utilities")
-    # if task == 'causal-lm':
-    #     chat_script = os.path.join(base_path, "chat_llm.py")
-    # else:
-    #     chat_script = os.path.join(base_path, "chat_seq2seq.py")
     chat_script = os.path.join(base_path, "chat_playground.py")
     command = f"start cmd /K python {chat_script} --model_path {model_path}"
     print(command)
     os.system(command)
 
-@app.get("/playground/model_path")
+@app.get("/api/playground/model_path")
 async def get_model_path(request: Request) -> JSONResponse:
     global model_path
     # model_path = os.path.join(model_path, os.listdir(model_path)[0])

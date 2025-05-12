@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { config } from '../services/api';
 
 const FinetuneSettings = ({ defaultValues, updateSettings }) => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
   useEffect(() => {
     const fetchDefaultSettings = async () => {
       try {
-        const response = await fetch('http://localhost:8000/finetune/load_settings');
+        const response = await fetch(`${config.baseURL}/finetune/load_settings`);
         if (!response.ok) throw new Error('Failed to fetch settings');
         
         const data = await response.json();
@@ -93,7 +94,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
     console.log("Sending data to server:",JSON.stringify(formState));
 
     try {
-      const response = await fetch('http://localhost:8000/finetune/load_settings', {
+      const response = await fetch(`${config.baseURL}/finetune/load_settings`, {
         method: 'POST',
         body: formData,
       });
@@ -102,7 +103,7 @@ const FinetuneSettings = ({ defaultValues, updateSettings }) => {
         throw new Error(`Server error: ${response.status}`);
       }
 
-      const responseGet = await fetch('http://localhost:8000/finetune/start', {
+      const responseGet = await fetch(`${config.baseURL}/finetune/start`, {
         method: 'GET',
       });
       console.log("Response from GET request:", responseGet);

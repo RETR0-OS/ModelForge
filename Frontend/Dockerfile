@@ -1,9 +1,12 @@
-FROM ubuntu
+FROM node:24-alpine as builder
+WORKDIR /frontend
+COPY ./Frontend/package*.json .
+#COPY ./tailwind.config.js .
+RUN npm install
+COPY ./Frontend .
+EXPOSE 3000
+RUN npm run build
 
-RUN apt-get update
-RUN apt-get install -y nodejs npm
-
-COPY . /opt/ModelForge/Frontend
-RUN cd /opt/ModelForge/Frontend && npm install
-
-RUN npm start
+FROM nginx:alpine
+COPY --from=builder /frontend/build /usr/share/nginx/html
+COPY nginx/nginx.conf /etc/nginx/conf.d/default.conf

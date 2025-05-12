@@ -1,0 +1,37 @@
+networks:
+  modelforge-net:
+    driver: bridge
+
+services:
+  frontend:
+    build:
+        context: .
+        dockerfile: ./frontend/Dockerfile
+    ports:
+      - "3000:80"
+    networks:
+      - modelforge-net
+    depends_on:
+      - backend
+  backend:
+    build: ./FastAPI_server
+    volumes:
+      - finetuned_models:/backend/finetuned_models
+      - model_checkpoints:/backend/model_checkpoints
+    environment:
+      - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
+    networks:
+      - modelforge-net
+#    ports:
+#      - "8000:8000"
+    command: nvidia-smi
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+volumes:
+  finetuned_models:
+  model_checkpoints:

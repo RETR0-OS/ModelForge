@@ -1,0 +1,4 @@
+finetuned_models
+model_checkpoints
+training_logs
+*__pycache__*
