@@ -22,8 +22,6 @@ services:
       - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
     networks:
       - modelforge-net
-#    ports:
-#      - "8000:8000"
     command: nvidia-smi
     deploy:
       resources:

@@ -7,3 +7,4 @@ FastAPI_server/__pycache__/
 FastAPI_server/utilities/__pycache__/*
 FastAPI_server/utilities/tests/
 *.pyc
+.env

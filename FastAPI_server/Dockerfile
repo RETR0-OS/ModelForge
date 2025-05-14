@@ -13,9 +13,16 @@ RUN /backend/venv/bin/pip install --upgrade pip && \
     /backend/venv/bin/pip install -r docker_requirements.txt && \
     /backend/venv/bin/pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu124
 
+RUN apt-get install -y dos2unix
+
 COPY . .
 
-COPY entry_script.sh /entrypoint.sh
+COPY ./entry_script.sh /entrypoint.sh
+
+RUN dos2unix /entrypoint.sh
+
+#RUN ls -al /
+
 RUN chmod +x /entrypoint.sh
 
 EXPOSE 8000
