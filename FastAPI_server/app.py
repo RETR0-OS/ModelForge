@@ -312,7 +312,6 @@ async def detect_hardware(request: Request) -> JSONResponse:
     global settings_cache
     try:
         form = await request.json()
-        print(form)
         task = TaskFormData(task=form["task"])
         task = task.task
         settings_builder.task = task
@@ -502,19 +501,16 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
 async def new_playground(request: Request) -> None:
     global model_path
     form = await request.json()
-    print(form)
     model_path = form["model_path"]
 
     base_path = os.path.join(os.path.dirname(__file__), "utilities")
     chat_script = os.path.join(base_path, "chat_playground.py")
     command = f"start cmd /K python {chat_script} --model_path {model_path}"
-    print(command)
     os.system(command)
 
 @app.get("/api/playground/model_path")
 async def get_model_path(request: Request) -> JSONResponse:
     global model_path
-    # model_path = os.path.join(model_path, os.listdir(model_path)[0])
     return JSONResponse({
         "model_path": model_path
     })
