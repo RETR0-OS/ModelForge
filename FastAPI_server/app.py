@@ -35,6 +35,7 @@ import uuid
 import json
 import traceback
 from pydantic import BaseModel, field_validator
+import sqlite3
 
 ## FastAPI imports
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, File, UploadFile, Form
@@ -57,6 +58,24 @@ app_name = "ModelForge"
 finetuning_status = {"status": "idle", "progress": 0, "message": ""}
 datasets_dir = "./datasets"
 model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
+
+try:
+    db_connection = sqlite3.connect("modelforge.db")
+    db_cursor = db_connection.cursor()
+    db_cursor.execute('''
+        CREATE TABLE IF NOT EXISTS modelforge_models (
+            model_id STRING PRIMARY KEY,
+            model_name STRING NOT NULL,
+            model_path STRING, 
+            pipeline_task STRING NOT NULL,
+            compute_specs STRING NOT NULL,
+        )
+    ''')
+
+except sqlite3.Error as e:
+    print(f"Database connection error: {e}")
+    raise HTTPException(status_code=500, detail="Database connection error. Please try again later.")
+
 origins = [
     "*",
 ]
@@ -424,9 +443,34 @@ async def load_settings(json_file: UploadFile = File(...), settings: str = Form(
 def finetuning_task(llm_tuner) -> None:
     global settings_builder, finetuning_status, model_path, settings_cache
     try:
+        model_id = str(uuid.uuid4()).replace("-", "_")
+        model_name = settings_builder.model_name
+        pipeline_task = settings_builder.task
+        compute_specs = settings_builder.compute_profile
+        db_cursor.execute(
+            f'''
+                INSERT INTO modelforge_models (model_id, model_name, pipeline_task, compute_specs)
+                VALUES ({model_id}, '{model_name}', '{pipeline_task}', '{compute_specs}');
+            '''
+        )
         llm_tuner.load_dataset(settings_builder.dataset)
         path = llm_tuner.finetune()
         model_path = os.path.join(os.path.dirname(__file__), path.replace("./", ""))
+        db_cursor.execute(
+            f'''
+                UPDATE modelforge_models
+                SET model_path = {model_path}
+                WHERE model_id = {model_id};
+            '''
+        )
+    except hf_errors.HFValidationError as e:
+        print(f"HFValidationError: {e}")
+        finetuning_status["status"] = "error"
+        finetuning_status["message"] = "Invalid model or dataset. Please check your inputs."
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        finetuning_status["status"] = "error"
+        finetuning_status["message"] = "Database error occurred. Please check your modelforge.db file or open an issue on Github."
     finally:
         settings_cache.clear()
         finetuning_status["status"] = "idle"
