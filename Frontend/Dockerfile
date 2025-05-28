@@ -1,7 +1,6 @@
 FROM node:24-alpine as builder
 WORKDIR /frontend
 COPY ./Frontend/package*.json .
-#COPY ./tailwind.config.js .
 RUN npm install
 COPY ./Frontend .
 EXPOSE 3000
