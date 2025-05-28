@@ -8,3 +8,4 @@ FastAPI_server/utilities/__pycache__/*
 FastAPI_server/utilities/tests/
 *.pyc
 .env
+modelforge.db

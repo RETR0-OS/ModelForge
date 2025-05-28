@@ -18,6 +18,7 @@ services:
     volumes:
       - finetuned_models:/backend/finetuned_models
       - model_checkpoints:/backend/model_checkpoints
+      - models_db:/backend/database
     environment:
       - HUGGINGFACE_TOKEN=${HUGGINGFACE_TOKEN}
     networks:
@@ -33,3 +34,4 @@ services:
 volumes:
   finetuned_models:
   model_checkpoints:
+  models_db:

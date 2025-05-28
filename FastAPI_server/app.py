@@ -60,7 +60,7 @@ datasets_dir = "./datasets"
 model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
 
 try:
-    db_connection = sqlite3.connect("modelforge.db")
+    db_connection = sqlite3.connect("database/modelforge.db")
     db_cursor = db_connection.cursor()
     db_cursor.execute('''
         CREATE TABLE IF NOT EXISTS modelforge_models (
@@ -68,7 +68,7 @@ try:
             model_name STRING NOT NULL,
             model_path STRING, 
             pipeline_task STRING NOT NULL,
-            compute_specs STRING NOT NULL,
+            compute_specs STRING NOT NULL
         )
     ''')
 
@@ -558,6 +558,28 @@ async def get_model_path(request: Request) -> JSONResponse:
     return JSONResponse({
         "model_path": model_path
     })
+
+@app.get("/api/models/all")
+async def get_all_models(request: Request) -> JSONResponse:
+    global db_cursor
+    try:
+        db_cursor.execute("SELECT * FROM modelforge_models")
+        models = db_cursor.fetchall()
+        model_list = []
+        for model in models:
+            model_list.append({
+                "model_id": model[0],
+                "model_name": model[1],
+                "model_path": model[2],
+                "pipeline_task": model[3],
+                "compute_specs": model[4]
+            })
+        return JSONResponse({
+            "models": model_list
+        })
+    except sqlite3.Error as e:
+        print(f"Database error: {e}")
+        raise HTTPException(status_code=500, detail="Database error occurred. Please check your modelforge.db file or open an issue on Github.")
 
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8000)
