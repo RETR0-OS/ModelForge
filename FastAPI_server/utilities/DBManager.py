@@ -13,7 +13,7 @@ class DatabaseManager:
             cls._instance = super(DatabaseManager, cls).__new__(cls)
         return cls._instance
 
-    def __init__(self, db_path="./database/modelforge.db"):
+    def __init__(self, db_path="./database/modelforge.sqlite"):
         self.db_path = db_path
         self.conn = None
         self.cursor = None

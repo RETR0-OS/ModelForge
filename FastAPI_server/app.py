@@ -67,7 +67,7 @@ origins = [
     "http://localhost:3000",
 ]
 
-db_manager = DatabaseManager(db_path="./database/modelforge.db")
+db_manager = DatabaseManager(db_path="./database/modelforge.sqlite")
 
 app.add_middleware(
     CORSMiddleware,
