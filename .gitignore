@@ -10,3 +10,4 @@ FastAPI_server/utilities/tests/
 .env
 ./FastAPI_server/database/
 ./FastAPI_server/database/*
+*.db
