@@ -93,8 +93,6 @@ class DatabaseManager:
             models = []
             for row in rows:
                 model = dict(row)
-                model['training_params'] = json.loads(model['training_params'])
-                model['performance_metrics'] = json.loads(model['performance_metrics'])
                 models.append(model)
 
             return models

@@ -8,6 +8,6 @@ FastAPI_server/utilities/__pycache__/*
 FastAPI_server/utilities/tests/
 *.pyc
 .env
-./FastAPI_server/database/
-./FastAPI_server/database/*
+FastAPI_server/database/
+FastAPI_server/database/*
 *.db

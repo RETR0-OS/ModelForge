@@ -8,6 +8,7 @@ import FinetuneSettings from './pages/FinetuningSettingsPage';
 import Loading from './pages/Loading';
 import TechnicalDetailsPage from './pages/TechnicalDetailsPage';
 import './index.css';
+import ListAllModels from "./pages/ListAllModels";
 
 const RedirectToFastAPI = () => {
   useEffect(() => {
@@ -119,8 +120,11 @@ function App() {
           path="/technical-details" 
           element={<TechnicalDetailsPage />} 
           />
+          <Route
+            path="/models"
+            element={<ListAllModels/>}
+          />
         </Routes>
-
       </div>
     </Router>
   );

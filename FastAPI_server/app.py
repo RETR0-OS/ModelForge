@@ -5,6 +5,9 @@ from datetime import datetime
 from huggingface_hub import HfApi
 from huggingface_hub import errors as hf_errors
 import uvicorn
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ## Validate HuggingFace login
 try:
@@ -529,6 +532,27 @@ async def new_playground(request: Request) -> None:
     command = f"start cmd /K python {chat_script} --model_path {model_path}"
     print(command)
     os.system(command)
+
+@app.get("/models", response_class=JSONResponse)
+async def list_models(request: Request) -> JSONResponse:
+    try:
+        models = db_manager.get_all_models()  # Assumes this method returns a list of model dicts
+        return JSONResponse({"models": models})
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="Error fetching models.")
+
+
+@app.get("/models/{model_id}", response_class=JSONResponse)
+async def get_model(model_id: int, request: Request) -> JSONResponse:
+    try:
+        model = db_manager.get_model_by_id(model_id)  # Assumes this method exists
+        if not model:
+            raise HTTPException(status_code=404, detail="Model not found.")
+        return JSONResponse(model)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="Error fetching model.")
 
 @app.get("/playground/model_path")
 async def get_model_path(request: Request) -> JSONResponse:
