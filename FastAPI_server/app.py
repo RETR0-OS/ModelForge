@@ -67,7 +67,8 @@ origins = [
     "http://localhost:3000",
 ]
 
-db_manager = DatabaseManager(db_path="./database/modelforge.sqlite")
+db_manager = DatabaseManager(db_path=os.getenv("DB_PATH", "./database/modelforge.sqlite"))
+print("Database initialized at:", db_manager.db_path)
 
 app.add_middleware(
     CORSMiddleware,
