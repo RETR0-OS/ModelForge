@@ -1,3 +1,10 @@
+import os
+os.environ["TRANSFORMERS_NO_ADVISORY_WARNINGS"] = "true"
+os.environ["TRANSFORMERS_VERBOSITY"] = "error"
+import warnings
+warnings.filterwarnings("ignore", category=UserWarning)
+warnings.filterwarnings("ignore", category=FutureWarning)
+
 import torch
 from transformers import AutoTokenizer, TextStreamer, pipeline
 from peft import PeftConfig
@@ -83,7 +90,7 @@ class PlaygroundModel:
             self.clean_up()
 
     def chat(self):
-        print("Chat started. Type '/bye' to exit")
+        print("Chat started. Type '/bye' to exit or /view_settings to view current model configurations.")
         try:
             if self.modelforge_config["pipeline_task"] == "question-answering":
                 while True:
