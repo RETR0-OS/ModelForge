@@ -169,7 +169,7 @@ class Finetuner(ABC):
     def finetune(self) -> bool | str:
         """
         Finetune the model with the provided data.
-        :return: True if model is successfully fine-tuned, False otherwise.
+        :return: model_path if model is successfully fine-tuned, False otherwise.
         """
         pass
 

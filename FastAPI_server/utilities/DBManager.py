@@ -1,13 +1,14 @@
+import os
 import sqlite3
 import json
 from datetime import datetime
 import traceback
-
+import shutil
 
 class DatabaseManager:
     _instance = None
 
-    def __new__(cls):
+    def __new__(cls, *args, **kwargs):
         if not cls._instance:
             cls._instance = super(DatabaseManager, cls).__new__(cls)
         return cls._instance
@@ -24,6 +25,8 @@ class DatabaseManager:
             self.conn = sqlite3.connect(self.db_path)
             self.cursor = self.conn.cursor()
 
+            print("Initializing database...")
+
             # Create fine-tuned models table
             self.cursor.execute('''
             CREATE TABLE IF NOT EXISTS fine_tuned_models (
@@ -33,7 +36,7 @@ class DatabaseManager:
                 task TEXT NOT NULL,
                 description TEXT,
                 creation_date TEXT NOT NULL,
-                model_path TEXT NOT NULL,
+                model_path TEXT NOT NULL
             )
             ''')
             self.conn.commit()
@@ -54,7 +57,7 @@ class DatabaseManager:
             INSERT INTO fine_tuned_models 
             (model_name, base_model, task, description, creation_date, 
             model_path)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+            VALUES (?, ?, ?, ?, ?, ?)
             ''', (
                 model_data['model_name'],
                 model_data['base_model'],
@@ -82,8 +85,7 @@ class DatabaseManager:
             self.cursor = self.conn.cursor()
 
             self.cursor.execute('''
-            SELECT * FROM fine_tuned_models 
-            WHERE is_active = 1
+            SELECT * FROM fine_tuned_models
             ORDER BY creation_date DESC
             ''')
 
@@ -115,8 +117,6 @@ class DatabaseManager:
 
             if row:
                 model = dict(row)
-                model['training_params'] = json.loads(model['training_params'])
-                model['performance_metrics'] = json.loads(model['performance_metrics'])
                 return model
             return None
         except sqlite3.Error as e:
@@ -127,11 +127,14 @@ class DatabaseManager:
                 self.conn.close()
 
     def delete_model(self, model_id):
-        """Delete a model"""
+        """Delete a model from DB and directory"""
         try:
             self.conn = sqlite3.connect(self.db_path)
             self.cursor = self.conn.cursor()
-
+            model_path = self.get_model_by_id(model_id)['model_path']
+            if model_path and os.path.exists(model_path):
+                shutil.rmtree(model_path, ignore_errors=True)
+                print(f"Deleted model files at {model_path}")
             self.cursor.execute('DELETE FROM fine_tuned_models WHERE id = ?', (model_id,))
             self.conn.commit()
             return True
