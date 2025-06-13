@@ -1,5 +1,7 @@
 import os
 import signal
+from datetime import datetime
+
 from huggingface_hub import HfApi
 from huggingface_hub import errors as hf_errors
 import uvicorn
@@ -47,6 +49,7 @@ from utilities.settings_builder import SettingsBuilder
 from utilities.CausalLLMTuner import CausalLLMFinetuner
 from utilities.Seq2SeqLMTuner import Seq2SeqFinetuner
 from utilities.QuestionAnsweringTuner import QuestionAnsweringTuner
+from utilities.DBManager import DatabaseManager
 
 ## Server Global Configurations
 app = FastAPI()
@@ -60,6 +63,9 @@ model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
 origins = [
     "http://localhost:3000",
 ]
+
+db_manager = DatabaseManager(db_path="./database/modelforge.db")
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -422,12 +428,25 @@ async def load_settings(json_file: UploadFile = File(...), settings: str = Form(
     settings_data["dataset"] = file_path
     settings_builder.set_settings(settings_data)
 
+
 def finetuning_task(llm_tuner) -> None:
-    global settings_builder, finetuning_status, model_path, settings_cache
+    global settings_builder, finetuning_status, model_path, settings_cache, db_manager
     try:
         llm_tuner.load_dataset(settings_builder.dataset)
         path = llm_tuner.finetune()
         model_path = os.path.join(os.path.dirname(__file__), path.replace("./", ""))
+
+        model_data = {
+            "model_name": settings_builder.fine_tuned_name.split('/')[
+                -1] if settings_builder.fine_tuned_name else os.path.basename(model_path),
+            "base_model": settings_builder.model_name,
+            "task": settings_builder.task,
+            "description": f"Fine-tuned {settings_builder.model_name} for {settings_builder.task}",
+            "creation_date": datetime.now().isoformat(),
+            "model_path": model_path,
+        }
+        db_manager.add_model(model_data)
+
     finally:
         settings_cache.clear()
         finetuning_status["status"] = "idle"
@@ -506,10 +525,6 @@ async def new_playground(request: Request) -> None:
     model_path = form["model_path"]
 
     base_path = os.path.join(os.path.dirname(__file__), "utilities")
-    # if task == 'causal-lm':
-    #     chat_script = os.path.join(base_path, "chat_llm.py")
-    # else:
-    #     chat_script = os.path.join(base_path, "chat_seq2seq.py")
     chat_script = os.path.join(base_path, "chat_playground.py")
     command = f"start cmd /K python {chat_script} --model_path {model_path}"
     print(command)
@@ -518,7 +533,6 @@ async def new_playground(request: Request) -> None:
 @app.get("/playground/model_path")
 async def get_model_path(request: Request) -> JSONResponse:
     global model_path
-    # model_path = os.path.join(model_path, os.listdir(model_path)[0])
     return JSONResponse({
         "model_path": model_path
     })

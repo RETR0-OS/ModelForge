@@ -7,9 +7,9 @@ import traceback
 class DatabaseManager:
     _instance = None
 
-    def __new__(cls, *args, **kwargs):
+    def __new__(cls):
         if not cls._instance:
-            cls._instance = super(DatabaseManager, cls).__new__(cls, *args, **kwargs)
+            cls._instance = super(DatabaseManager, cls).__new__(cls)
         return cls._instance
 
     def __init__(self, db_path="./database/modelforge.db"):
@@ -34,7 +34,6 @@ class DatabaseManager:
                 description TEXT,
                 creation_date TEXT NOT NULL,
                 model_path TEXT NOT NULL,
-                config_path TEXT,
             )
             ''')
             self.conn.commit()
@@ -54,7 +53,7 @@ class DatabaseManager:
             self.cursor.execute('''
             INSERT INTO fine_tuned_models 
             (model_name, base_model, task, description, creation_date, 
-            model_path, config_path)
+            model_path)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
             ''', (
                 model_data['model_name'],
@@ -63,7 +62,6 @@ class DatabaseManager:
                 model_data.get('description', ''),
                 model_data.get('creation_date', datetime.now().isoformat()),
                 model_data['model_path'],
-                model_data.get('config_path', '')
             ))
 
             self.conn.commit()
