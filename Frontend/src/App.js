@@ -7,6 +7,7 @@ import DetectHardwarePage from './pages/DetectHardwarePage';
 import FinetuneSettings from './pages/FinetuningSettingsPage';
 import Loading from './pages/Loading';
 import TechnicalDetailsPage from './pages/TechnicalDetailsPage';
+import ListModels from './pages/ListModels';
 import './index.css';
 import ListAllModels from "./pages/ListAllModels";
 

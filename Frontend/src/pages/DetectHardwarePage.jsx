@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { config } from '../services/api';
 
 const HardwareDetection = ({ currentSettings, updateSettings }) => {
   const navigate = useNavigate();
@@ -42,7 +43,7 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
     
     try {
         console.log('Selected Task:', selectedTask);
-        const resp = await fetch('http://localhost:8000/finetune/detect', {
+        const resp = await fetch(`${config.baseURL}/finetune/detect`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -233,7 +234,7 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
                 onChange={async (e) => {
                   console.log('Setting model to:', e.target.value);
                   setSelectedModel(e.target.value);
-                  await fetch(`http://localhost:8000/finetune/set_model`, {
+                  await fetch(`${config.baseURL}/finetune/set_model`, {
                     method: 'POST',
                     headers: {
                       'Content-Type': 'application/json',

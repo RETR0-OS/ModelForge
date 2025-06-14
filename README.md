@@ -16,41 +16,69 @@
 - **Summarization**: Generates summaries for long articles and texts. Ideal for use cases like news article summarization, law document summarization, and medical article summarization.
 - **Extractive Question Answering**: Finds the answers relevant to a query from a given context. Best for use cases like Retrieval Augmented Generation (RAG), and enterprise document search (for example, searching for information in internal documentation).
 
-## ⚡ **Quick Start**  
-1. **Install** (Python 3.10+):  
+## Installation
+### Prerequisites
+- **Python 3.8+**: Ensure you have Python installed.
+- **NVIDIA GPU**: Recommended VRAM >= 6GB.
+- **CUDA**: Ensure CUDA is installed and configured for your GPU.
+- **Docker Desktop**: Install Docker Desktop for your OS.
+- **NVIDIA Container Toolkit**: Follow [these instructions](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) to install the NVIDIA Container Toolkit.
+- **HuggingFace Account**: Create an account on [Hugging Face](https://huggingface.co/) and [generate a finegrained access token](https://huggingface.co/settings/tokens).
+
+### Steps
+1. **Clone the Repository**:  
    ```bash
-   pip install -r requirements.txt  # Includes transformers, peft
-   ```  
-2. **Run**:  
+   git clone https://RETR0-OS/ModelForge.git
+    cd ModelForge
+    ```
+2. **Set HuggingFace API Key in environment variables**:<br>
+   Linux:
    ```bash
-   uvicorn app:app --reload  # Launches FastAPI server at localhost:8000
+   export HUGGINGFACE_TOKEN=your_huggingface_token
    ```
-   ```bash
-   npm start # Launches the React app at localhost:3000
-   ```  
-3. **Finetune**:  
-   - Select a task (e.g., "Summarization").  
-   - Upload a dataset (JSONL with `instruction` and `response` fields).  
-   - Click **Start Training** (3 epochs by default).  
+    Windows Powershell:
+    ```bash
+    $env:HUGGINGFACE_TOKEN="your_huggingface_token"
+    ```
+    Windows CMD:
+    ```bash
+    set HUGGINGFACE_TOKEN=your_huggingface_token
+    ```
+   
+3. **Build and the Docker Images**:
+    ```bash
+    docker-compose up --build
+    ```
+``NOTE: This may take a while, especially the first time you run it. The images are quite large.``
+
+4. **Done!**:
+Navigate to [http://localhost:3000](http://localhost:3000) in your browser and get started!
+
+### **Running the Application Again in the Future**
+1. **Start the Docker Containers**:
+    ```bash
+    docker-compose up
+    ```
+2. **Navigate to the UI**:  
+   Open your browser and go to [http://localhost:3000](http://localhost:3000).
+
+### **Stopping the Application**
+To stop the application and free up resources, open a new terminal and run:
+```bash
+  docker-compose down
+```
 
 ## 📂 **Dataset Format**  
-```json
-[
-  {"input": "Enter a really long article here...", "output": "Short summary."},
-  {"input": "Enter the poem topic here...", "output": "Roses are red..."}
-]
+```jsonl
+{"input": "Enter a really long article here...", "output": "Short summary."},
+{"input": "Enter the poem topic here...", "output": "Roses are red..."}
 ```
 
 ## 🛠 **Tech Stack**  
 - `transformers` + `peft` (LoRA finetuning)  
 - `bitsandbytes` (4-bit quantization)  
 - `React` (UI)   
-
-## ❓ **FAQ**  
-**Q: No GPU?**  
-A: GPU required for now—stay tuned for CPU support!  
-
-**Q: Slow training?**  
-A: Reduce epochs/batch size in training configuraiton step.  
-
----
+- `FastAPI` (Backend)
+- `Docker` (Containerization)
+- `NVIDIA Container Toolkit` (GPU support)
+- `NGINX` (Reverse proxy)
