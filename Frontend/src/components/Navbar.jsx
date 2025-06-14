@@ -121,6 +121,20 @@ const Navbar = ({ appName = "ModelForge" }) => {
 
           {/* Right side content based on screenshot */}
           <div className="flex items-center">
+            {/* My Models tab */}
+            {!disableNavigation && (
+              <Link
+                to="/models"
+                className={`text-white px-4 py-2 rounded-lg transition ${
+                  location.pathname === '/models'
+                    ? 'bg-[#232c40] font-semibold'
+                    : 'hover:bg-[#232c40]'
+                }`}
+                style={{ marginRight: '0.5rem' }}
+              >
+                My Models
+              </Link>
+            )}
             {/* Back to Home button on inner pages */}
             {showBackButton && (
               <Link to="/" className="bg-[#232c40] hover:bg-[#2d3a52] text-white px-4 py-2 rounded-lg flex items-center gap-2 transition">
