@@ -1,8 +1,13 @@
 import os
 import signal
+from datetime import datetime
+
 from huggingface_hub import HfApi
 from huggingface_hub import errors as hf_errors
 import uvicorn
+from dotenv import load_dotenv
+
+load_dotenv()
 
 ## Validate HuggingFace login
 try:
@@ -34,8 +39,9 @@ except hf_errors.HTTPError:
 import uuid
 import json
 import traceback
+import sys
+import subprocess
 from pydantic import BaseModel, field_validator
-import sqlite3
 
 ## FastAPI imports
 from fastapi import FastAPI, Request, HTTPException, BackgroundTasks, File, UploadFile, Form
@@ -48,6 +54,7 @@ from utilities.settings_builder import SettingsBuilder
 from utilities.CausalLLMTuner import CausalLLMFinetuner
 from utilities.Seq2SeqLMTuner import Seq2SeqFinetuner
 from utilities.QuestionAnsweringTuner import QuestionAnsweringTuner
+from utilities.DBManager import DatabaseManager
 
 ## Server Global Configurations
 app = FastAPI()
@@ -58,27 +65,13 @@ app_name = "ModelForge"
 finetuning_status = {"status": "idle", "progress": 0, "message": ""}
 datasets_dir = "./datasets"
 model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
-
-try:
-    db_connection = sqlite3.connect("database/modelforge.db")
-    db_cursor = db_connection.cursor()
-    db_cursor.execute('''
-        CREATE TABLE IF NOT EXISTS modelforge_models (
-            model_id STRING PRIMARY KEY,
-            model_name STRING NOT NULL,
-            model_path STRING, 
-            pipeline_task STRING NOT NULL,
-            compute_specs STRING NOT NULL
-        )
-    ''')
-
-except sqlite3.Error as e:
-    print(f"Database connection error: {e}")
-    raise HTTPException(status_code=500, detail="Database connection error. Please try again later.")
-
 origins = [
-    "*",
+    "http://localhost:3000",
 ]
+
+db_manager = DatabaseManager(db_path=os.getenv("DB_PATH", "./database/modelforge.sqlite"))
+print("Database initialized at:", db_manager.db_path)
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,
@@ -300,7 +293,7 @@ class SettingsFormData(BaseModel):
 
 
 ## Server endpoints
-@app.get("/api")
+@app.get("/")
 async def home(request: Request) -> JSONResponse:
     return JSONResponse({
         "app_name": app_name,
@@ -317,7 +310,7 @@ def gen_uuid(filename) -> str:
     extension = filename.split(".")[-1]
     return str(uuid.uuid4()).replace("-", "") + "." + extension
 
-@app.get("/api/finetune/detect")
+@app.get("/finetune/detect")
 async def detect_hardware_page(request: Request) -> JSONResponse:
     global settings_cache
     settings_cache.clear()  # Clear the cache to ensure fresh detection
@@ -326,11 +319,12 @@ async def detect_hardware_page(request: Request) -> JSONResponse:
         "message": "Ready to detect hardware"
     })
 
-@app.post("/api/finetune/detect", response_class=JSONResponse)
+@app.post("/finetune/detect", response_class=JSONResponse)
 async def detect_hardware(request: Request) -> JSONResponse:
     global settings_cache
     try:
         form = await request.json()
+        print(form)
         task = TaskFormData(task=form["task"])
         task = task.task
         settings_builder.task = task
@@ -377,7 +371,7 @@ async def detect_hardware(request: Request) -> JSONResponse:
             detail="Error detecting hardware. Please try again later."
         )
 
-@app.post("/api/finetune/set_model")
+@app.post("/finetune/set_model")
 async def set_model(request: Request) -> None:
     global settings_cache
     try:
@@ -392,7 +386,7 @@ async def set_model(request: Request) -> None:
             detail="Error setting model. Please try again later."
         )
 
-@app.get("/api/finetune/load_settings")
+@app.get("/finetune/load_settings")
 async def load_settings_page(request: Request) -> JSONResponse:
     global settings_cache
     if not settings_cache:
@@ -405,7 +399,7 @@ async def load_settings_page(request: Request) -> JSONResponse:
         "default_values": settings_builder.get_settings()
     })
 
-@app.post("/api/finetune/load_settings")
+@app.post("/finetune/load_settings")
 async def load_settings(json_file: UploadFile = File(...), settings: str = Form(...)) -> None:
     print("Loading settings...")
     global settings_builder, datasets_dir
@@ -440,37 +434,25 @@ async def load_settings(json_file: UploadFile = File(...), settings: str = Form(
     settings_data["dataset"] = file_path
     settings_builder.set_settings(settings_data)
 
+
 def finetuning_task(llm_tuner) -> None:
-    global settings_builder, finetuning_status, model_path, settings_cache
+    global settings_builder, finetuning_status, model_path, settings_cache, db_manager
     try:
-        model_id = str(uuid.uuid4()).replace("-", "_")
-        model_name = settings_builder.model_name
-        pipeline_task = settings_builder.task
-        compute_specs = settings_builder.compute_profile
-        db_cursor.execute(
-            f'''
-                INSERT INTO modelforge_models (model_id, model_name, pipeline_task, compute_specs)
-                VALUES ({model_id}, '{model_name}', '{pipeline_task}', '{compute_specs}');
-            '''
-        )
         llm_tuner.load_dataset(settings_builder.dataset)
         path = llm_tuner.finetune()
         model_path = os.path.join(os.path.dirname(__file__), path.replace("./", ""))
-        db_cursor.execute(
-            f'''
-                UPDATE modelforge_models
-                SET model_path = {model_path}
-                WHERE model_id = {model_id};
-            '''
-        )
-    except hf_errors.HFValidationError as e:
-        print(f"HFValidationError: {e}")
-        finetuning_status["status"] = "error"
-        finetuning_status["message"] = "Invalid model or dataset. Please check your inputs."
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        finetuning_status["status"] = "error"
-        finetuning_status["message"] = "Database error occurred. Please check your modelforge.db file or open an issue on Github."
+
+        model_data = {
+            "model_name": settings_builder.fine_tuned_name.split('/')[
+                -1] if settings_builder.fine_tuned_name else os.path.basename(model_path),
+            "base_model": settings_builder.model_name,
+            "task": settings_builder.task,
+            "description": f"Fine-tuned {settings_builder.model_name} for {settings_builder.task}",
+            "creation_date": datetime.now().isoformat(),
+            "model_path": model_path,
+        }
+        db_manager.add_model(model_data)
+
     finally:
         settings_cache.clear()
         finetuning_status["status"] = "idle"
@@ -479,7 +461,7 @@ def finetuning_task(llm_tuner) -> None:
         settings_builder = SettingsBuilder(None, None, None)
         del llm_tuner
 
-@app.get("/api/finetune/status")
+@app.get("/finetune/status")
 async def finetuning_status_page(request: Request) -> JSONResponse:
     global finetuning_status
     return JSONResponse({
@@ -488,7 +470,7 @@ async def finetuning_status_page(request: Request) -> JSONResponse:
         "message": finetuning_status["message"]
     })
 
-@app.get("/api/finetune/start")
+@app.get("/finetune/start")
 async def start_finetuning_page(request: Request, background_task: BackgroundTasks) -> JSONResponse:
     global settings_builder, settings_cache, finetuning_status
 
@@ -541,45 +523,56 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
         "message": "Finetuning process started.",
     })
 
-@app.post("/api/playground/new")
+@app.post("/playground/new")
 async def new_playground(request: Request) -> None:
     global model_path
     form = await request.json()
+    print(form)
     model_path = form["model_path"]
 
     base_path = os.path.join(os.path.dirname(__file__), "utilities")
     chat_script = os.path.join(base_path, "chat_playground.py")
-    command = f"start cmd /K python {chat_script} --model_path {model_path}"
-    os.system(command)
+    if os.name == "nt":  # Windows
+        command = ["cmd.exe", "/c", "start", "python", chat_script, "--model_path", model_path]
+        subprocess.Popen(command, shell=True)
+    else:  # Unix/Linux/Mac
+        command = ["x-terminal-emulator", "-e", f"python {chat_script} --model_path {model_path}"]
+        try:
+            subprocess.Popen(command)
+        except FileNotFoundError:
+            # Fallback to gnome-terminal or xterm if x-terminal-emulator is not available
+            try:
+                subprocess.Popen(["gnome-terminal", "--", "python3", chat_script, "--model_path", model_path])
+            except FileNotFoundError:
+                subprocess.Popen(["xterm", "-e", f"python3 {chat_script} --model_path {model_path}"])
 
-@app.get("/api/playground/model_path")
+@app.get("/models", response_class=JSONResponse)
+async def list_models(request: Request) -> JSONResponse:
+    try:
+        models = db_manager.get_all_models()  # Assumes this method returns a list of model dicts
+        return JSONResponse({"models": models})
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="Error fetching models.")
+
+
+@app.get("/models/{model_id}", response_class=JSONResponse)
+async def get_model(model_id: int, request: Request) -> JSONResponse:
+    try:
+        model = db_manager.get_model_by_id(model_id)  # Assumes this method exists
+        if not model:
+            raise HTTPException(status_code=404, detail="Model not found.")
+        return JSONResponse(model)
+    except Exception as e:
+        print(e)
+        raise HTTPException(status_code=500, detail="Error fetching model.")
+
+@app.get("/playground/model_path")
 async def get_model_path(request: Request) -> JSONResponse:
     global model_path
     return JSONResponse({
         "model_path": model_path
     })
-
-@app.get("/api/models/all")
-async def get_all_models(request: Request) -> JSONResponse:
-    global db_cursor
-    try:
-        db_cursor.execute("SELECT * FROM modelforge_models")
-        models = db_cursor.fetchall()
-        model_list = []
-        for model in models:
-            model_list.append({
-                "model_id": model[0],
-                "model_name": model[1],
-                "model_path": model[2],
-                "pipeline_task": model[3],
-                "compute_specs": model[4]
-            })
-        return JSONResponse({
-            "models": model_list
-        })
-    except sqlite3.Error as e:
-        print(f"Database error: {e}")
-        raise HTTPException(status_code=500, detail="Database error occurred. Please check your modelforge.db file or open an issue on Github.")
 
 if __name__ == '__main__':
     uvicorn.run(app, host='127.0.0.1', port=8000)

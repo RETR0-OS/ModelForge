@@ -1,4 +1,3 @@
-import os
 from abc import ABC, abstractmethod
 import webbrowser
 import tensorboard
@@ -90,6 +89,15 @@ class Finetuner(ABC):
         """
         pass
 
+    @staticmethod
+    def gen_uuid() -> str:
+        """
+        Generate a unique identifier for the finetuned model.
+        :return: A string representing the unique identifier.
+        """
+        import uuid
+        return str(uuid.uuid4())
+
     def set_settings(self, **kwargs) -> None:
         """
         Set the settings for the finetuner based on the provided keyword arguments.
@@ -98,8 +106,9 @@ class Finetuner(ABC):
         """
 
         # Basic settings
-        self.fine_tuned_name = f"./finetuned_models/{self.model_name.replace('/', '-')}"
-        self.output_dir = "./model_checkpoints/" + self.model_name.replace('/', '-') if self.model_name else "./model_checkpoints"
+        uid = self.gen_uuid()
+        self.fine_tuned_name = f"./finetuned_models/{self.model_name.replace('/', "-")+'_' + uid}"
+        self.output_dir = "./model_checkpoints/" + self.model_name.replace('/', "-") + '_' + uid
         self.num_train_epochs = kwargs.get('num_train_epochs')
 
         self.max_seq_length = kwargs.get('max_seq_length')
@@ -160,7 +169,7 @@ class Finetuner(ABC):
     def finetune(self) -> bool | str:
         """
         Finetune the model with the provided data.
-        :return: True if model is successfully fine-tuned, False otherwise.
+        :return: model_path if model is successfully fine-tuned, False otherwise.
         """
         pass
 

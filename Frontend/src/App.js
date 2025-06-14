@@ -9,6 +9,7 @@ import Loading from './pages/Loading';
 import TechnicalDetailsPage from './pages/TechnicalDetailsPage';
 import ListModels from './pages/ListModels';
 import './index.css';
+import ListAllModels from "./pages/ListAllModels";
 
 const RedirectToFastAPI = () => {
   useEffect(() => {
@@ -121,11 +122,10 @@ function App() {
           element={<TechnicalDetailsPage />} 
           />
           <Route
-          path="/models/all"
-          element={<ListModels />}
+            path="/models"
+            element={<ListAllModels/>}
           />
         </Routes>
-
       </div>
     </Router>
   );

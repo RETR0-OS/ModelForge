@@ -152,7 +152,7 @@ class QuestionAnsweringTuner(Finetuner):
                 raise Warning(
                     "Error building config file.\nRetry finetuning. This might cause problems in the model playground.")
             super().report_finish()
-            return "finetuned_models/" + self.model_name.replace("/", "-")
+            return self.fine_tuned_name
 
         except hf_errors.GatedRepoError as e:
             super().invalid_access()

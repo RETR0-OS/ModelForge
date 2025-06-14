@@ -1,3 +1,9 @@
+import os
+os.environ["TRANSFORMERS_NO_ADVISORY_WARNINGS"] = "true"
+os.environ["TRANSFORMERS_VERBOSITY"] = "error"
+import warnings
+warnings.filterwarnings("ignore")
+
 import torch
 from transformers import AutoTokenizer, TextStreamer, pipeline
 from peft import PeftConfig
@@ -80,10 +86,10 @@ class PlaygroundModel:
                 )["answer"]
             return response
         except KeyboardInterrupt:
-            self.clean_up()
+            return ""
 
     def chat(self):
-        print("Chat started. Type '/bye' to exit")
+        print("Chat started. Type '/bye' to exit or /view_settings to view current model configurations.")
         try:
             if self.modelforge_config["pipeline_task"] == "question-answering":
                 while True:
@@ -103,7 +109,8 @@ class PlaygroundModel:
                         print("Context cannot be empty.")
                         continue
                     response = self.generate_response(prompt=query, context=context)
-                    print(f"Assistant: {response}")
+                    print(f"Assistant:", end=" ", flush=True)
+                    print(response)
             else:
                 while True:
                     user_input = input("You: ").strip()
@@ -117,8 +124,10 @@ class PlaygroundModel:
                         print(f"Model tokenizer configurations:\n{self.generator.tokenizer}")
                         print()
                         continue
+                    print(f"Assistant: ", end=" ", flush=True)
                     response = self.generate_response(user_input)
-                    print(f"Assistant: {response}")
+                    print(response)
+
         except KeyboardInterrupt:
             print("\nInterrupted by user")
         except Exception as e:
