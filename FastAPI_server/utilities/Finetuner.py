@@ -107,8 +107,8 @@ class Finetuner(ABC):
 
         # Basic settings
         uid = self.gen_uuid()
-        self.fine_tuned_name = f"./finetuned_models/{self.model_name.replace('/', "-")+'_' + uid}"
-        self.output_dir = "./model_checkpoints/" + self.model_name.replace('/', "-") + '_' + uid
+        self.fine_tuned_name = f"./finetuned_models/{self.model_name.replace('/', '-')+'_' + uid}"
+        self.output_dir = "./model_checkpoints/" + self.model_name.replace('/', '-') + '_' + uid
         self.num_train_epochs = kwargs.get('num_train_epochs')
 
         self.max_seq_length = kwargs.get('max_seq_length')

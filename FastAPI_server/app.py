@@ -43,6 +43,11 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from routers.finetuning_router import router as finetuning_router
 from routers.playground_router import router as playground_router
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
+
+## Static files
+frontend_dir = os.path.join(os.path.dirname(__file__), "../Frontend/build")
 
 ## Server Global Configurations
 app_name = "ModelForge"
@@ -60,8 +65,25 @@ app.add_middleware(
     allow_credentials=True,
 )
 
-app.include_router(finetuning_router)
-app.include_router(playground_router)
+app.include_router(prefix="/api", router=finetuning_router)
+app.include_router(prefix="/api", router=playground_router)
+
+
+## Mount static files
+app.mount(
+    "/",
+    StaticFiles(directory=frontend_dir, html=True),
+    name="static"
+)
+
+app.get("/{full_path:path}")
+async def serve_react_app(full_path: str):
+    index_file = os.path.join(frontend_dir,"index.html")
+    if os.path.exists(index_file):
+        return FileResponse(index_file)
+    else:
+        return JSONResponse({"detail": "index.html not found"}, status_code=404)
+
 
 
 ## Server endpoints
@@ -78,7 +100,7 @@ async def home(request: Request) -> JSONResponse:
         ]
     })
 
-@app.get("/models", response_class=JSONResponse)
+@app.get("/api/models", response_class=JSONResponse)
 async def list_models(request: Request) -> JSONResponse:
     try:
         models = global_manager.db_manager.get_all_models()  # Assumes this method returns a list of model dicts
@@ -87,7 +109,7 @@ async def list_models(request: Request) -> JSONResponse:
         print(e)
         raise HTTPException(status_code=500, detail="Error fetching models.")
 
-@app.get("/models/{model_id}", response_class=JSONResponse)
+@app.get("/api/models/{model_id}", response_class=JSONResponse)
 async def get_model(model_id: int, request: Request) -> JSONResponse:
     try:
         model = global_manager.db_manager.get_model_by_id(model_id)  # Assumes this method exists
