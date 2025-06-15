@@ -21,52 +21,79 @@
 - **Python 3.8+**: Ensure you have Python installed.
 - **NVIDIA GPU**: Recommended VRAM >= 6GB.
 - **CUDA**: Ensure CUDA is installed and configured for your GPU.
-- **Docker Desktop**: Install Docker Desktop for your OS.
-- **NVIDIA Container Toolkit**: Follow [these instructions](https://docs.nvidia.com/datacenter/cloud-native/container-toolkit/install-guide.html) to install the NVIDIA Container Toolkit.
+- **Node.js & npm**: Required for running the frontend.
 - **HuggingFace Account**: Create an account on [Hugging Face](https://huggingface.co/) and [generate a finegrained access token](https://huggingface.co/settings/tokens).
 
 ### Steps
 1. **Clone the Repository**:  
    ```bash
    git clone https://RETR0-OS/ModelForge.git
-    cd ModelForge
-    ```
+   cd ModelForge
+   ```
+
 2. **Set HuggingFace API Key in environment variables**:<br>
    Linux:
    ```bash
    export HUGGINGFACE_TOKEN=your_huggingface_token
    ```
-    Windows Powershell:
+   Windows Powershell:
+   ```bash
+   $env:HUGGINGFACE_TOKEN="your_huggingface_token"
+   ```
+   Windows CMD:
+   ```bash
+   set HUGGINGFACE_TOKEN=your_huggingface_token
+   ```
+   Or use a .env file:
     ```bash
-    $env:HUGGINGFACE_TOKEN="your_huggingface_token"
+    echo "HUGGINGFACE_TOKEN=your_huggingface_token" > .env
     ```
-    Windows CMD:
-    ```bash
-    set HUGGINGFACE_TOKEN=your_huggingface_token
-    ```
-   
-3. **Build and the Docker Images**:
-    ```bash
-    docker-compose up --build
-    ```
-``NOTE: This may take a while, especially the first time you run it. The images are quite large.``
 
-4. **Done!**:
-Navigate to [http://localhost:3000](http://localhost:3000) in your browser and get started!
+3. **Install Backend Dependencies**:
+   ```bash
+   cd FastAPI_server
+   pip install -r requirements.txt
+   ```
+
+4. **Install Frontend Dependencies**:
+   ```bash
+   cd ../Frontend
+   npm install
+   ```
+
+5. **Run the Backend**:
+   ```bash
+   cd ../FastAPI_server
+   uvicorn app:app --host 127.0.0.1 --port 8000 --reload
+   ```
+
+6. **Run the Frontend**:
+   Open a new terminal, then:
+   ```bash
+   cd ../Frontend
+   npm start
+   ```
+
+7. **Done!**:
+   Navigate to [http://localhost:3000](http://localhost:3000) in your browser and get started!
 
 ### **Running the Application Again in the Future**
-1. **Start the Docker Containers**:
-    ```bash
-    docker-compose up
-    ```
-2. **Navigate to the UI**:  
+1. **Start the Backend**:
+   ```bash
+   cd backend
+   uvicorn main:app --host 0.0.0.0 --port 8000
+   ```
+2. **Start the Frontend**:
+   Open a new terminal, then:
+   ```bash
+   cd frontend
+   npm start
+   ```
+3. **Navigate to the UI**:  
    Open your browser and go to [http://localhost:3000](http://localhost:3000).
 
 ### **Stopping the Application**
-To stop the application and free up resources, open a new terminal and run:
-```bash
-  docker-compose down
-```
+To stop the application and free up resources, press `Ctrl+C` in the terminals running the backend and frontend.
 
 ## 📂 **Dataset Format**  
 ```jsonl
@@ -79,6 +106,5 @@ To stop the application and free up resources, open a new terminal and run:
 - `bitsandbytes` (4-bit quantization)  
 - `React` (UI)   
 - `FastAPI` (Backend)
-- `Docker` (Containerization)
-- `NVIDIA Container Toolkit` (GPU support)
-- `NGINX` (Reverse proxy)
+- `Python` (Backend)
+- `Node.js` (Frontend)
