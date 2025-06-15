@@ -136,3 +136,9 @@ class SettingsBuilder:
             "logging_steps": self.logging_steps,
 
         }
+
+    def reset(self):
+        """
+        Clear all settings to their default values
+        """
+        self.__init__(None, None, None)
