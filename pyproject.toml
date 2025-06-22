@@ -1,9 +1,9 @@
 [project]
-name = "ModelForge"
+name = "modelforge-finetuning"
 version = "0.1.0"
 description = "ModelForge: A no-code toolkit for fine-tuning HuggingFace models"
 authors = [
-    {name = "Your Name", email = "your.email@example.com"},
+    {name = "R3tr0 M1ll3r", email = "r3tr0.m1ll3r@gmail.com"},
 ]
 readme = "README.md"
 requires-python = ">=3.11"
@@ -30,14 +30,10 @@ dependencies = [
 ]
 
 [tool.setuptools]
-packages = ["FastAPI_server", "FastAPI_server.globals", "FastAPI_server.routers", "FastAPI_server.utilities"]
-
-
-[tool.setuptools.package-data]
-"FastAPI_server" = ["Frontend/build/**/*", "Frontend/build/*"]
+packages = ["ModelForge", "ModelForge.globals", "ModelForge.routers", "ModelForge.utilities"]
 
 [project.scripts]
-modelforge = "FastAPI_server.cli:main"
+modelforge = "ModelForge.cli:main"
 
 [build-system]
 requires = ["setuptools"]

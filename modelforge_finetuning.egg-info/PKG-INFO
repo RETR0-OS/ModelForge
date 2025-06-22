@@ -1,3 +1,30 @@
+Metadata-Version: 2.4
+Name: modelforge-finetuning
+Version: 0.1.0
+Summary: ModelForge: A no-code toolkit for fine-tuning HuggingFace models
+Author-email: R3tr0 M1ll3r <r3tr0.m1ll3r@gmail.com>
+Requires-Python: >=3.11
+Description-Content-Type: text/markdown
+Requires-Dist: accelerate==1.5.2
+Requires-Dist: bitsandbytes==0.45.3
+Requires-Dist: datasets==3.5.0
+Requires-Dist: dotenv>=0.9.9
+Requires-Dist: fastapi==0.115.12
+Requires-Dist: huggingface-hub==0.30.2
+Requires-Dist: safetensors==0.5.3
+Requires-Dist: setuptools==78.1.0
+Requires-Dist: tensorboard==2.19.0
+Requires-Dist: tensorboard-data-server==0.7.2
+Requires-Dist: tokenizers==0.21.1
+Requires-Dist: tqdm==4.67.1
+Requires-Dist: transformers>=4.45.1
+Requires-Dist: trl==0.16.0
+Requires-Dist: uvicorn
+Requires-Dist: platformdirs
+Requires-Dist: pynvml
+Requires-Dist: peft
+Requires-Dist: python-multipart
+
 # ModelForge 🔧⚡
 
 **Finetune LLMs on your laptop’s GPU—no code, no PhD, no hassle.**  
@@ -18,15 +45,16 @@
 
 ## Installation
 ### Prerequisites
-- **Python==3.11.x**: Ensure you have Python installed.
+- **Python 3.8+**: Ensure you have Python installed.
 - **NVIDIA GPU**: Recommended VRAM >= 6GB.
 - **CUDA**: Ensure CUDA is installed and configured for your GPU.
+- **Node.js & npm**: Required for running the frontend.
 - **HuggingFace Account**: Create an account on [Hugging Face](https://huggingface.co/) and [generate a finegrained access token](https://huggingface.co/settings/tokens).
 
 ### Steps
 1. **Install the Package**:  
    ```bash
-   pip install modelforge-finetuning
+   pip install git+https://github.com
    ```
 
 2. **Set HuggingFace API Key in environment variables**:<br>
@@ -47,25 +75,33 @@
     echo "HUGGINGFACE_TOKEN=your_huggingface_token" > .env
     ```
 
-3. **Install Appropriate CUDA version for PyTorch**:
-   -  Navigate to the [PyTorch installation page](https://pytorch.org/get-started/locally/) and select the appropriate CUDA version for your system.
-   - Install PyTorch with the correct CUDA version. For example, for CUDA 12.6 on Windows, you can use:
+3. **Install Backend Dependencies**:
    ```bash
-    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
-    ```
-
-4. **Run the Application**:
-   ```bash
-   modelforge run
+   cd FastAPI_server
+   pip install -r requirements.txt
    ```
 
-5. **Done!**:
+4. **Install Frontend Dependencies and build Frontend**:
+   ```bash
+   cd ../Frontend
+   npm install
+   npm run build
+   ```
+
+5. **Run the Backend**:
+   ```bash
+   cd ../FastAPI_server
+   uvicorn app:app --host 127.0.0.1 --port 8000 --reload
+   ```
+
+6. **Done!**:
    Navigate to [http://localhost:8000](http://localhost:8000) in your browser and get started!
 
 ### **Running the Application Again in the Future**
 1. **Start the Application**:
    ```bash
-   modelforge run
+   cd backend
+   uvicorn main:app --host 0.0.0.0 --port 8000
    ```
 2. **Navigate to the App**:  
    Open your browser and go to [http://localhost:8000](http://localhost:8000).
@@ -85,4 +121,4 @@ To stop the application and free up resources, press `Ctrl+C` in the terminal ru
 - `React` (UI)   
 - `FastAPI` (Backend)
 - `Python` (Backend)
-- `React.JS` (Frontend)
+- `Node.js` (Frontend)
