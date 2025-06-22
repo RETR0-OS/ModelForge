@@ -5,7 +5,7 @@ from fastapi import APIRouter
 from fastapi import Request
 from starlette.responses import JSONResponse
 
-from ModelForge.FastAPI_server.globals.globals_instance import global_manager
+from ..globals.globals_instance import global_manager
 
 router = APIRouter(
     prefix="/playground",

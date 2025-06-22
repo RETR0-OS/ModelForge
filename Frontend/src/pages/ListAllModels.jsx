@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
+import { config } from "../services/api";
 
 function openPlayground(modelPath){
-    const url = "http://localhost:8000/playground/new";
+    const url = config.baseURL + "playground/new";
     const options = {
         method: "POST",
         headers: {
@@ -20,7 +21,7 @@ const ListAllModels = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:8000/models")
+    fetch(config.baseURL + "/models/")
       .then((res) => {
         if (!res.ok) throw new Error("Failed to fetch models");
         return res.json();
