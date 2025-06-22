@@ -11,7 +11,7 @@ on:
 env:
   PACKAGE_NAME: "modelforge-finetuning"
   OWNER: "RETR0-OS"
-  TAP_NAME: "<TAP_NAME>"
+  TAP_NAME: "BREW_TAP_TOKEN"
 
 jobs:
   details:
@@ -115,7 +115,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
 
   bump_homebrew_formula:
-    needs: [pypi_publish, github_release, details]
+    needs: [ pypi_publish, github_release, details ]
     runs-on: ubuntu-latest
     steps:
       - name: Dispatch Homebrew Tap Update
