@@ -45,16 +45,15 @@ Requires-Dist: python-multipart
 
 ## Installation
 ### Prerequisites
-- **Python 3.8+**: Ensure you have Python installed.
+- **Python==3.11.x**: Ensure you have Python installed.
 - **NVIDIA GPU**: Recommended VRAM >= 6GB.
 - **CUDA**: Ensure CUDA is installed and configured for your GPU.
-- **Node.js & npm**: Required for running the frontend.
 - **HuggingFace Account**: Create an account on [Hugging Face](https://huggingface.co/) and [generate a finegrained access token](https://huggingface.co/settings/tokens).
 
 ### Steps
 1. **Install the Package**:  
    ```bash
-   pip install git+https://github.com
+   pip install modelforge-finetuning
    ```
 
 2. **Set HuggingFace API Key in environment variables**:<br>
@@ -75,33 +74,25 @@ Requires-Dist: python-multipart
     echo "HUGGINGFACE_TOKEN=your_huggingface_token" > .env
     ```
 
-3. **Install Backend Dependencies**:
+3. **Install Appropriate CUDA version for PyTorch**:
+   -  Navigate to the [PyTorch installation page](https://pytorch.org/get-started/locally/) and select the appropriate CUDA version for your system.
+   - Install PyTorch with the correct CUDA version. For example, for CUDA 12.6 on Windows, you can use:
    ```bash
-   cd FastAPI_server
-   pip install -r requirements.txt
+    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+    ```
+
+4. **Run the Application**:
+   ```bash
+   modelforge run
    ```
 
-4. **Install Frontend Dependencies and build Frontend**:
-   ```bash
-   cd ../Frontend
-   npm install
-   npm run build
-   ```
-
-5. **Run the Backend**:
-   ```bash
-   cd ../FastAPI_server
-   uvicorn app:app --host 127.0.0.1 --port 8000 --reload
-   ```
-
-6. **Done!**:
+5. **Done!**:
    Navigate to [http://localhost:8000](http://localhost:8000) in your browser and get started!
 
 ### **Running the Application Again in the Future**
 1. **Start the Application**:
    ```bash
-   cd backend
-   uvicorn main:app --host 0.0.0.0 --port 8000
+   modelforge run
    ```
 2. **Navigate to the App**:  
    Open your browser and go to [http://localhost:8000](http://localhost:8000).
@@ -121,4 +112,4 @@ To stop the application and free up resources, press `Ctrl+C` in the terminal ru
 - `React` (UI)   
 - `FastAPI` (Backend)
 - `Python` (Backend)
-- `Node.js` (Frontend)
+- `React.JS` (Frontend)
