@@ -1,5 +1,5 @@
 export const config = {
-    baseURL: 'http://localhost:8000',
+    baseURL: '/api',
     headers: {
         'Content-Type': 'application/json',
     },

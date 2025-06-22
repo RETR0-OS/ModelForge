@@ -1,0 +1,2 @@
+[console_scripts]
+modelforge = ModelForge.cli:main

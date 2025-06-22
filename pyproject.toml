@@ -1,0 +1,50 @@
+[project]
+name = "modelforge-finetuning"
+version = "0.1.0"
+description = "ModelForge: A no-code toolkit for fine-tuning HuggingFace models"
+authors = [
+    {name = "R3tr0 M1ll3r", email = "r3tr0.m1ll3r@gmail.com"},
+]
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "accelerate==1.5.2",
+    "bitsandbytes==0.45.3",
+    "datasets==3.5.0",
+    "dotenv>=0.9.9",
+    "fastapi==0.115.12",
+    "huggingface-hub==0.30.2",
+    "safetensors==0.5.3",
+    "setuptools==78.1.0",
+    "tensorboard==2.19.0",
+    "tensorboard-data-server==0.7.2",
+    "tokenizers==0.21.1",
+    "tqdm==4.67.1",
+    "transformers>=4.45.1",
+    "trl==0.16.0",
+    "uvicorn",
+    "platformdirs",
+    "pynvml",
+    "peft",
+    "python-multipart"
+]
+
+[tool.setuptools]
+packages = ["ModelForge", "ModelForge.globals", "ModelForge.routers", "ModelForge.utilities"]
+
+[project.scripts]
+modelforge = "ModelForge.cli:main"
+
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.exclude-package-data]
+"*" = [
+    "database/*",
+    "datasets/*",
+    "model_checkpoints/*",
+    "training_logs/*",
+    "*__pycache__*",
+    "*.pyc"
+]
