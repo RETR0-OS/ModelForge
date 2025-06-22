@@ -1,3 +1,3 @@
-from ModelForge.FastAPI_server.globals.globals import GlobalSettings
+from .globals import GlobalSettings
 
-global_manager = GlobalSettings.get_instance()
+global_manager = GlobalSettings()

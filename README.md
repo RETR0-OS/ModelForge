@@ -55,10 +55,11 @@
    pip install -r requirements.txt
    ```
 
-4. **Install Frontend Dependencies**:
+4. **Install Frontend Dependencies and build Frontend**:
    ```bash
    cd ../Frontend
    npm install
+   npm run build
    ```
 
 5. **Run the Backend**:
@@ -67,33 +68,20 @@
    uvicorn app:app --host 127.0.0.1 --port 8000 --reload
    ```
 
-6. **Run the Frontend**:
-   Open a new terminal, then:
-   ```bash
-   cd ../Frontend
-   npm start
-   ```
-
-7. **Done!**:
-   Navigate to [http://localhost:3000](http://localhost:3000) in your browser and get started!
+6. **Done!**:
+   Navigate to [http://localhost:8000](http://localhost:8000) in your browser and get started!
 
 ### **Running the Application Again in the Future**
-1. **Start the Backend**:
+1. **Start the Application**:
    ```bash
    cd backend
    uvicorn main:app --host 0.0.0.0 --port 8000
    ```
-2. **Start the Frontend**:
-   Open a new terminal, then:
-   ```bash
-   cd frontend
-   npm start
-   ```
-3. **Navigate to the UI**:  
-   Open your browser and go to [http://localhost:3000](http://localhost:3000).
+2. **Navigate to the App**:  
+   Open your browser and go to [http://localhost:8000](http://localhost:8000).
 
 ### **Stopping the Application**
-To stop the application and free up resources, press `Ctrl+C` in the terminals running the backend and frontend.
+To stop the application and free up resources, press `Ctrl+C` in the terminal running the app.
 
 ## 📂 **Dataset Format**  
 ```jsonl

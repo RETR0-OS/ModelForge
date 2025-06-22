@@ -1,26 +1,36 @@
 import os
 
-from ModelForge.FastAPI_server.utilities.DBManager import DatabaseManager
-from ModelForge.FastAPI_server.utilities.hardware_detector import HardwareDetector
-from ModelForge.FastAPI_server.utilities.settings_builder import SettingsBuilder
+from ..utilities.DBManager import DatabaseManager
+from ..utilities.FileManager import FileManager
+from ..utilities.hardware_detector import HardwareDetector
+from ..utilities.settings_builder import SettingsBuilder
 
 class GlobalSettings:
     _instance = None
+    file_manager = None
+    hardware_detector = None
+    settings_builder = None
+    settings_cache = None
+    finetuning_status = None
+    datasets_dir = None
+    model_path = None
+    db_manager = None
+    app_name = None
 
     def __new__(cls):
         if cls._instance is None:
             cls._instance = super(GlobalSettings, cls).__new__(cls)
-            cls._instance._init()
         return cls._instance
 
-    def _init(self):
+    def __init__(self):
+        self.file_manager = FileManager()
         self.hardware_detector = HardwareDetector()
         self.settings_builder = SettingsBuilder(None, None, None)
         self.settings_cache = {}
         self.finetuning_status = {"status": "idle", "progress": 0, "message": ""}
-        self.datasets_dir = "./datasets"
-        self.model_path = os.path.join(os.path.dirname(__file__), "model_checkpoints")
-        self.db_manager = DatabaseManager(db_path=os.getenv("DB_PATH", "./database/modelforge.sqlite"))
+        self.datasets_dir = self.file_manager.return_default_dirs()["datasets"]
+        self.model_path = self.file_manager.return_default_dirs()["models"]
+        self.db_manager = DatabaseManager(db_path=os.path.join(self.file_manager.return_default_dirs()["database"], "modelforge.sqlite"))
         self.app_name = "ModelForge"
 
     @classmethod

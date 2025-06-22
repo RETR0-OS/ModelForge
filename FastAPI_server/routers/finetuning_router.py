@@ -9,11 +9,11 @@ from fastapi import Request
 from starlette.responses import JSONResponse
 from pydantic import BaseModel, field_validator
 
-from ModelForge.FastAPI_server.utilities.CausalLLMTuner import CausalLLMFinetuner
-from ModelForge.FastAPI_server.utilities.QuestionAnsweringTuner import QuestionAnsweringTuner
-from ModelForge.FastAPI_server.utilities.Seq2SeqLMTuner import Seq2SeqFinetuner
+from ..utilities.CausalLLMTuner import CausalLLMFinetuner
+from ..utilities.QuestionAnsweringTuner import QuestionAnsweringTuner
+from ..utilities.Seq2SeqLMTuner import Seq2SeqFinetuner
 
-from ModelForge.FastAPI_server.globals.globals_instance import global_manager
+from ..globals.globals_instance import global_manager
 
 router = APIRouter(
     prefix="/finetune",
@@ -328,27 +328,10 @@ async def load_settings(json_file: UploadFile = File(...), settings: str = Form(
 
     json_filename = gen_uuid(json_file.filename)
     file_content = await json_file.read()
-    file_path = os.path.join(global_manager.datasets_dir, json_filename)
-
-    # Check file extension to decide a processing method
-    if json_file.filename.endswith('.jsonl'):
-        # For JSONL files, validate each line is valid JSON
-        try:
-            # Decode bytes to string and split by lines
-            content_str = file_content.decode('utf-8')
-            for line in content_str.strip().split('\n'):
-                json.loads(line)  # Just to validate each line is valid JSON
-        except json.JSONDecodeError:
-            raise HTTPException(400, "Invalid JSONL format - contains invalid JSON lines")
-    elif json_file.filename.endswith('.json'):
-        # For JSON files, validate the entire content is valid JSON
-        try:
-            json.loads(file_content.decode('utf-8'))
-        except json.JSONDecodeError:
-            raise HTTPException(400, "Invalid JSON format")
-    with open(file_path, "wb") as f:
-        f.write(file_content)
+    file_path = os.path.join(global_manager.file_manager.return_default_dirs()["datasets"], json_filename)
+    file_path = global_manager.file_manager.save_file(file_path=file_path, content=file_content)
     global_manager.settings_builder.dataset = file_path
+
     settings_data = json.loads(settings)
     settings_data["dataset"] = file_path
     global_manager.settings_builder.set_settings(settings_data)
@@ -439,4 +422,3 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
         "app_name":global_manager.app_name,
         "message": "Finetuning process started.",
     })
-

@@ -34,6 +34,8 @@ const Navbar = ({ appName = "ModelForge" }) => {
         return 'Technical Documentation';
       case '/app':
         return 'Application';
+      case '/models':
+        return 'My models'
       default:
         return null;
     }
