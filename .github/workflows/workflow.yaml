@@ -1,0 +1,132 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "[0-9]+.[0-9]+.[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+a[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+b[0-9]+"
+      - "[0-9]+.[0-9]+.[0-9]+rc[0-9]+"
+
+env:
+  PACKAGE_NAME: "modelforge-finetuning"
+  OWNER: "RETR0-OS"
+  TAP_NAME: "<TAP_NAME>"
+
+jobs:
+  details:
+    runs-on: ubuntu-latest
+    outputs:
+      new_version: ${{ steps.release.outputs.new_version }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Extract tag and version
+        id: release
+        run: |
+          if [[ "${{ github.ref_type }}" == "tag" ]]; then
+            TAG_NAME=${GITHUB_REF#refs/tags/}
+            NEW_VERSION=$(echo $TAG_NAME | awk -F'-' '{print $1}')
+            echo "new_version=$NEW_VERSION" >> "$GITHUB_OUTPUT"
+            echo "tag_name=$TAG_NAME" >> "$GITHUB_OUTPUT"
+          else
+            echo "No tag found"; exit 1
+          fi
+
+  check_pypi:
+    needs: details
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check latest PyPI version
+        run: |
+          response=$(curl -s https://pypi.org/pypi/${{ env.PACKAGE_NAME }}/json || echo "{}")
+          latest=$(echo "$response" | jq -r '.releases | keys_unsorted | last // "0.0.0"')
+          echo "latest_previous_version=$latest" >> $GITHUB_ENV
+
+      - name: Compare versions
+        run: |
+          if [ "$(printf '%s\n' "$latest_previous_version" "${{ needs.details.outputs.new_version }}" | sort -rV | head -n1)" != "${{ needs.details.outputs.new_version }}" ]; then
+            echo "New version is not greater than $latest_previous_version" && exit 1
+          fi
+
+  build_package:
+    needs: [details, check_pypi]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install build backend
+        run: pip install build
+
+      - name: Build package
+        run: python -m build
+
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+  pypi_publish:
+    needs: [build_package]
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      id-token: write
+    steps:
+      - name: Download dist
+        uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+
+  github_release:
+    needs: [build_package, details]
+    runs-on: ubuntu-latest
+    environment: release
+    permissions:
+      contents: write
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: dist
+          path: dist/
+
+      - name: Create GitHub Release
+        run: |
+          gh release create "${{ needs.details.outputs.tag_name }}" dist/* \
+            --title "${{ needs.details.outputs.tag_name }}" \
+            --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+  bump_homebrew_formula:
+    needs: [pypi_publish, github_release, details]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Dispatch Homebrew Tap Update
+        uses: peter-evans/repository-dispatch@v2
+        with:
+          token: ${{ secrets.BREW_TAP_TOKEN }}
+          repository: ${{ env.OWNER }}/${{ env.TAP_NAME }}
+          event-type: update-formula
+          client-payload: |
+            {
+              "formula_version": "${{ needs.details.outputs.new_version }}",
+              "formula_url": "https://github.com/${{ env.OWNER }}/${{ env.PACKAGE_NAME }}/releases/download/${{ needs.details.outputs.new_version }}/${{ env.PACKAGE_NAME }}-${{ needs.details.outputs.new_version }}.tar.gz",
+              "formula_name": "${{ env.PACKAGE_NAME }}"
+            }
