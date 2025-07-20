@@ -25,7 +25,7 @@ async def new_playground(request: Request) -> None:
     print(form)
     model_path = form["model_path"]
 
-    base_path = os.path.join(os.path.dirname(__file__), "utilities")
+    base_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "utilities"))
     chat_script = os.path.join(base_path, "chat_playground.py")
     if os.name == "nt":  # Windows
         command = ["cmd.exe", "/c", "start", "python", chat_script, "--model_path", model_path]
