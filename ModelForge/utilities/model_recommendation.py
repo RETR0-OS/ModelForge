@@ -68,6 +68,47 @@ class ModelRecommendationEngine:
             logging.error(error_msg)
             raise RuntimeError(error_msg) from e
     
+    def get_recommendation_with_custom_model(self, custom_model: str, hardware_profile: str, task: str) -> Tuple[str, List[str]]:
+        """
+        Get recommendation when using a custom model, keeping alternatives as fallbacks.
+        
+        Args:
+            custom_model: Custom model repository name
+            hardware_profile: Hardware profile (low_end, mid_range, high_end)
+            task: Task name (text-generation, summarization, etc.)
+            
+        Returns:
+            Tuple of (custom_model, alternative_models_from_profile)
+            
+        Raises:
+            ValueError: If profile or task is not supported
+        """
+        try:
+            # Validate inputs
+            self._validate_profile(hardware_profile)
+            self._validate_task(task)
+            
+            logging.info(f"Getting custom model recommendation: {custom_model} for profile: {hardware_profile}, task: {task}")
+            
+            # Get recommended alternatives for fallback
+            try:
+                _, alternative_models = self.get_recommendation(hardware_profile, task)
+            except Exception as e:
+                logging.warning(f"Could not get alternatives for custom model: {e}")
+                alternative_models = []
+            
+            logging.info(f"Custom model: {custom_model}, fallback alternatives: {alternative_models}")
+            
+            return custom_model, alternative_models
+            
+        except ValueError:
+            # Re-raise ValueError as is
+            raise
+        except Exception as e:
+            error_msg = f"Failed to get custom model recommendation for '{custom_model}': {str(e)}"
+            logging.error(error_msg)
+            raise RuntimeError(error_msg) from e
+    
     def get_all_recommendations_for_profile(self, hardware_profile: str) -> Dict[str, Dict[str, any]]:
         """
         Get all model recommendations for a given hardware profile across all tasks.

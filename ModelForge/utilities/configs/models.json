@@ -54,5 +54,14 @@
         "alternatives": ["IlyaGusev/mbart_ru_sum_gazeta", "facebook/bart-base", "deepset/roberta-base-squad2"]
       }
     }
+  },
+  "custom_model_support": {
+    "enabled": true,
+    "validation_timeout_seconds": 10,
+    "default_warnings": [
+      "Custom model compatibility not guaranteed",
+      "Memory and performance not estimated",
+      "User responsible for hardware limitations"
+    ]
   }
 } 

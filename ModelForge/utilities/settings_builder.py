@@ -11,6 +11,7 @@ class SettingsBuilder:
         self.num_train_epochs = 1
         self.dataset = None
         self.compute_profile = compute_profile
+        self.is_custom_model = False
         self.lora_r = 16
         self.lora_alpha = 32
         self.lora_dropout = 0.1
@@ -134,8 +135,35 @@ class SettingsBuilder:
             "max_seq_length": self.max_seq_length,
             "dataset": self.dataset,
             "logging_steps": self.logging_steps,
+            "is_custom_model": self.is_custom_model,
 
         }
+
+    def set_custom_model(self, model_name: str) -> None:
+        """
+        Set a custom model and update related settings.
+        
+        Args:
+            model_name: Custom model repository name
+        """
+        self.model_name = model_name
+        self.is_custom_model = True
+        # Update output directory for custom model
+        safe_model_name = model_name.replace('/', '-').replace('\\', '-')
+        self.output_dir = f"../model_checkpoints/{safe_model_name}"
+    
+    def set_recommended_model(self, model_name: str) -> None:
+        """
+        Set a recommended model and update related settings.
+        
+        Args:
+            model_name: Recommended model name
+        """
+        self.model_name = model_name
+        self.is_custom_model = False
+        # Update output directory for recommended model
+        safe_model_name = model_name.replace('/', '-').replace('\\', '-')
+        self.output_dir = f"../model_checkpoints/{safe_model_name}"
 
     def reset(self):
         """

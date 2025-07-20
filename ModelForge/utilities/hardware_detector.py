@@ -7,7 +7,6 @@ from .model_recommendation import ModelRecommendationEngine
 
 
 class HardwareDetector:
- 
     def __init__(self):
         """
         Initialize HardwareDetector with enhanced error handling.

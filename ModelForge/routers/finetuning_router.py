@@ -12,6 +12,7 @@ from pydantic import BaseModel, field_validator
 from ..utilities.CausalLLMTuner import CausalLLMFinetuner
 from ..utilities.QuestionAnsweringTuner import QuestionAnsweringTuner
 from ..utilities.Seq2SeqLMTuner import Seq2SeqFinetuner
+from ..utilities.model_validator import ModelValidator
 
 from ..globals.globals_instance import global_manager
 
@@ -35,6 +36,14 @@ class SelectedModelFormData(BaseModel):
         if not selected_model:
             raise ValueError("Selected model cannot be empty.")
         return selected_model
+
+class CustomModelValidationData(BaseModel):
+    repo_name: str
+    @field_validator("repo_name")
+    def validate_repo_name(cls, repo_name):
+        if not repo_name or not repo_name.strip():
+            raise ValueError("Repository name cannot be empty.")
+        return repo_name.strip()
 
 class SettingsFormData(BaseModel):
     task: str
@@ -245,13 +254,16 @@ async def detect_hardware(request: Request) -> JSONResponse:
         task = TaskFormData(task=form["task"])
         task = task.task
         global_manager.settings_builder.task = task
+        # Reset custom model settings when running new hardware detection
+        global_manager.settings_builder.is_custom_model = False
         model_requirements, hardware_profile, model_recommendation, possible_options = global_manager.hardware_detector.run(task)
         global_manager.settings_builder.compute_profile = model_requirements["profile"]
         global_manager.settings_cache.update({
             "model_requirements": model_requirements,
             "hardware_profile": hardware_profile,
             "model_recommendation": model_recommendation,
-            "selected_model": None
+            "selected_model": None,
+            "is_custom_model": False
         })
         return JSONResponse(
             {
@@ -294,12 +306,86 @@ async def set_model(request: Request) -> None:
         form = await request.json()
         selected_model = SelectedModelFormData(selected_model=form["selected_model"])
         global_manager.settings_cache["selected_model"] = selected_model
-        global_manager.settings_builder.model_name = selected_model.selected_model
+        global_manager.settings_cache["is_custom_model"] = False
+        global_manager.settings_builder.set_recommended_model(selected_model.selected_model)
     except Exception as e:
         print(e)
         raise HTTPException(
             status_code=500,
             detail="Error setting model. Please try again later."
+        )
+
+@router.post("/validate_custom_model", response_class=JSONResponse)
+async def validate_custom_model(request: Request) -> JSONResponse:
+    try:
+        form = await request.json()
+        validation_data = CustomModelValidationData(repo_name=form["repo_name"])
+        
+        # Create model validator and validate the repository
+        model_validator = ModelValidator()
+        validation_result = model_validator.validate_repo_name(validation_data.repo_name)
+        
+        # Add default warnings for custom models
+        if validation_result["valid"]:
+            validation_result["warnings"] = model_validator.get_default_warnings()
+        
+        return JSONResponse({
+            "status_code": 200,
+            "validation": validation_result
+        })
+        
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+    except Exception as e:
+        print(f"Custom model validation error: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Error validating custom model. Please try again later."
+        )
+
+@router.post("/set_custom_model", response_class=JSONResponse)
+async def set_custom_model(request: Request) -> JSONResponse:
+    try:
+        form = await request.json()
+        validation_data = CustomModelValidationData(repo_name=form["repo_name"])
+        
+        # Validate the custom model first
+        model_validator = ModelValidator()
+        validation_result = model_validator.validate_repo_name(validation_data.repo_name)
+        
+        if not validation_result["valid"]:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Invalid custom model: {validation_result.get('error', 'Unknown error')}"
+            )
+        
+        # Set the custom model in global settings
+        global_manager.settings_cache["selected_model"] = validation_data
+        global_manager.settings_cache["is_custom_model"] = True
+        global_manager.settings_builder.set_custom_model(validation_data.repo_name)
+        
+        return JSONResponse({
+            "status_code": 200,
+            "message": "Custom model set successfully",
+            "model_name": validation_data.repo_name,
+            "warnings": model_validator.get_default_warnings()
+        })
+        
+    except ValueError as e:
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error setting custom model: {e}")
+        raise HTTPException(
+            status_code=500,
+            detail="Error setting custom model. Please try again later."
         )
 
 @router.get("/load_settings")
@@ -348,9 +434,11 @@ def finetuning_task(llm_tuner) -> None:
                 -1] if global_manager.settings_builder.fine_tuned_name else os.path.basename(model_path),
             "base_model": global_manager.settings_builder.model_name,
             "task": global_manager.settings_builder.task,
-            "description": f"Fine-tuned {global_manager.settings_builder.model_name} for {global_manager.settings_builder.task}",
+            "description": f"Fine-tuned {global_manager.settings_builder.model_name} for {global_manager.settings_builder.task}" + 
+                          (" (Custom Model)" if global_manager.settings_builder.is_custom_model else " (Recommended Model)"),
             "creation_date": datetime.now().isoformat(),
             "model_path": model_path,
+            "is_custom_base_model": global_manager.settings_builder.is_custom_model
         }
         global_manager.db_manager.add_model(model_data)
 
@@ -375,6 +463,12 @@ async def finetuning_status_page(request: Request) -> JSONResponse:
 async def start_finetuning_page(request: Request, background_task: BackgroundTasks) -> JSONResponse:
 
     print(global_manager.settings_builder.get_settings())
+    
+    # Log whether using custom model
+    if global_manager.settings_builder.is_custom_model:
+        print(f"Starting finetuning with CUSTOM MODEL: {global_manager.settings_builder.model_name}")
+    else:
+        print(f"Starting finetuning with RECOMMENDED MODEL: {global_manager.settings_builder.model_name}")
 
     if not global_manager.settings_cache:
         raise HTTPException(
