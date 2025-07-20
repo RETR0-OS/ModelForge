@@ -7,10 +7,11 @@ class SettingsBuilder:
         self.model_name = model_name
         self.task = task
         self.fine_tuned_name = None
-        self.output_dir = f"../model_checkpoints/{model_name}"
+        self.output_dir = None  # Will be set properly in set_settings()
         self.num_train_epochs = 1
         self.dataset = None
         self.compute_profile = compute_profile
+        self.is_custom_model = False
         self.lora_r = 16
         self.lora_alpha = 32
         self.lora_dropout = 0.1
@@ -134,8 +135,31 @@ class SettingsBuilder:
             "max_seq_length": self.max_seq_length,
             "dataset": self.dataset,
             "logging_steps": self.logging_steps,
+            "is_custom_model": self.is_custom_model,
 
         }
+
+    def set_custom_model(self, model_name: str) -> None:
+        """
+        Set a custom model and update related settings.
+        
+        Args:
+            model_name: Custom model repository name
+        """
+        self.model_name = model_name
+        self.is_custom_model = True
+        # Note: output_dir will be set in set_settings() using global model path
+    
+    def set_recommended_model(self, model_name: str) -> None:
+        """
+        Set a recommended model and update related settings.
+        
+        Args:
+            model_name: Recommended model name
+        """
+        self.model_name = model_name
+        self.is_custom_model = False
+        # Note: output_dir will be set in set_settings() using global model path
 
     def reset(self):
         """

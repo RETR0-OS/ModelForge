@@ -149,7 +149,7 @@ class PlaygroundModel:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Chat with QLoRA fine-tuned model")
     parser.add_argument("--model_path", type=str, required=True,
-                        help="Path to saved PEFT model directory")
+                        help="Path to saved modelforge model directory")
     args = parser.parse_args()
 
     bot = PlaygroundModel(model_path=args.model_path)
