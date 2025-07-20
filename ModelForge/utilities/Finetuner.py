@@ -104,11 +104,16 @@ class Finetuner(ABC):
         :param kwargs: The keyword arguments to set the settings.
         :return: None
         """
+        from ..globals.globals_instance import global_manager
 
         # Basic settings
         uid = self.gen_uuid()
-        self.fine_tuned_name = f"./finetuned_models/{self.model_name.replace('/', '-')+'_' + uid}"
-        self.output_dir = "./model_checkpoints/" + self.model_name.replace('/', '-') + '_' + uid
+        safe_model_name = self.model_name.replace('/', '-').replace('\\', '-')
+        
+        # Use FileManager default directories for consistent structure
+        default_dirs = global_manager.file_manager.return_default_dirs()
+        self.fine_tuned_name = f"{default_dirs['models']}/{safe_model_name}_{uid}"
+        self.output_dir = f"{default_dirs['model_checkpoints']}/{safe_model_name}_{uid}"
         self.num_train_epochs = kwargs.get('num_train_epochs')
 
         self.max_seq_length = kwargs.get('max_seq_length')

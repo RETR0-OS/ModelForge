@@ -427,11 +427,15 @@ def finetuning_task(llm_tuner) -> None:
     try:
         llm_tuner.load_dataset(global_manager.settings_builder.dataset)
         path = llm_tuner.finetune()
-        model_path = os.path.join(os.path.dirname(__file__), path.replace("./", ""))
+        
+        # Handle both absolute and relative paths
+        if os.path.isabs(path):
+            model_path = path
+        else:
+            model_path = os.path.join(os.path.dirname(__file__), path.replace("./", ""))
 
         model_data = {
-            "model_name": global_manager.settings_builder.fine_tuned_name.split('/')[
-                -1] if global_manager.settings_builder.fine_tuned_name else os.path.basename(model_path),
+            "model_name": global_manager.settings_builder.fine_tuned_name.split('/')[-1] if global_manager.settings_builder.fine_tuned_name else os.path.basename(model_path),
             "base_model": global_manager.settings_builder.model_name,
             "task": global_manager.settings_builder.task,
             "description": f"Fine-tuned {global_manager.settings_builder.model_name} for {global_manager.settings_builder.task}" + 

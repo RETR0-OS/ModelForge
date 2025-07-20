@@ -7,7 +7,7 @@ class SettingsBuilder:
         self.model_name = model_name
         self.task = task
         self.fine_tuned_name = None
-        self.output_dir = f"../model_checkpoints/{model_name}"
+        self.output_dir = None  # Will be set properly in set_settings()
         self.num_train_epochs = 1
         self.dataset = None
         self.compute_profile = compute_profile
@@ -148,9 +148,7 @@ class SettingsBuilder:
         """
         self.model_name = model_name
         self.is_custom_model = True
-        # Update output directory for custom model
-        safe_model_name = model_name.replace('/', '-').replace('\\', '-')
-        self.output_dir = f"../model_checkpoints/{safe_model_name}"
+        # Note: output_dir will be set in set_settings() using global model path
     
     def set_recommended_model(self, model_name: str) -> None:
         """
@@ -161,9 +159,7 @@ class SettingsBuilder:
         """
         self.model_name = model_name
         self.is_custom_model = False
-        # Update output directory for recommended model
-        safe_model_name = model_name.replace('/', '-').replace('\\', '-')
-        self.output_dir = f"../model_checkpoints/{safe_model_name}"
+        # Note: output_dir will be set in set_settings() using global model path
 
     def reset(self):
         """
