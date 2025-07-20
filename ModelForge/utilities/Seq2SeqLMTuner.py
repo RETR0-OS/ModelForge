@@ -102,6 +102,7 @@ class Seq2SeqFinetuner(Finetuner):
                 lora_alpha=self.lora_alpha,
                 lora_dropout=self.lora_dropout,
                 bias="none",
+                target_modules=["q_proj", "v_proj"],
             )
 
             training_args = SFTConfig(

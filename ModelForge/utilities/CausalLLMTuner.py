@@ -75,6 +75,7 @@ class CausalLLMFinetuner(Finetuner):
                 r=self.lora_r,
                 bias="none",
                 task_type=self.task,
+                target_modules=["q_proj", "v_proj"],
             )
 
             print("Setting training args")

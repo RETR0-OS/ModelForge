@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { config } from "../services/api";
 
 function openPlayground(modelPath){
-    const url = config.baseURL + "playground/new";
+    const url = config.baseURL + "/playground/new";
     const options = {
         method: "POST",
         headers: {
