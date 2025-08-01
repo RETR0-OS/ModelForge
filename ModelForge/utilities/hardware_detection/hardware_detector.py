@@ -1,7 +1,7 @@
 import psutil
 import pynvml
 import logging
-from typing import Dict, List, Tuple, Union, Optional
+from typing import Dict, List, Tuple, Union
 from .config_manager import ConfigurationManager
 from .model_recommendation import ModelRecommendationEngine
 

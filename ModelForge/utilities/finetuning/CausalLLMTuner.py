@@ -1,7 +1,7 @@
 import torch
 from datasets import load_dataset
 from trl import SFTTrainer, SFTConfig
-from peft import LoraConfig, get_peft_model, TaskType, PeftModel
+from peft import LoraConfig, get_peft_model, TaskType
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
 from typing import Dict, Optional
 from .Finetuner import Finetuner
