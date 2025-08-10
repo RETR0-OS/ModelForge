@@ -303,7 +303,7 @@ const HardwareDetection = ({ currentSettings, updateSettings }) => {
 
             <div className="mt-4">
               <label className="block text-sm font-medium text-gray-400 mb-1">Recommended Model</label>
-              <div className="p-3 bg-gray-900 rounded-lg text-white font-medium text-orange-500">
+              <div className="p-3 bg-gray-900 rounded-lg font-medium text-orange-500">
                 {hardwareData.model_recommendation}
               </div>
             </div>
