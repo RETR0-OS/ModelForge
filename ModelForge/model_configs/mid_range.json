@@ -21,16 +21,6 @@
         "mistralai/Mistral-Small-3.1-24B-Base-2503"
       ]
     },
-    "question-answering": {
-      "primary": "openai/gpt-oss-20b",
-      "alternatives": [
-        "openai/gpt-oss-20b",
-        "mistralai/Mistral-Small-3.1-24B-Base-2503",
-        "meta-llama/Llama-3.1-8B-Instruct",
-        "qwen/Qwen2.5-7B",
-        "facebook/bart-base"
-      ]
-    },
     "extractive-question-answering": {
       "primary": "meta-llama/Llama-3.1-8B-Instruct",
       "alternatives": [

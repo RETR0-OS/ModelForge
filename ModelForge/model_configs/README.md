@@ -31,7 +31,6 @@ Each configuration file represents a hardware profile (e.g., `low_end.json`, `mi
 
 - `text-generation`: Generate text based on input prompts
 - `summarization`: Summarize long text into shorter summaries
-- `question-answering`: Answer questions based on context
 - `extractive-question-answering`: Extract answers from text passages
 
 ### Example Configuration File
