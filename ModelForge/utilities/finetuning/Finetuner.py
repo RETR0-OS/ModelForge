@@ -104,7 +104,7 @@ class Finetuner(ABC):
         :param kwargs: The keyword arguments to set the settings.
         :return: None
         """
-        from ..globals.globals_instance import global_manager
+        from ...globals.globals_instance import global_manager
 
         # Basic settings
         uid = self.gen_uuid()
