@@ -16,13 +16,23 @@ class CausalLLMFinetuner(Finetuner):
         self.task = TaskType.CAUSAL_LM
 
     @staticmethod
-    def format_example(example: dict, specs: str) -> Dict[str, Optional[str]]:
-        pass
+    def format_example(example: dict, specs: str, **kwargs) -> Dict[str, Optional[str]]:
+        """
+        Format the example for training with the chat templates of the expected models.
+        :param example: The example to be formatted.
+        :param specs: The computational environment specs (low_end, mid_range, or high_end).
+        :return: A dictionary with 'prompt' and 'completion' keys.
+        """
+        return {
+            "prompt" : "USER:" + example.get("prompt", ""),
+            "completion": "ASSISTANT: " + example.get("completion", "") + "<|endoftext|>"
+        }
 
     def load_dataset(self, dataset_path:str) -> None:
         dataset = load_dataset("json", data_files=dataset_path, split="train")
         dataset = dataset.rename_column("input", "prompt")
         dataset = dataset.rename_column("output", "completion")
+        dataset = dataset.map(lambda x: self.format_example(x, self.compute_specs))
         print(dataset[0])
         self.dataset = dataset
 
