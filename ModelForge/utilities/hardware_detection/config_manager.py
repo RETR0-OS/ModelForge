@@ -7,20 +7,30 @@ from pathlib import Path
 class ConfigurationManager:
     """Simple configuration manager for loading and accessing configuration files."""
     
-    def __init__(self, config_dir: str = None):
+    def __init__(self, config_dir: Optional[str] = None, model_configs_dir: Optional[str] = None):
         """
         Initialize the configuration manager.
         
         Args:
             config_dir: Directory containing configuration files. 
                        Defaults to configs/ in the utilities directory.
+            model_configs_dir: Directory containing modular model configuration files.
+                              Defaults to model_configs/ in the ModelForge directory.
         """
         if config_dir is None:
             # Default to configs directory relative to this file
             current_dir = Path(__file__).parent.parent
-            config_dir = current_dir / "configs"
+            self.config_dir = current_dir / "configs"
+        else:
+            self.config_dir = Path(config_dir)
         
-        self.config_dir = Path(config_dir)
+        if model_configs_dir is None:
+            # Default to model_configs directory in the ModelForge root
+            current_dir = Path(__file__).parent.parent.parent
+            self.model_configs_dir = current_dir / "model_configs"
+        else:
+            self.model_configs_dir = Path(model_configs_dir)
+        
         self._models_config = None
         self._hardware_thresholds_config = None
         self._tasks_config = None
@@ -35,9 +45,10 @@ class ConfigurationManager:
         """Load all configuration files with enhanced error handling."""
         try:
             logging.info(f"Loading configurations from: {self.config_dir}")
+            logging.info(f"Loading model configurations from: {self.model_configs_dir}")
             
             # Load each configuration file independently
-            self._models_config = self._load_json_file_safely("models.json")
+            self._models_config = self._load_modular_model_configs()
             self._hardware_thresholds_config = self._load_json_file_safely("hardware_thresholds.json")
             self._tasks_config = self._load_json_file_safely("tasks.json")
             
@@ -60,6 +71,115 @@ class ConfigurationManager:
             return self._load_json_file(filename)
         except Exception as e:
             error_msg = f"Failed to load {filename}: {str(e)}"
+            self._loading_errors.append(error_msg)
+            logging.error(error_msg)
+            return None
+
+    def _load_modular_model_configs(self) -> Optional[Dict[str, Any]]:
+        """
+        Load modular model configuration files from the model_configs directory.
+        
+        Returns:
+            Dictionary with 'profiles' key containing all hardware profile configurations,
+            or None if loading fails.
+        """
+        try:
+            if not self.model_configs_dir.exists():
+                error_msg = f"Model configs directory not found: {self.model_configs_dir}"
+                self._loading_errors.append(error_msg)
+                logging.error(error_msg)
+                return None
+            
+            if not self.model_configs_dir.is_dir():
+                error_msg = f"Model configs path is not a directory: {self.model_configs_dir}"
+                self._loading_errors.append(error_msg)
+                logging.error(error_msg)
+                return None
+            
+            # Initialize the profiles structure
+            profiles = {}
+            
+            # Scan for all JSON files in the model_configs directory
+            json_files = list(self.model_configs_dir.glob("*.json"))
+            
+            if not json_files:
+                error_msg = f"No JSON configuration files found in: {self.model_configs_dir}"
+                self._loading_errors.append(error_msg)
+                logging.warning(error_msg)
+                return None
+            
+            logging.info(f"Found {len(json_files)} model configuration files")
+            
+            # Load each profile configuration file
+            for config_file in json_files:
+                try:
+                    with open(config_file, 'r', encoding='utf-8') as file:
+                        config_data = json.load(file)
+                    
+                    # Validate the structure of the config file
+                    if not isinstance(config_data, dict):
+                        error_msg = f"Invalid config format in {config_file.name}: expected object, got {type(config_data).__name__}"
+                        self._loading_errors.append(error_msg)
+                        logging.error(error_msg)
+                        continue
+                    
+                    if "profile" not in config_data:
+                        error_msg = f"Missing 'profile' field in {config_file.name}"
+                        self._loading_errors.append(error_msg)
+                        logging.error(error_msg)
+                        continue
+                    
+                    if "tasks" not in config_data:
+                        error_msg = f"Missing 'tasks' field in {config_file.name}"
+                        self._loading_errors.append(error_msg)
+                        logging.error(error_msg)
+                        continue
+                    
+                    profile_name = config_data["profile"]
+                    
+                    # Validate that profile name matches filename
+                    expected_filename = f"{profile_name}.json"
+                    if config_file.name != expected_filename:
+                        warning_msg = f"Profile name '{profile_name}' doesn't match filename '{config_file.name}', expected '{expected_filename}'"
+                        logging.warning(warning_msg)
+                    
+                    # Add the profile to our structure
+                    profiles[profile_name] = config_data["tasks"]
+                    logging.info(f"Loaded profile '{profile_name}' from {config_file.name}")
+                    
+                except json.JSONDecodeError as e:
+                    error_msg = f"Invalid JSON in {config_file.name}: {e}"
+                    self._loading_errors.append(error_msg)
+                    logging.error(error_msg)
+                    continue
+                except Exception as e:
+                    error_msg = f"Error loading {config_file.name}: {e}"
+                    self._loading_errors.append(error_msg)
+                    logging.error(error_msg)
+                    continue
+            
+            if not profiles:
+                error_msg = "No valid model profiles were loaded"
+                self._loading_errors.append(error_msg)
+                logging.error(error_msg)
+                return None
+            
+            # Return in the same format as the original models.json structure
+            return {
+                "profiles": profiles,
+                "custom_model_support": {
+                    "enabled": True,
+                    "validation_timeout_seconds": 10,
+                    "default_warnings": [
+                        "Custom model compatibility not guaranteed",
+                        "Memory and performance not estimated",
+                        "User responsible for hardware limitations"
+                    ]
+                }
+            }
+            
+        except Exception as e:
+            error_msg = f"Failed to load modular model configs: {e}"
             self._loading_errors.append(error_msg)
             logging.error(error_msg)
             return None
