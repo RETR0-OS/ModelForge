@@ -1,6 +1,6 @@
 [project]
 name = "modelforge-finetuning"
-version = "0.1.9"
+version = "0.2.0"
 description = "ModelForge: A no-code toolkit for fine-tuning HuggingFace models"
 authors = [
     {name = "R3tr0 M1ll3r", email = "r3tr0.m1ll3r@gmail.com"},
@@ -39,6 +39,17 @@ modelforge = "ModelForge.cli:main"
 [build-system]
 requires = ["setuptools"]
 build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+include-package-data = true
+
+[tool.setuptools.package-data]
+"ModelForge" = [
+    "**/*.jsonl",
+    "**/*.yaml",
+    "**/*.yml",
+    "**/*.json",
+]
 
 [tool.setuptools.exclude-package-data]
 "*" = [
