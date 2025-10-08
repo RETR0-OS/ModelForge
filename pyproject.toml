@@ -26,7 +26,7 @@ dependencies = [
     "platformdirs",
     "pynvml",
     "peft",
-    "python-multipart"
+    "python-multipart",
 ]
 
 [tool.setuptools.packages.find]
