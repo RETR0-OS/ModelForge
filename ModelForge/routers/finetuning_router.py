@@ -1,13 +1,14 @@
 from datetime import datetime
 import json
 import os
+import shutil
 import traceback
 import uuid
 
 from fastapi import APIRouter, HTTPException, UploadFile, File, Form, BackgroundTasks
 from fastapi import Request
 from starlette.responses import JSONResponse
-from pydantic import BaseModel, field_validator
+from pydantic import BaseModel, field_validator, model_validator
 
 from ..utilities.finetuning.CausalLLMTuner import CausalLLMFinetuner
 from ..utilities.finetuning.QuestionAnsweringTuner import QuestionAnsweringTuner
@@ -20,13 +21,17 @@ router = APIRouter(
     prefix="/finetune",
 )
 
+# Valid task types
+VALID_TASKS = ["text-generation", "summarization", "extractive-question-answering"]
+VALID_TASKS_STR = "'text-generation', 'summarization', or 'extractive-question-answering'"
+
 ## Pydantic Data Validator Classes
 class TaskFormData(BaseModel):
     task: str
     @field_validator("task")
     def validate_task(cls, task):
-        if task not in ["text-generation", "summarization", "extractive-question-answering"]:
-            raise ValueError("Invalid task. Must be one of 'text-generation', 'summarization', or 'extractive-question-answering'.")
+        if task not in VALID_TASKS:
+            raise ValueError(f"Invalid task. Must be one of {VALID_TASKS_STR}.")
         return task
 
 class SelectedModelFormData(BaseModel):
@@ -83,8 +88,8 @@ class SettingsFormData(BaseModel):
         return dataset
     @field_validator("task")
     def validate_task(cls, task):
-        if task not in ["text-generation", "summarization", "question-answering"]:
-            raise ValueError("Invalid task. Must be one of 'text-generation', 'summarization', or 'question-answering'.")
+        if task not in VALID_TASKS:
+            raise ValueError(f"Invalid task. Must be one of {VALID_TASKS_STR}.")
         return task
     @field_validator("model_name")
     def validate_model_name(cls, model_name):
@@ -95,7 +100,7 @@ class SettingsFormData(BaseModel):
     def validate_num_train_epochs(cls, num_train_epochs):
         if num_train_epochs <= 0:
             raise ValueError("Number of training epochs must be greater than 0.")
-        elif num_train_epochs > 30:
+        if num_train_epochs >= 50:
             raise ValueError("Number of training epochs must be less than 50.")
         return num_train_epochs
     @field_validator("compute_specs")
@@ -154,13 +159,9 @@ class SettingsFormData(BaseModel):
             raise ValueError("bf16 must be true or false.")
         return bf16
     @field_validator("per_device_train_batch_size")
-    def validate_per_device_train_batch_size(cls, per_device_train_batch_size, compute_specs):
+    def validate_per_device_train_batch_size(cls, per_device_train_batch_size):
         if per_device_train_batch_size <= 0:
             raise ValueError("Batch size must be greater than 0.")
-        elif per_device_train_batch_size > 3 and compute_specs != "high_end":
-            raise ValueError("Batch size must be less than 4. Your device cannot support a higher batch size.")
-        elif per_device_train_batch_size > 8 and compute_specs == "high_end":
-            raise ValueError("Batch size must be less than 9. Higher batch sizes cause out of memory error.")
         return per_device_train_batch_size
     @field_validator("per_device_eval_batch_size")
     def validate_per_device_eval_batch_size(cls, per_device_eval_batch_size):
@@ -236,11 +237,20 @@ class SettingsFormData(BaseModel):
         if not dataset:
             raise ValueError("Dataset cannot be empty.")
         return dataset
+    
+    @model_validator(mode='after')
+    def validate_batch_size_with_compute_specs(self):
+        """Validate batch size based on compute specs"""
+        if self.per_device_train_batch_size > 3 and self.compute_specs != "high_end":
+            raise ValueError("Batch size must be 3 or less. Your device cannot support a higher batch size.")
+        elif self.per_device_train_batch_size > 8 and self.compute_specs == "high_end":
+            raise ValueError("Batch size must be 8 or less. Higher batch sizes cause out of memory error.")
+        return self
 
 
 @router.get("/detect")
 async def detect_hardware_page(request: Request) -> JSONResponse:
-    global_manager.clear_global_manager.settings_cache()  # Clear the cache to ensure fresh detection
+    global_manager.clear_settings_cache()  # Clear the cache to ensure fresh detection
     return JSONResponse({
         "app_name": global_manager.app_name,
         "message": "Ready to detect hardware"
@@ -290,7 +300,7 @@ async def detect_hardware(request: Request) -> JSONResponse:
         print(e)
         raise HTTPException(
             status_code=400,
-            detail="Invalid task. Must be one of 'text-generation', 'summarization', or 'question-answering'."
+            detail=f"Invalid task. Must be one of {VALID_TASKS_STR}."
         )
     except Exception as e:
         print("General exception triggered")
@@ -317,6 +327,14 @@ async def set_model(request: Request) -> None:
 
 @router.post("/validate_custom_model", response_class=JSONResponse)
 async def validate_custom_model(request: Request) -> JSONResponse:
+    """
+    Validate a custom model from HuggingFace Hub.
+    
+    Note: Currently validates repository existence but not task compatibility.
+    Consider adding architecture-task compatibility checks (e.g., ensure
+    summarization models aren't used for text generation tasks) for better
+    user experience and to prevent fine-tuning failures.
+    """
     try:
         form = await request.json()
         validation_data = CustomModelValidationData(repo_name=form["repo_name"])
@@ -424,15 +442,14 @@ async def load_settings(json_file: UploadFile = File(...), settings: str = Form(
 
 
 def finetuning_task(llm_tuner) -> None:
+    output_dir = None
     try:
         llm_tuner.load_dataset(global_manager.settings_builder.dataset)
+        output_dir = llm_tuner.output_dir  # Store for cleanup on failure
         path = llm_tuner.finetune()
         
-        # Handle both absolute and relative paths
-        if os.path.isabs(path):
-            model_path = path
-        else:
-            model_path = os.path.join(os.path.dirname(__file__), path.replace("./", ""))
+        # Use the path returned from finetune (should be absolute)
+        model_path = os.path.abspath(path) if not os.path.isabs(path) else path
 
         model_data = {
             "model_name": global_manager.settings_builder.fine_tuned_name.split('/')[-1] if global_manager.settings_builder.fine_tuned_name else os.path.basename(model_path),
@@ -445,6 +462,17 @@ def finetuning_task(llm_tuner) -> None:
             "is_custom_base_model": global_manager.settings_builder.is_custom_model
         }
         global_manager.db_manager.add_model(model_data)
+    
+    except Exception as e:
+        print(f"Fine-tuning failed: {e}")
+        # Cleanup failed fine-tuning artifacts
+        if output_dir and os.path.exists(output_dir):
+            try:
+                shutil.rmtree(output_dir)
+                print(f"Cleaned up failed fine-tuning artifacts at: {output_dir}")
+            except Exception as cleanup_error:
+                print(f"Warning: Could not cleanup output directory: {cleanup_error}")
+        raise
 
     finally:
         global_manager.settings_cache.clear()
@@ -485,6 +513,19 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
             status_code=400,
             detail="A finetuning is already in progress. Please wait until it completes."
         )
+    
+    # Validate available disk space (require at least 10GB free)
+    try:
+        stat = shutil.disk_usage(global_manager.model_path)
+        available_gb = stat.free / (1024 ** 3)  # Convert to GB
+        if available_gb < 10:
+            raise HTTPException(
+                status_code=400,
+                detail=f"Insufficient disk space. Available: {available_gb:.2f}GB. Required: at least 10GB."
+            )
+    except Exception as e:
+        print(f"Warning: Could not check disk space: {e}")
+    
     global_manager.finetuning_status["status"] = "initializing"
     global_manager.finetuning_status["message"] = "Starting finetuning process..."
     if global_manager.settings_builder.task == "text-generation":
@@ -508,7 +549,7 @@ async def start_finetuning_page(request: Request, background_task: BackgroundTas
     else:
         raise HTTPException(
             status_code=400,
-            detail="Invalid task. Must be one of 'text-generation', 'summarization', or 'question-answering'."
+            detail=f"Invalid task. Must be one of {VALID_TASKS_STR}."
         )
 
     llm_tuner.set_settings(**global_manager.settings_builder.get_settings())

@@ -6,6 +6,13 @@ import shutil
 from typing import Any
 
 class DatabaseManager:
+    """
+    Manages SQLite database operations for ModelForge.
+    
+    Note: Currently opens/closes connections for each operation. For better performance
+    in high-traffic scenarios, consider implementing connection pooling using libraries
+    like SQLAlchemy or maintaining a connection pool manually.
+    """
     _instance = None
 
     def __new__(cls, *args, **kwargs):
@@ -153,4 +160,5 @@ class DatabaseManager:
     def kill_connection(self) -> None:
         if self.conn:
             self.conn.close()
+            self.conn = None
             del self.cursor
