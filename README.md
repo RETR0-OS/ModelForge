@@ -1,12 +1,6 @@
 # ModelForge 🔧⚡
 
-<p align="center">
-  <a href="https://pepy.tech/project/modelforge-finetuning">
-    <img src="https://static.pepy.tech/personalized-badge/modelforge-finetuning?period=total&units=INTERNATIONAL_SYSTEM&left_color=#191C24&right_color=#5B9EFF&left_text=Downloads" 
-      alt="PyPI Downloads"
-      style="border-radius: 8px; box-shadow: 0 2px 6px rgba(90, 154, 255, 0.15); padding: 4px;"/>
-  </a>
-</p>
+[![PyPI Downloads](https://static.pepy.tech/personalized-badge/modelforge-finetuning?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=BLUE&left_text=downloads)](https://pepy.tech/projects/modelforge-finetuning)
 
 **Finetune LLMs on your laptop’s GPU—no code, no PhD, no hassle.**  
 
