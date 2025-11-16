@@ -26,7 +26,6 @@ The Unsloth provider enables **2x faster training** with **20% less memory** thr
 | WSL 2 | ✅ | Full support |
 | Docker | ✅ | With NVIDIA runtime |
 | Windows (Native) | ❌ | Use WSL or Docker |
-| macOS | ❌ | No NVIDIA GPUs |
 
 ## Installation
 

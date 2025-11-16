@@ -16,7 +16,7 @@ Different providers offer different trade-offs in terms of speed, memory usage, 
 
 | Provider | Speed | Memory | Platform Support | Description |
 |----------|-------|--------|------------------|-------------|
-| **[HuggingFace](huggingface.md)** | 1x (baseline) | Standard | All (Windows/Linux/macOS) | Standard HuggingFace Transformers |
+| **[HuggingFace](huggingface.md)** | 1x (baseline) | Standard | Windows/Linux | Standard HuggingFace Transformers |
 | **[Unsloth](unsloth.md)** | 2x faster | 20% less | Linux/WSL/Docker only | Optimized training kernels |
 
 ## Choosing a Provider
@@ -167,7 +167,6 @@ Based on Llama-3.2-7B with batch_size=4:
 **Supported Platforms:**
 - ✅ Windows 10/11
 - ✅ Linux (all distributions)
-- ✅ macOS (Intel with NVIDIA or CPU mode)
 - ✅ WSL 2
 - ✅ Docker
 
@@ -183,7 +182,6 @@ Based on Llama-3.2-7B with batch_size=4:
 - ✅ WSL 2 on Windows
 - ✅ Docker with NVIDIA runtime
 - ❌ Native Windows
-- ❌ macOS
 
 **Requirements:**
 - Python 3.11

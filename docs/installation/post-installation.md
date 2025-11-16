@@ -45,7 +45,7 @@ Your HuggingFace token is required to download models.
 
 ### Set Token
 
-**Linux/macOS (persistent):**
+**Linux (persistent):**
 ```bash
 echo 'export HUGGINGFACE_TOKEN="hf_xxxxxxxxxxxx"' >> ~/.bashrc
 source ~/.bashrc
@@ -126,7 +126,7 @@ Should return:
 
 ModelForge creates the following directories:
 
-**Linux/macOS:**
+**Linux:**
 ```
 ~/.local/share/modelforge/
 ├── database/              # SQLite database

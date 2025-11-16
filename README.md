@@ -96,7 +96,6 @@ Open your browser to **http://localhost:8000** and start training!
 ### Installation
 - **[Windows Installation](docs/installation/windows.md)** - Complete Windows setup (including WSL and Docker)
 - **[Linux Installation](docs/installation/linux.md)** - Linux setup guide
-- **[macOS Installation](docs/installation/macos.md)** - macOS setup guide
 - **[Post-Installation](docs/installation/post-installation.md)** - Initial configuration
 
 ### Configuration & Usage
@@ -141,7 +140,6 @@ Open your browser to **http://localhost:8000** and start training!
 | **Windows (Native)** | ✅ Full support | ❌ Not supported | Use WSL or Docker for Unsloth |
 | **WSL 2** | ✅ Full support | ✅ Full support | Recommended for Windows users |
 | **Docker** | ✅ Full support | ✅ Full support | With NVIDIA runtime |
-| **macOS** | ⚠️ CPU only | ❌ Not supported | Use cloud GPU for production |
 
 **[Platform-Specific Installation Guides →](docs/installation/)**
 

@@ -344,13 +344,68 @@ sudo apt-get install -y nvidia-container-toolkit
 sudo systemctl restart docker
 ```
 
-### 3. Pull and Run ModelForge Container
+### 3. Create Dockerfile and Build
+
+Create a `Dockerfile`:
+
+```dockerfile
+FROM ubuntu:22.04
+
+# Install Python 3.11
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa -y \
+    && apt-get update \
+    && apt-get install -y \
+    python3.11 \
+    python3.11-venv \
+    python3.11-dev \
+    python3-pip \
+    git \
+    wget \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set Python 3.11 as default
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.11 1
+
+# Install CUDA (if needed for GPU support)
+# Skip if using NVIDIA base image
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-keyring_1.1-1_all.deb \
+    && dpkg -i cuda-keyring_1.1-1_all.deb \
+    && apt-get update \
+    && apt-get install -y cuda-toolkit-12-6 \
+    && rm cuda-keyring_1.1-1_all.deb
+
+# Install ModelForge from PyPI
+RUN pip install --no-cache-dir modelforge-finetuning
+
+# Install PyTorch with CUDA
+RUN pip install --no-cache-dir torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+
+# Install Unsloth (optional)
+RUN pip install --no-cache-dir unsloth
+
+# Set working directory
+WORKDIR /workspace
+
+# Expose port
+EXPOSE 8000
+
+# Run ModelForge
+CMD ["modelforge", "run", "--host", "0.0.0.0"]
+```
+
+Build and run:
 
 ```bash
+# Build the image
+docker build -t modelforge:latest .
+
+# Run container
 docker run --gpus all -p 8000:8000 \
   -e HUGGINGFACE_TOKEN=your_token_here \
   -v modelforge-data:/root/.local/share/modelforge \
-  retro0s/modelforge:latest
+  modelforge:latest
 ```
 
 ## Next Steps

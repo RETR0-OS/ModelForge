@@ -9,7 +9,7 @@ The HuggingFace provider uses the standard Transformers library to load and fine
 ## Features
 
 ✅ **Maximum compatibility** - Works with all HuggingFace models  
-✅ **All platforms** - Windows, Linux, macOS  
+✅ **All platforms** - Windows, Linux  
 ✅ **Well-tested** - Battle-tested implementation  
 ✅ **Extensive documentation** - Full HuggingFace ecosystem support  
 ✅ **All tasks** - Text generation, summarization, question answering  

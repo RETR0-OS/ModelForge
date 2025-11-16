@@ -37,7 +37,7 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 ### 3. Set Your HuggingFace Token
 
-**Linux/macOS:**
+**Linux:**
 ```bash
 export HUGGINGFACE_TOKEN=your_huggingface_token
 ```
