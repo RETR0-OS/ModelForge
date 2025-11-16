@@ -1,5 +1,13 @@
 import torch
 from datasets import load_dataset
+
+# Import unsloth first to prevent EOS token corruption
+# This must come before TRL imports to ensure proper tokenizer initialization
+try:
+    import unsloth
+except ImportError:
+    pass
+
 from trl import SFTTrainer, SFTConfig
 from peft import LoraConfig, get_peft_model, TaskType
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
@@ -67,12 +75,14 @@ class CausalLLMFinetuner(Finetuner):
                     quantization_config=bits_n_bytes_config,
                     device_map=self.device_map,
                     use_cache=False,
+                    num_processes=1
                 )
             else:
                 model = AutoModelForCausalLM.from_pretrained(
                     self.model_name,
                     device_map=self.device_map,
                     use_cache=False,
+                    num_processes=1
                 )
 
             tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
@@ -121,6 +131,7 @@ class CausalLLMFinetuner(Finetuner):
                 train_dataset=self.dataset,
                 args=training_arguments,
                 callbacks=[ProgressCallback()],
+                dataset_num_proc=1,  # Stabilize preprocessing (single process)
             )
             trainer.train()
             trainer.model.save_pretrained(self.fine_tuned_name)

@@ -1,6 +1,14 @@
 from typing import Dict
 import torch
 from datasets import load_dataset
+
+# Import unsloth first to prevent EOS token corruption
+# This must come before TRL imports to ensure proper tokenizer initialization
+try:
+    import unsloth
+except ImportError:
+    pass
+
 from trl import SFTTrainer, SFTConfig
 from .Finetuner import Finetuner, ProgressCallback
 from peft import LoraConfig, TaskType, get_peft_model
@@ -66,12 +74,14 @@ class Seq2SeqFinetuner(Finetuner):
                     quantization_config=bits_n_bytes_config,
                     device_map=self.device_map,
                     use_cache=False,
+                    num_processes=1
                 )
             else:
                 model = AutoModelForSeq2SeqLM.from_pretrained(
                     self.model_name,
                     device_map=self.device_map,
                     use_cache=False,
+                    num_processes=1
                 )
             print(model.dtype)
             tokenizer = AutoTokenizer.from_pretrained(self.model_name)
@@ -118,6 +128,7 @@ class Seq2SeqFinetuner(Finetuner):
                 args=training_args,
                 train_dataset=self.dataset,
                 callbacks=[ProgressCallback()],
+                dataset_num_proc=1,  # Stabilize preprocessing (single process)
             )
 
             trainer.train()
