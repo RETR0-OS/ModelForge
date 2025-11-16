@@ -1,95 +1,244 @@
 # ModelForge 🔧⚡
 
 [![PyPI Downloads](https://static.pepy.tech/personalized-badge/modelforge-finetuning?period=total&units=INTERNATIONAL_SYSTEM&left_color=BLACK&right_color=BLUE&left_text=downloads)](https://pepy.tech/projects/modelforge-finetuning)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)](https://www.python.org/downloads/)
+[![Version](https://img.shields.io/badge/version-2.0.1-blue)](https://github.com/RETR0-OS/ModelForge)
 
-**Finetune LLMs on your laptop’s GPU—no code, no PhD, no hassle.**  
+**Fine-tune LLMs on your laptop's GPU—no code, no PhD, no hassle.**
+
+ModelForge v2.0 is a complete architectural overhaul bringing **2x faster training**, modular providers, advanced strategies, and production-ready code quality.
 
 ![logo](https://github.com/user-attachments/assets/12b3545d-0e8b-4460-9291-d0786c9cb0fa)
 
+## ✨ What's New in v2.0
 
-## 🚀 **Features**  
-- **GPU-Powered Finetuning**: Optimized for NVIDIA GPUs (even 4GB VRAM).  
-- **One-Click Workflow**: Upload data → Pick task → Train → Test.  
-- **Hardware-Aware**: Auto-detects your GPU/CPU and recommends models.  
-- **React UI**: No CLI or notebooks—just a friendly interface.  
+- 🚀 **2x Faster Training** with Unsloth provider
+- 🧩 **Multiple Providers**: HuggingFace, Unsloth (more coming!)
+- 🎯 **Advanced Strategies**: SFT, QLoRA, RLHF, DPO
+- 📊 **Built-in Evaluation** with task-specific metrics
+- 🏗️ **Modular Architecture** for easy extensibility
+- 🔒 **Production-Ready** with proper error handling and logging
+
+**[See What's New in v2.0 →](docs/getting-started/whats-new.md)**
+
+## 🚀 Features
+
+- **GPU-Powered Fine-Tuning**: Optimized for NVIDIA GPUs (even 4GB VRAM)
+- **One-Click Workflow**: Upload data → Configure → Train → Test
+- **Hardware-Aware**: Auto-detects GPU and recommends optimal models
+- **No-Code UI**: Beautiful React interface, no CLI or notebooks
+- **Multiple Providers**: HuggingFace (standard) or Unsloth (2x faster)
+- **Advanced Strategies**: SFT, QLoRA, RLHF, DPO support
+- **Automatic Evaluation**: Built-in metrics for all tasks
 
 ## 📖 Supported Tasks
-- **Text-Generation**: Generates answers in the form of text based on prior and fine-tuned knowledge. Ideal for use cases like customer support chatbots, story generators, social media script writers,[...]
-- **Summarization**: Generates summaries for long articles and texts. Ideal for use cases like news article summarization, law document summarization, and medical article summarization.
-- **Extractive Question Answering**: Finds the answers relevant to a query from a given context. Best for use cases like Retrieval Augmented Generation (RAG), and enterprise document search (for examp[...]
 
-## Installation
+- **Text Generation**: Chatbots, instruction following, code generation, creative writing
+- **Summarization**: Document condensing, article summarization, meeting notes
+- **Question Answering**: RAG systems, document search, FAQ bots
+
+## 🎯 Quick Start
+
 ### Prerequisites
-- **Python==3.11.x**: Ensure you have Python installed.
-- **NVIDIA GPU**: Recommended VRAM >= 6GB.
-- **CUDA**: Ensure CUDA is installed and configured for your GPU.
-- **HuggingFace Account**: Create an account on [Hugging Face](https://huggingface.co/) and [generate a finegrained access token](https://huggingface.co/settings/tokens).
 
-### Steps
-1. **Install the Package**:  
-   ```bash
-   pip install modelforge-finetuning
-   ```
+- **Python 3.11.x** (Python 3.12 not yet supported)
+- **NVIDIA GPU** with 4GB+ VRAM (6GB+ recommended)
+- **CUDA** installed and configured
+- **HuggingFace Account** with access token ([Get one here](https://huggingface.co/settings/tokens))
+- **Linux or Windows** operating system
 
-2. **Set HuggingFace API Key in environment variables**:<br>
-   Linux:
-   ```bash
-   export HUGGINGFACE_TOKEN=your_huggingface_token
-   ```
-   Windows Powershell:
-   ```bash
-   $env:HUGGINGFACE_TOKEN="your_huggingface_token"
-   ```
-   Windows CMD:
-   ```bash
-   set HUGGINGFACE_TOKEN=your_huggingface_token
-   ```
-   Or use a .env file:
-    ```bash
-    echo "HUGGINGFACE_TOKEN=your_huggingface_token" > .env
-    ```
+> **⚠️ macOS is NOT supported.** ModelForge requires NVIDIA CUDA which is not available on macOS. Use Linux or Windows with NVIDIA GPU.
+> 
+> **Windows Users**: See [Windows Installation Guide](docs/installation/windows.md) for platform-specific instructions, especially for Unsloth support.
 
-3. **Install Appropriate CUDA version for PyTorch**:
-   -  Navigate to the [PyTorch installation page](https://pytorch.org/get-started/locally/) and select the appropriate CUDA version for your system.
-   - Install PyTorch with the correct CUDA version. For example, for CUDA 12.6 on Windows, you can use:
-   ```bash
-    pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
-    ```
+### Installation
 
-4. **Run the Application**:
-   ```bash
-   modelforge run
-   ```
+```bash
+# Install ModelForge
+pip install modelforge-finetuning
 
-5. **Done!**:
-   Navigate to [http://localhost:8000](http://localhost:8000) in your browser and get started!
-
-### **Running the Application Again in the Future**
-1. **Start the Application**:
-   ```bash
-   modelforge run
-   ```
-2. **Navigate to the App**:  
-   Open your browser and go to [http://localhost:8000](http://localhost:8000).
-
-### **Stopping the Application**
-To stop the application and free up resources, press `Ctrl+C` in the terminal running the app.
-
-## 📂 **Dataset Format**  
-```jsonl
-{"input": "Enter a really long article here...", "output": "Short summary."},
-{"input": "Enter the poem topic here...", "output": "Roses are red..."}
+# Install PyTorch with CUDA support
+# Visit https://pytorch.org/get-started/locally/ for your CUDA version
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
 ```
 
-## 🤝 **Contributing Model Recommendations**
-ModelForge uses a modular configuration system for model recommendations. Contributors can easily add new recommended models by adding configuration files to the `model_configs/` directory. Each hardw[...]
+### Set HuggingFace Token
 
-See the [Model Configuration Guide](ModelForge/model_configs/README.md) for detailed instructions on how to add new model recommendations.
+**Linux:**
+```bash
+export HUGGINGFACE_TOKEN=your_token_here
+```
 
-## 🛠 **Tech Stack**  
-- `transformers` + `peft` (LoRA finetuning)  
-- `bitsandbytes` (4-bit quantization)  
-- `React` (UI)   
-- `FastAPI` (Backend)
-- `Python` (Backend)
-- `React.JS` (Frontend)
+**Windows PowerShell:**
+```powershell
+$env:HUGGINGFACE_TOKEN="your_token_here"
+```
+
+**Or use .env file:**
+```bash
+echo "HUGGINGFACE_TOKEN=your_token_here" > .env
+```
+
+### Run ModelForge
+
+```bash
+modelforge run
+```
+
+Open your browser to **http://localhost:8000** and start training!
+
+**[Full Quick Start Guide →](docs/getting-started/quickstart.md)**
+
+## 📚 Documentation
+
+### Getting Started
+- **[Quick Start Guide](docs/getting-started/quickstart.md)** - Get up and running in 5 minutes
+- **[What's New in v2.0](docs/getting-started/whats-new.md)** - Major features and improvements
+
+### Installation
+- **[Windows Installation](docs/installation/windows.md)** - Complete Windows setup (including WSL and Docker)
+- **[Linux Installation](docs/installation/linux.md)** - Linux setup guide
+- **[Post-Installation](docs/installation/post-installation.md)** - Initial configuration
+
+### Configuration & Usage
+- **[Configuration Guide](docs/configuration/configuration-guide.md)** - All configuration options
+- **[Dataset Formats](docs/configuration/dataset-formats.md)** - Preparing your training data
+- **[Training Tasks](docs/configuration/training-tasks.md)** - Understanding different tasks
+- **[Hardware Profiles](docs/configuration/hardware-profiles.md)** - Optimizing for your GPU
+
+### Providers
+- **[Provider Overview](docs/providers/overview.md)** - Understanding providers
+- **[HuggingFace Provider](docs/providers/huggingface.md)** - Standard HuggingFace models
+- **[Unsloth Provider](docs/providers/unsloth.md)** - 2x faster training
+
+### Training Strategies
+- **[Strategy Overview](docs/strategies/overview.md)** - Understanding strategies
+- **[SFT Strategy](docs/strategies/sft.md)** - Standard supervised fine-tuning
+- **[QLoRA Strategy](docs/strategies/qlora.md)** - Memory-efficient training
+- **[RLHF Strategy](docs/strategies/rlhf.md)** - Reinforcement learning
+- **[DPO Strategy](docs/strategies/dpo.md)** - Direct preference optimization
+
+### API Reference
+- **[REST API](docs/api-reference/rest-api.md)** - Complete API documentation
+- **[Training Config Schema](docs/api-reference/training-config.md)** - Configuration options
+
+### Troubleshooting
+- **[Common Issues](docs/troubleshooting/common-issues.md)** - Frequently encountered problems
+- **[Windows Issues](docs/troubleshooting/windows-issues.md)** - Windows-specific troubleshooting
+- **[FAQ](docs/troubleshooting/faq.md)** - Frequently asked questions
+
+### Contributing
+- **[Contributing Guide](docs/contributing/contributing.md)** - How to contribute
+- **[Architecture](docs/contributing/architecture.md)** - Understanding the codebase
+- **[Model Configurations](docs/contributing/model-configs.md)** - Adding model recommendations
+
+**[📖 Full Documentation Index →](docs/README.md)**
+
+## 🔧 Platform Support
+
+| Platform | HuggingFace Provider | Unsloth Provider | Notes |
+|----------|---------------------|------------------|-------|
+| **Linux** | ✅ Full support | ✅ Full support | Recommended |
+| **Windows (Native)** | ✅ Full support | ❌ Not supported | Use WSL or Docker for Unsloth |
+| **WSL 2** | ✅ Full support | ✅ Full support | Recommended for Windows users |
+| **Docker** | ✅ Full support | ✅ Full support | With NVIDIA runtime |
+
+**[Platform-Specific Installation Guides →](docs/installation/)**
+
+## ⚠️ Important Notes
+
+### Windows Users
+
+**Unsloth provider is NOT supported on native Windows.** For 2x faster training with Unsloth:
+
+1. **Option 1: WSL (Recommended)** - [WSL Installation Guide](docs/installation/windows.md#option-2-wsl-installation-recommended)
+2. **Option 2: Docker** - [Docker Installation Guide](docs/installation/windows.md#option-3-docker-installation)
+
+The HuggingFace provider works perfectly on native Windows.
+
+### Unsloth Constraints
+
+When using Unsloth provider, you **MUST** specify a fixed `max_sequence_length`:
+
+```json
+{
+  "provider": "unsloth",
+  "max_seq_length": 2048  // ✅ Required - cannot be -1
+}
+```
+
+Auto-inference (`max_seq_length: -1`) is **NOT supported** with Unsloth.
+
+**[Learn more about Unsloth →](docs/providers/unsloth.md)**
+
+## 📂 Dataset Format
+
+ModelForge uses JSONL format. Each task has specific fields:
+
+**Text Generation:**
+```jsonl
+{"input": "What is AI?", "output": "AI stands for Artificial Intelligence..."}
+{"input": "Explain ML", "output": "Machine Learning is a subset of AI..."}
+```
+
+**Summarization:**
+```jsonl
+{"input": "Long article text...", "output": "Short summary."}
+```
+
+**Question Answering:**
+```jsonl
+{"context": "Document text...", "question": "What is X?", "answer": "X is..."}
+```
+
+**[Complete Dataset Format Guide →](docs/configuration/dataset-formats.md)**
+
+## 🤝 Contributing
+
+We welcome contributions! ModelForge v2.0's modular architecture makes it easy to:
+
+- **Add new providers** - Just 2 files needed
+- **Add new strategies** - Just 2 files needed
+- **Add model recommendations** - Simple JSON configs
+- **Improve documentation**
+- **Fix bugs and add features**
+
+**[Contributing Guide →](docs/contributing/contributing.md)**
+
+### Adding Model Recommendations
+
+ModelForge uses modular configuration files for model recommendations. See the **[Model Configuration Guide](docs/contributing/model-configs.md)** for instructions on adding new recommended models.
+
+## 🛠 Tech Stack
+
+- **Backend**: Python, FastAPI, SQLAlchemy
+- **Frontend**: React.js
+- **ML**: PyTorch, Transformers, PEFT, TRL
+- **Training**: LoRA, QLoRA, bitsandbytes
+- **Providers**: HuggingFace Hub, Unsloth
+
+*Results on NVIDIA RTX 3090. Your results may vary.*
+
+## 📜 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- HuggingFace for Transformers and model hub
+- Unsloth AI for optimized training kernels
+- The open-source ML community
+
+## 📧 Support
+
+- **Documentation**: [docs/](docs/)
+- **Issues**: [GitHub Issues](https://github.com/RETR0-OS/ModelForge/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/RETR0-OS/ModelForge/discussions)
+- **PyPI**: [modelforge-finetuning](https://pypi.org/project/modelforge-finetuning/)
+
+---
+
+**ModelForge v2.0 - Making LLM fine-tuning accessible to everyone** 🚀
+
+**[Get Started →](docs/getting-started/quickstart.md)** | **[Documentation →](docs/)** | **[GitHub →](https://github.com/RETR0-OS/ModelForge)**
