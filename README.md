@@ -218,15 +218,6 @@ ModelForge uses modular configuration files for model recommendations. See the *
 - **Training**: LoRA, QLoRA, bitsandbytes
 - **Providers**: HuggingFace Hub, Unsloth
 
-## 📊 Performance
-
-| Setup | Provider | Training Time | Memory Usage |
-|-------|----------|---------------|--------------|
-| Llama-3.2-3B, 1000 examples | HuggingFace | 45 min | 8 GB VRAM |
-| Llama-3.2-3B, 1000 examples | Unsloth | 22 min | 6.4 GB VRAM |
-| Llama-3.2-7B, 1000 examples | HuggingFace | 90 min | 16 GB VRAM |
-| Llama-3.2-7B, 1000 examples | Unsloth | 45 min | 12.8 GB VRAM |
-
 *Results on NVIDIA RTX 3090. Your results may vary.*
 
 ## 📜 License
