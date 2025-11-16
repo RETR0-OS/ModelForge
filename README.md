@@ -46,7 +46,10 @@ ModelForge v2.0 is a complete architectural overhaul bringing **2x faster traini
 - **NVIDIA GPU** with 4GB+ VRAM (6GB+ recommended)
 - **CUDA** installed and configured
 - **HuggingFace Account** with access token ([Get one here](https://huggingface.co/settings/tokens))
+- **Linux or Windows** operating system
 
+> **⚠️ macOS is NOT supported.** ModelForge requires NVIDIA CUDA which is not available on macOS. Use Linux or Windows with NVIDIA GPU.
+> 
 > **Windows Users**: See [Windows Installation Guide](docs/installation/windows.md) for platform-specific instructions, especially for Unsloth support.
 
 ### Installation
@@ -62,7 +65,7 @@ pip install torch torchvision torchaudio --index-url https://download.pytorch.or
 
 ### Set HuggingFace Token
 
-**Linux/macOS:**
+**Linux:**
 ```bash
 export HUGGINGFACE_TOKEN=your_token_here
 ```

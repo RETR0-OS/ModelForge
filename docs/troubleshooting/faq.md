@@ -41,9 +41,14 @@ Yes, but training will be extremely slow (10-100x slower). Only recommended for 
 
 Currently, only NVIDIA GPUs are supported due to CUDA requirements.
 
-### What about Apple Silicon (M1/M2/M3)?
+### Does ModelForge work on macOS?
 
-Not currently supported. We recommend using cloud GPU instances for Mac users.
+**No, macOS is not supported.** ModelForge requires NVIDIA CUDA, which is not available on macOS (including Apple Silicon M1/M2/M3 and Intel Macs).
+
+**Alternative for Mac users:**
+- Use cloud GPU instances (Google Colab, AWS, Azure, Lambda Labs)
+- Set up a remote Linux server with NVIDIA GPU
+- Use a dual-boot Linux system on Intel Mac hardware
 
 ## Installation
 
