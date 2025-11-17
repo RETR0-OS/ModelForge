@@ -20,7 +20,7 @@ ModelForge v2.0 is a complete architectural overhaul bringing **2x faster traini
 - 🏗️ **Modular Architecture** for easy extensibility
 - 🔒 **Production-Ready** with proper error handling and logging
 
-**[See What's New in v2.0 →](https://github.com/RETR0-OS/ModelForge/docs/getting-started/whats-new.md)**
+**[See What's New in v2.0 →](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/getting-started/whats-new.md)**
 
 ## 🚀 Features
 
@@ -50,7 +50,7 @@ ModelForge v2.0 is a complete architectural overhaul bringing **2x faster traini
 
 > **⚠️ macOS is NOT supported.** ModelForge requires NVIDIA CUDA which is not available on macOS. Use Linux or Windows with NVIDIA GPU.
 > 
-> **Windows Users**: See [Windows Installation Guide](https://github.com/RETR0-OS/ModelForge/docs/installation/windows.md) for platform-specific instructions, especially for Unsloth support.
+> **Windows Users**: See [Windows Installation Guide](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/installation/windows.md) for platform-specific instructions, especially for Unsloth support.
 
 ### Installation
 
@@ -88,52 +88,52 @@ modelforge run
 
 Open your browser to **http://localhost:8000** and start training!
 
-**[Full Quick Start Guide →](https://github.com/RETR0-OS/ModelForge/docs/getting-started/quickstart.md)**
+**[Full Quick Start Guide →](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/getting-started/quickstart.md)**
 
 ## 📚 Documentation
 
 ### Getting Started
-- **[Quick Start Guide](https://github.com/RETR0-OS/ModelForge/docs/getting-started/quickstart.md)** - Get up and running in 5 minutes
-- **[What's New in v2.0](https://github.com/RETR0-OS/ModelForge/docs/getting-started/whats-new.md)** - Major features and improvements
+- **[Quick Start Guide](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/getting-started/quickstart.md)** - Get up and running in 5 minutes
+- **[What's New in v2.0](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/getting-started/whats-new.md)** - Major features and improvements
 
 ### Installation
-- **[Windows Installation](https://github.com/RETR0-OS/ModelForge/docs/installation/windows.md)** - Complete Windows setup (including WSL and Docker)
-- **[Linux Installation](https://github.com/RETR0-OS/ModelForge/docs/installation/linux.md)** - Linux setup guide
-- **[Post-Installation](https://github.com/RETR0-OS/ModelForge/docs/installation/post-installation.md)** - Initial configuration
+- **[Windows Installation](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/installation/windows.md)** - Complete Windows setup (including WSL and Docker)
+- **[Linux Installation](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/installation/linux.md)** - Linux setup guide
+- **[Post-Installation](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/installation/post-installation.md)** - Initial configuration
 
 ### Configuration & Usage
-- **[Configuration Guide](https://github.com/RETR0-OS/ModelForge/docs/configuration/configuration-guide.md)** - All configuration options
-- **[Dataset Formats](https://github.com/RETR0-OS/ModelForge/docs/configuration/dataset-formats.md)** - Preparing your training data
-- **[Training Tasks](https://github.com/RETR0-OS/ModelForge/docs/configuration/training-tasks.md)** - Understanding different tasks
-- **[Hardware Profiles](https://github.com/RETR0-OS/ModelForge/docs/configuration/hardware-profiles.md)** - Optimizing for your GPU
+- **[Configuration Guide](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/configuration/configuration-guide.md)** - All configuration options
+- **[Dataset Formats](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/configuration/dataset-formats.md)** - Preparing your training data
+- **[Training Tasks](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/configuration/training-tasks.md)** - Understanding different tasks
+- **[Hardware Profiles](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/configuration/hardware-profiles.md)** - Optimizing for your GPU
 
 ### Providers
-- **[Provider Overview](https://github.com/RETR0-OS/ModelForge/docs/providers/overview.md)** - Understanding providers
-- **[HuggingFace Provider](https://github.com/RETR0-OS/ModelForge/docs/providers/huggingface.md)** - Standard HuggingFace models
-- **[Unsloth Provider](https://github.com/RETR0-OS/ModelForge/docs/providers/unsloth.md)** - 2x faster training
+- **[Provider Overview](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/providers/overview.md)** - Understanding providers
+- **[HuggingFace Provider](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/providers/huggingface.md)** - Standard HuggingFace models
+- **[Unsloth Provider](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/providers/unsloth.md)** - 2x faster training
 
 ### Training Strategies
-- **[Strategy Overview](https://github.com/RETR0-OS/ModelForge/docs/strategies/overview.md)** - Understanding strategies
-- **[SFT Strategy](https://github.com/RETR0-OS/ModelForge/docs/strategies/sft.md)** - Standard supervised fine-tuning
-- **[QLoRA Strategy](https://github.com/RETR0-OS/ModelForge/docs/strategies/qlora.md)** - Memory-efficient training
-- **[RLHF Strategy](https://github.com/RETR0-OS/ModelForge/docs/strategies/rlhf.md)** - Reinforcement learning
-- **[DPO Strategy](https://github.com/RETR0-OS/ModelForge/docs/strategies/dpo.md)** - Direct preference optimization
+- **[Strategy Overview](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/strategies/overview.md)** - Understanding strategies
+- **[SFT Strategy](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/strategies/sft.md)** - Standard supervised fine-tuning
+- **[QLoRA Strategy](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/strategies/qlora.md)** - Memory-efficient training
+- **[RLHF Strategy](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/strategies/rlhf.md)** - Reinforcement learning
+- **[DPO Strategy](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/strategies/dpo.md)** - Direct preference optimization
 
 ### API Reference
-- **[REST API](https://github.com/RETR0-OS/ModelForge/docs/api-reference/rest-api.md)** - Complete API documentation
-- **[Training Config Schema](https://github.com/RETR0-OS/ModelForge/docs/api-reference/training-config.md)** - Configuration options
+- **[REST API](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/api-reference/rest-api.md)** - Complete API documentation
+- **[Training Config Schema](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/api-reference/training-config.md)** - Configuration options
 
 ### Troubleshooting
-- **[Common Issues](https://github.com/RETR0-OS/ModelForge/docs/troubleshooting/common-issues.md)** - Frequently encountered problems
-- **[Windows Issues](https://github.com/RETR0-OS/ModelForge/docs/troubleshooting/windows-issues.md)** - Windows-specific troubleshooting
-- **[FAQ](https://github.com/RETR0-OS/ModelForge/docs/troubleshooting/faq.md)** - Frequently asked questions
+- **[Common Issues](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/troubleshooting/common-issues.md)** - Frequently encountered problems
+- **[Windows Issues](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/troubleshooting/windows-issues.md)** - Windows-specific troubleshooting
+- **[FAQ](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/troubleshooting/faq.md)** - Frequently asked questions
 
 ### Contributing
-- **[Contributing Guide](https://github.com/RETR0-OS/ModelForge/docs/contributing/contributing.md)** - How to contribute
-- **[Architecture](https://github.com/RETR0-OS/ModelForge/docs/contributing/architecture.md)** - Understanding the codebase
-- **[Model Configurations](https://github.com/RETR0-OS/ModelForge/docs/contributing/model-configs.md)** - Adding model recommendations
+- **[Contributing Guide](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/contributing/contributing.md)** - How to contribute
+- **[Architecture](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/contributing/architecture.md)** - Understanding the codebase
+- **[Model Configurations](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/contributing/model-configs.md)** - Adding model recommendations
 
-**[📖 Full Documentation Index →](https://github.com/RETR0-OS/ModelForge/docs/README.md)**
+**[📖 Full Documentation Index →](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/README.md)**
 
 ## 🔧 Platform Support
 
@@ -144,7 +144,7 @@ Open your browser to **http://localhost:8000** and start training!
 | **WSL 2** | ✅ Full support | ✅ Full support | Recommended for Windows users |
 | **Docker** | ✅ Full support | ✅ Full support | With NVIDIA runtime |
 
-**[Platform-Specific Installation Guides →](https://github.com/RETR0-OS/ModelForge/docs/installation/)**
+**[Platform-Specific Installation Guides →](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/installation/)**
 
 ## ⚠️ Important Notes
 
@@ -152,8 +152,8 @@ Open your browser to **http://localhost:8000** and start training!
 
 **Unsloth provider is NOT supported on native Windows.** For 2x faster training with Unsloth:
 
-1. **Option 1: WSL (Recommended)** - [WSL Installation Guide](https://github.com/RETR0-OS/ModelForge/docs/installation/windows.md#option-2-wsl-installation-recommended)
-2. **Option 2: Docker** - [Docker Installation Guide](https://github.com/RETR0-OS/ModelForge/docs/installation/windows.md#option-3-docker-installation)
+1. **Option 1: WSL (Recommended)** - [WSL Installation Guide](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/installation/windows.md#option-2-wsl-installation-recommended)
+2. **Option 2: Docker** - [Docker Installation Guide](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/installation/windows.md#option-3-docker-installation)
 
 The HuggingFace provider works perfectly on native Windows.
 
@@ -170,7 +170,7 @@ When using Unsloth provider, you **MUST** specify a fixed `max_sequence_length`:
 
 Auto-inference (`max_seq_length: -1`) is **NOT supported** with Unsloth.
 
-**[Learn more about Unsloth →](https://github.com/RETR0-OS/ModelForge/docs/providers/unsloth.md)**
+**[Learn more about Unsloth →](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/providers/unsloth.md)**
 
 ## 📂 Dataset Format
 
@@ -192,7 +192,7 @@ ModelForge uses JSONL format. Each task has specific fields:
 {"context": "Document text...", "question": "What is X?", "answer": "X is..."}
 ```
 
-**[Complete Dataset Format Guide →](https://github.com/RETR0-OS/ModelForge/docs/configuration/dataset-formats.md)**
+**[Complete Dataset Format Guide →](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/configuration/dataset-formats.md)**
 
 ## 🤝 Contributing
 
@@ -204,11 +204,11 @@ We welcome contributions! ModelForge v2.0's modular architecture makes it easy t
 - **Improve documentation**
 - **Fix bugs and add features**
 
-**[Contributing Guide →](https://github.com/RETR0-OS/ModelForge/docs/contributing/contributing.md)**
+**[Contributing Guide →](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/contributing/contributing.md)**
 
 ### Adding Model Recommendations
 
-ModelForge uses modular configuration files for model recommendations. See the **[Model Configuration Guide](https://github.com/RETR0-OS/ModelForge/docs/contributing/model-configs.md)** for instructions on adding new recommended models.
+ModelForge uses modular configuration files for model recommendations. See the **[Model Configuration Guide](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/contributing/model-configs.md)** for instructions on adding new recommended models.
 
 ## 🛠 Tech Stack
 
@@ -232,7 +232,7 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 ## 📧 Support
 
-- **Documentation**: [https://github.com/RETR0-OS/ModelForge/docs/](https://github.com/RETR0-OS/ModelForge/docs/)
+- **Documentation**: [hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/)
 - **Issues**: [GitHub Issues](https://github.com/RETR0-OS/ModelForge/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/RETR0-OS/ModelForge/discussions)
 - **PyPI**: [modelforge-finetuning](https://pypi.org/project/modelforge-finetuning/)
@@ -241,4 +241,4 @@ MIT License - see [LICENSE](LICENSE) file for details.
 
 **ModelForge v2.0 - Making LLM fine-tuning accessible to everyone** 🚀
 
-**[Get Started →](https://github.com/RETR0-OS/ModelForge/docs/getting-started/quickstart.md)** | **[Documentation →](https://github.com/RETR0-OS/ModelForge/docs/)** | **[GitHub →](https://github.com/RETR0-OS/ModelForge)**
+**[Get Started →](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/getting-started/quickstart.md)** | **[Documentation →](hhttps://github.com/RETR0-OS/ModelForge/tree/main/docs/)** | **[GitHub →](https://github.com/RETR0-OS/ModelForge)**
