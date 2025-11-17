@@ -21,3 +21,5 @@ ModelForge.egg-info/
 *.egg-info
 *.lock
 unsloth_compiled_cache/*
+# MkDocs build directory
+site/
