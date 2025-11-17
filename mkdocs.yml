@@ -1,0 +1,104 @@
+site_name: ModelForge Documentation
+site_description: Complete documentation for ModelForge - A no-code toolkit for fine-tuning Large Language Models
+site_author: R3tr0 M1ll3r
+site_url: https://modelforge.readthedocs.io
+
+repo_name: RETR0-OS/ModelForge
+repo_url: https://github.com/RETR0-OS/ModelForge
+
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+
+markdown_extensions:
+  - admonition
+  - codehilite
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - toc:
+      permalink: true
+
+nav:
+  - Home: README.md
+  
+  - Getting Started:
+    - Quick Start Guide: getting-started/quickstart.md
+    - What's New in v2.0: getting-started/whats-new.md
+  
+  - Installation:
+    - Windows Installation: installation/windows.md
+    - Linux Installation: installation/linux.md
+    - Post-Installation Setup: installation/post-installation.md
+  
+  - Configuration:
+    - Configuration Guide: configuration/configuration-guide.md
+    - Dataset Formats: configuration/dataset-formats.md
+    - Training Tasks: configuration/training-tasks.md
+    - Hardware Profiles: configuration/hardware-profiles.md
+  
+  - Providers:
+    - Provider Overview: providers/overview.md
+    - HuggingFace Provider: providers/huggingface.md
+    - Unsloth Provider: providers/unsloth.md
+    - Adding Custom Providers: providers/custom-providers.md
+  
+  - Training Strategies:
+    - Strategy Overview: strategies/overview.md
+    - Supervised Fine-Tuning (SFT): strategies/sft.md
+    - QLoRA Strategy: strategies/qlora.md
+    - RLHF Strategy: strategies/rlhf.md
+    - DPO Strategy: strategies/dpo.md
+    - Adding Custom Strategies: strategies/custom-strategies.md
+  
+  - API Reference:
+    - REST API Documentation: api-reference/rest-api.md
+    - Training Configuration Schema: api-reference/training-config.md
+    - Response Formats: api-reference/responses.md
+  
+  - Troubleshooting:
+    - Common Issues: troubleshooting/common-issues.md
+    - Windows-Specific Issues: troubleshooting/windows-issues.md
+    - FAQ: troubleshooting/faq.md
+    - Performance Optimization: troubleshooting/performance.md
+  
+  - Contributing:
+    - Contributing Guide: contributing/contributing.md
+    - Development Setup: contributing/development.md
+    - Architecture Overview: contributing/architecture.md
+    - Model Configurations: contributing/model-configs.md
+
+plugins:
+  - search
+  - awesome-pages
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/RETR0-OS/ModelForge
+    - icon: fontawesome/brands/python
+      link: https://pypi.org/project/modelforge-finetuning/
