@@ -64,3 +64,5 @@ include-package-data = true
 
 [project.urls]
 Documentation = "https://modelforge-finetuning.readthedocs.io"
+Repository = "https://github.com/ForgeOpus/ModelForge"
+Organization = "https://github.com/ForgeOpus"
