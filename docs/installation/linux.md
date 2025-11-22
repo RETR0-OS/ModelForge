@@ -417,4 +417,4 @@ docker run --gpus all -p 8000:8000 \
 
 ---
 
-**Need Help?** Check [Common Issues](../troubleshooting/common-issues.md) or ask in [GitHub Discussions](https://github.com/RETR0-OS/ModelForge/discussions).
+**Need Help?** Check [Common Issues](../troubleshooting/common-issues.md) or ask in [GitHub Discussions](https://github.com/ForgeOpus/ModelForge/discussions).

@@ -356,7 +356,7 @@ Contributors are recognized in:
 ## Questions?
 
 - Check [FAQ](../troubleshooting/faq.md)
-- Ask in [GitHub Discussions](https://github.com/RETR0-OS/ModelForge/discussions)
+- Ask in [GitHub Discussions](https://github.com/ForgeOpus/ModelForge/discussions)
 - Read [Architecture Guide](architecture.md)
 
 ---

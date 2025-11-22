@@ -3,17 +3,52 @@ Refactored models router.
 Handles model listing and retrieval operations.
 """
 from fastapi import APIRouter, HTTPException, Depends
-from typing import List, Dict
+from typing import List, Dict, Any
+from pydantic import BaseModel
 
 from ..services.model_service import ModelService
 from ..dependencies import get_model_service
 from ..logging_config import logger
 
 
+class ModelsResponse(BaseModel):
+    """Response model for list of models."""
+    models: List[Dict[str, Any]]
+
+
 router = APIRouter(prefix="/models")
 
 
-@router.get("/", response_model=List[Dict])
+@router.get("/all", response_model=ModelsResponse)
+async def get_all_models_legacy(
+    model_service: ModelService = Depends(get_model_service),
+):
+    """
+    Get all fine-tuned models (legacy endpoint for backward compatibility).
+
+    Args:
+        model_service: Model service instance
+
+    Returns:
+        Dictionary with models list
+    """
+    logger.info("Fetching all models (legacy endpoint)")
+    try:
+        models = model_service.get_all_models()
+        # Transform field names to match frontend expectations
+        transformed_models = []
+        for model in models:
+            transformed_model = model.copy()
+            transformed_model["model_name"] = model["name"]
+            transformed_model["model_path"] = model["path"]
+            transformed_models.append(transformed_model)
+        return ModelsResponse(models=transformed_models)
+    except Exception as e:
+        logger.error(f"Error fetching models: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/", response_model=ModelsResponse)
 async def get_all_models(
     model_service: ModelService = Depends(get_model_service),
 ):
@@ -24,12 +59,19 @@ async def get_all_models(
         model_service: Model service instance
 
     Returns:
-        List of all models
+        Dictionary with models list
     """
     logger.info("Fetching all models")
     try:
         models = model_service.get_all_models()
-        return models
+        # Transform field names to match frontend expectations
+        transformed_models = []
+        for model in models:
+            transformed_model = model.copy()
+            transformed_model["model_name"] = model["name"]
+            transformed_model["model_path"] = model["path"]
+            transformed_models.append(transformed_model)
+        return ModelsResponse(models=transformed_models)
     except Exception as e:
         logger.error(f"Error fetching models: {e}")
         raise HTTPException(status_code=500, detail=str(e))

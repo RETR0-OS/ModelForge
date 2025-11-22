@@ -62,17 +62,17 @@ Welcome to the comprehensive documentation for **ModelForge v2.0** - A no-code t
 
 ## 📖 External Resources
 
-- [GitHub Repository](https://github.com/RETR0-OS/ModelForge)
+- [GitHub Repository](https://github.com/ForgeOpus/ModelForge)
 - [PyPI Package](https://pypi.org/project/modelforge-finetuning/)
-- [Issue Tracker](https://github.com/RETR0-OS/ModelForge/issues)
-- [Discussions](https://github.com/RETR0-OS/ModelForge/discussions)
+- [Issue Tracker](https://github.com/ForgeOpus/ModelForge/issues)
+- [Discussions](https://github.com/ForgeOpus/ModelForge/discussions)
 
 ## 💡 Need Help?
 
 - Check the [FAQ](troubleshooting/faq.md) for quick answers
-- Search [existing issues](https://github.com/RETR0-OS/ModelForge/issues) on GitHub
-- Ask a question in [Discussions](https://github.com/RETR0-OS/ModelForge/discussions)
-- Report bugs via [GitHub Issues](https://github.com/RETR0-OS/ModelForge/issues/new)
+- Search [existing issues](https://github.com/ForgeOpus/ModelForge/issues) on GitHub
+- Ask a question in [Discussions](https://github.com/ForgeOpus/ModelForge/discussions)
+- Report bugs via [GitHub Issues](https://github.com/ForgeOpus/ModelForge/issues/new)
 
 ---
 

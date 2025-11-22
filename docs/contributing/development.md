@@ -36,7 +36,7 @@ git clone https://github.com/YOUR-USERNAME/ModelForge.git
 cd ModelForge
 
 # Add upstream remote
-git remote add upstream https://github.com/RETR0-OS/ModelForge.git
+git remote add upstream https://github.com/ForgeOpus/ModelForge.git
 ```
 
 ### 2. Create Virtual Environment

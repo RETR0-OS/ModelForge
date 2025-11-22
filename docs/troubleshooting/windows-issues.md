@@ -258,8 +258,8 @@ wsl --shutdown
 - [General Troubleshooting](common-issues.md)
 - [FAQ](faq.md)
 - [Windows Installation Guide](../installation/windows.md)
-- [GitHub Issues](https://github.com/RETR0-OS/ModelForge/issues)
+- [GitHub Issues](https://github.com/ForgeOpus/ModelForge/issues)
 
 ---
 
-**Windows-specific issue not listed?** Ask in [GitHub Discussions](https://github.com/RETR0-OS/ModelForge/discussions).
+**Windows-specific issue not listed?** Ask in [GitHub Discussions](https://github.com/ForgeOpus/ModelForge/discussions).

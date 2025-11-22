@@ -4,7 +4,7 @@ site_author: R3tr0 M1ll3r
 site_url: https://modelforge.readthedocs.io
 
 repo_name: RETR0-OS/ModelForge
-repo_url: https://github.com/RETR0-OS/ModelForge
+repo_url: https://github.com/ForgeOpus/ModelForge
 
 theme:
   name: material
@@ -99,6 +99,6 @@ plugins:
 extra:
   social:
     - icon: fontawesome/brands/github
-      link: https://github.com/RETR0-OS/ModelForge
+      link: https://github.com/ForgeOpus/ModelForge
     - icon: fontawesome/brands/python
       link: https://pypi.org/project/modelforge-finetuning/

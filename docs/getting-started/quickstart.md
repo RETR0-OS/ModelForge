@@ -150,7 +150,7 @@ Your previous models and settings are preserved!
 
 - Check the [FAQ](../troubleshooting/faq.md) for common questions
 - See [Troubleshooting](../troubleshooting/common-issues.md) for common issues
-- Ask in [GitHub Discussions](https://github.com/RETR0-OS/ModelForge/discussions)
+- Ask in [GitHub Discussions](https://github.com/ForgeOpus/ModelForge/discussions)
 
 ---
 

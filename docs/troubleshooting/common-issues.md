@@ -177,9 +177,9 @@ pip install unsloth
 
 - [Windows-Specific Issues](windows-issues.md)
 - [FAQ](faq.md)
-- [GitHub Issues](https://github.com/RETR0-OS/ModelForge/issues)
-- [GitHub Discussions](https://github.com/RETR0-OS/ModelForge/discussions)
+- [GitHub Issues](https://github.com/ForgeOpus/ModelForge/issues)
+- [GitHub Discussions](https://github.com/ForgeOpus/ModelForge/discussions)
 
 ---
 
-**Still having issues?** Create an issue on [GitHub](https://github.com/RETR0-OS/ModelForge/issues/new).
+**Still having issues?** Create an issue on [GitHub](https://github.com/ForgeOpus/ModelForge/issues/new).

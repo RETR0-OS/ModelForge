@@ -415,7 +415,7 @@ Check:
 ## Questions?
 
 - See [Contributing Guide](contributing.md)
-- Ask in [GitHub Discussions](https://github.com/RETR0-OS/ModelForge/discussions)
+- Ask in [GitHub Discussions](https://github.com/ForgeOpus/ModelForge/discussions)
 - Check [FAQ](../troubleshooting/faq.md)
 
 ---

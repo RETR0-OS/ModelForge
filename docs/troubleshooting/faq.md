@@ -383,10 +383,10 @@ Add JSON config file to `model_configs/`. See [Model Configurations](../contribu
 ## Still Have Questions?
 
 - Check [Troubleshooting Guide](common-issues.md)
-- Search [GitHub Issues](https://github.com/RETR0-OS/ModelForge/issues)
-- Ask in [GitHub Discussions](https://github.com/RETR0-OS/ModelForge/discussions)
+- Search [GitHub Issues](https://github.com/ForgeOpus/ModelForge/issues)
+- Ask in [GitHub Discussions](https://github.com/ForgeOpus/ModelForge/discussions)
 - Create new issue if bug
 
 ---
 
-**Can't find your answer?** Ask in [GitHub Discussions](https://github.com/RETR0-OS/ModelForge/discussions)!
+**Can't find your answer?** Ask in [GitHub Discussions](https://github.com/ForgeOpus/ModelForge/discussions)!
