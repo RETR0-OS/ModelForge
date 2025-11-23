@@ -222,7 +222,7 @@ ModelForge uses modular configuration files for model recommendations. See the *
 
 ## 📜 License
 
-MIT License - see [LICENSE](LICENSE) file for details.
+BSD License - see [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
