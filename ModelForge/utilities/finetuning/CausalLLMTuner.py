@@ -8,9 +8,15 @@ try:
 except ImportError:
     pass
 
-from trl import SFTTrainer, SFTConfig
 from peft import LoraConfig, get_peft_model, TaskType
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import (
+    AutoModelForCausalLM,
+    AutoTokenizer,
+    BitsAndBytesConfig,
+    Trainer,
+    TrainingArguments,
+    DataCollatorForLanguageModeling,
+)
 from typing import Dict, Optional
 from .Finetuner import Finetuner, ProgressCallback
 import os
@@ -37,11 +43,61 @@ class CausalLLMFinetuner(Finetuner):
         }
 
     def load_dataset(self, dataset_path:str) -> None:
+        """
+        Load and prepare dataset with tokenization.
+
+        Args:
+            dataset_path: Path to JSON dataset file
+        """
         dataset = load_dataset("json", data_files=dataset_path, split="train")
         dataset = dataset.rename_column("input", "prompt")
         dataset = dataset.rename_column("output", "completion")
+
+        # Format examples (add USER/ASSISTANT prefixes)
         dataset = dataset.map(lambda x: self.format_example(x, self.compute_specs))
-        print(dataset[0])
+
+        # Load tokenizer for tokenization
+        tokenizer = AutoTokenizer.from_pretrained(self.model_name, trust_remote_code=True)
+        tokenizer.pad_token = tokenizer.eos_token
+        tokenizer.padding_side = "right"
+
+        # Get max_seq_length (will be set during finetune, so use a default here)
+        max_seq_length = getattr(self, 'max_seq_length', 2048)
+        if max_seq_length is None or max_seq_length <= 0:
+            max_seq_length = 2048
+
+        # Tokenize dataset upfront
+        def tokenize_function(examples):
+            """Tokenize prompt + completion and create labels."""
+            # Combine prompt and completion
+            texts = [
+                f"{prompt}{completion}"
+                for prompt, completion in zip(examples["prompt"], examples["completion"])
+            ]
+
+            # Tokenize
+            tokenized = tokenizer(
+                texts,
+                truncation=True,
+                max_length=max_seq_length,
+                padding="max_length",
+                return_tensors=None,
+            )
+
+            # Labels = input_ids for causal LM
+            tokenized["labels"] = tokenized["input_ids"].copy()
+
+            return tokenized
+
+        # Apply tokenization
+        dataset = dataset.map(
+            tokenize_function,
+            batched=True,
+            remove_columns=dataset.column_names,
+            num_proc=1,
+        )
+
+        print(f"Dataset tokenized: {len(dataset)} examples")
         self.dataset = dataset
 
     def set_settings(self, **kwargs) -> None:
@@ -100,7 +156,8 @@ class CausalLLMFinetuner(Finetuner):
 
             print("Setting training args")
 
-            training_arguments = SFTConfig(
+            # Use standard TrainingArguments (NOT SFTConfig)
+            training_arguments = TrainingArguments(
                 output_dir=self.output_dir,
                 num_train_epochs=self.num_train_epochs,
                 per_device_train_batch_size=self.per_device_train_batch_size,
@@ -119,19 +176,26 @@ class CausalLLMFinetuner(Finetuner):
                 lr_scheduler_type=self.lr_scheduler_type,
                 report_to="tensorboard",
                 logging_dir=self.logging_dir,
-                max_length=None,
+                use_cache=False,
             )
 
             model = get_peft_model(model, peft_config)
 
+            # Create data collator
+            data_collator = DataCollatorForLanguageModeling(
+                tokenizer=tokenizer,
+                mlm=False,
+            )
+
             print("building trainer")
 
-            trainer = SFTTrainer(
+            # Use standard Trainer (NOT SFTTrainer)
+            trainer = Trainer(
                 model=model,
                 train_dataset=self.dataset,
                 args=training_arguments,
+                data_collator=data_collator,
                 callbacks=[ProgressCallback()],
-                dataset_num_proc=1,  # Stabilize preprocessing (single process)
             )
             trainer.train()
             trainer.model.save_pretrained(self.fine_tuned_name)
