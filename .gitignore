@@ -23,3 +23,5 @@ ModelForge.egg-info/
 unsloth_compiled_cache/*
 # MkDocs build directory
 site/
+.claude/
+*/.claude/*

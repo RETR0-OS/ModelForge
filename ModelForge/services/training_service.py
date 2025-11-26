@@ -218,8 +218,6 @@ class TrainingService:
                     max_seq_length=config.get("max_seq_length", 2048),
                 )
                 tokenizer.eos_token = tokenizer.eos_token or tokenizer.sep_token
-                # Store eos_token in config for use by training strategies
-                config["eos_token"] = tokenizer.eos_token
             else:
                 model = provider.load_model(
                     model_id=config["model_name"],
@@ -228,8 +226,6 @@ class TrainingService:
                 )
                 tokenizer = provider.load_tokenizer(config["model_name"])
                 tokenizer.eos_token = tokenizer.eos_token or tokenizer.sep_token
-                # Store eos_token in config for use by training strategies
-                config["eos_token"] = tokenizer.eos_token
 
             # Auto-detect and correct precision settings to prevent Unsloth errors
             config = self._auto_detect_precision_settings(model, config)
@@ -306,8 +302,6 @@ class TrainingService:
                 logger.info(f"Calculated max_steps: {total_steps} (epochs={num_epochs}, examples={num_examples}, effective_batch={effective_batch_size})")
 
             tokenizer.eos_token = tokenizer.eos_token or tokenizer.sep_token
-            # Store eos_token in config for use by training strategies
-            config["eos_token"] = tokenizer.eos_token
 
             # Get metrics function
             metrics_fn = MetricsCalculator.get_metrics_fn_for_task(

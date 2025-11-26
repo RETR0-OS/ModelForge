@@ -54,7 +54,7 @@ async def lifespan(app: FastAPI):
 app = FastAPI(
     title="ModelForge",
     description="Modular fine-tuning platform with support for multiple providers and strategies",
-    version="2.0.0",
+    version="v2",
     lifespan=lifespan,
 )
 

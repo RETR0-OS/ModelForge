@@ -6,13 +6,13 @@ from typing import Any, Dict, Optional
 from peft import LoraConfig, get_peft_model, TaskType, prepare_model_for_kbit_training
 
 # Import unsloth first to prevent EOS token corruption
-# This must come before TRL imports to ensure proper tokenizer initialization
+# This must come before transformers imports to ensure proper tokenizer initialization
 try:
     import unsloth
 except ImportError:
     pass
 
-from trl import SFTTrainer, SFTConfig
+from transformers import Trainer, TrainingArguments, DataCollatorForLanguageModeling
 
 from ..logging_config import logger
 
@@ -67,21 +67,26 @@ class SFTStrategy:
 
     def prepare_dataset(self, dataset: Any, tokenizer: Any, config: Dict) -> Any:
         """
-        Prepare dataset for SFT by consolidating all fields into a single 'text' field.
+        Prepare dataset for SFT by tokenizing text and creating labels.
 
         Args:
             dataset: Pre-formatted dataset with task-specific fields
-            tokenizer: Tokenizer instance (for EOS token)
-            config: Configuration dictionary (contains task type)
+            tokenizer: Tokenizer instance
+            config: Configuration dictionary (contains task type, max_seq_length)
 
         Returns:
-            Dataset with consolidated 'text' field
+            Dataset with tokenized fields: input_ids, attention_mask, labels
         """
         logger.info(f"Preparing dataset for SFT: {len(dataset)} examples")
 
         # Get EOS token with SEP fallback
         eos_token = tokenizer.eos_token or tokenizer.sep_token or ""
         task = config.get("task", "text-generation")
+        max_seq_length = config.get("max_seq_length", 2048)
+
+        # Handle max_seq_length = -1 (use model's maximum)
+        if max_seq_length == -1:
+            max_seq_length = 2048  # Fallback default
 
         def create_text_field(example):
             """Consolidate all fields into a single 'text' field with EOS token."""
@@ -119,10 +124,40 @@ class SFTStrategy:
 
             return {"text": text}
 
-        # Apply transformation and remove original columns
-        dataset = dataset.map(create_text_field, remove_columns=dataset.column_names, num_proc=1)
+        # Step 1: Create text field
+        dataset = dataset.map(
+            create_text_field,
+            remove_columns=dataset.column_names,
+            num_proc=1
+        )
 
-        logger.info(f"Dataset prepared with consolidated 'text' field: {len(dataset)} examples")
+        # Step 2: Tokenize text
+        def tokenize_function(examples):
+            """Tokenize text and create labels for causal LM."""
+            # Tokenize with truncation and padding
+            tokenized = tokenizer(
+                examples["text"],
+                truncation=True,
+                max_length=max_seq_length,
+                padding="max_length",  # Pad to max_length for consistency
+                return_tensors=None,  # Return lists, not tensors (datasets handles this)
+            )
+
+            # For causal LM: labels = input_ids
+            # The model will shift internally for next-token prediction
+            tokenized["labels"] = tokenized["input_ids"].copy()
+
+            return tokenized
+
+        # Apply tokenization
+        dataset = dataset.map(
+            tokenize_function,
+            batched=True,
+            remove_columns=["text"],  # Remove text field, keep only tokenized
+            num_proc=1,
+        )
+
+        logger.info(f"Dataset tokenized: {len(dataset)} examples with max_length={max_seq_length}")
         return dataset
 
     def create_trainer(
@@ -135,50 +170,23 @@ class SFTStrategy:
         callbacks: list = None,
     ) -> Any:
         """
-        Create SFTTrainer instance.
+        Create Trainer instance (standard transformers.Trainer).
 
         Args:
             model: Prepared model with PEFT
-            train_dataset: Training dataset
-            eval_dataset: Evaluation dataset
+            train_dataset: Tokenized training dataset
+            eval_dataset: Tokenized evaluation dataset
             tokenizer: Tokenizer instance
             config: Training configuration
             callbacks: Training callbacks
 
         Returns:
-            SFTTrainer instance
+            Trainer instance
         """
-        logger.info("Creating SFTTrainer")
+        logger.info("Creating Trainer for SFT")
 
-        # Handle max_seq_length = -1 (use model's maximum)
-        max_seq_length = config.get("max_seq_length")
-        if max_seq_length == -1:
-            # Attempt to get model's maximum sequence length from config
-            try:
-                if hasattr(model, 'config'):
-                    # Try different attribute names that models use
-                    if hasattr(model.config, 'max_position_embeddings'):
-                        max_seq_length = model.config.max_position_embeddings
-                    elif hasattr(model.config, 'n_positions'):
-                        max_seq_length = model.config.n_positions
-                    elif hasattr(model.config, 'max_sequence_length'):
-                        max_seq_length = model.config.max_sequence_length
-                    else:
-                        max_seq_length = 2048  # Fallback
-                else:
-                    max_seq_length = 2048  # Fallback
-
-                logger.info(f"max_seq_length was -1, resolved to model's max: {max_seq_length}")
-            except Exception as e:
-                logger.warning(f"Could not determine model's max sequence length: {e}. Using 2048.")
-                max_seq_length = 2048
-        elif max_seq_length is not None and max_seq_length <= 0:
-            # Handle other invalid values
-            logger.warning(f"Invalid max_seq_length: {max_seq_length}. Using 2048.")
-            max_seq_length = 2048
-
-        # Create training arguments
-        training_args = SFTConfig(
+        # Create standard training arguments (NOT SFTConfig)
+        training_args = TrainingArguments(
             output_dir=config.get("output_dir", "./checkpoints"),
             num_train_epochs=config.get("num_train_epochs", 1),
             per_device_train_batch_size=config.get("per_device_train_batch_size", 1),
@@ -198,34 +206,34 @@ class SFTStrategy:
             lr_scheduler_type=config.get("lr_scheduler_type", "cosine"),
             report_to="tensorboard",
             logging_dir=config.get("logging_dir", "./training_logs"),
-            max_length=max_seq_length,
-            packing=config.get("packing", False),
             # Evaluation settings
             eval_strategy="steps" if eval_dataset else "no",
             eval_steps=config.get("eval_steps", 100),
             save_strategy="steps",
             load_best_model_at_end=True if eval_dataset else False,
             metric_for_best_model="eval_loss" if eval_dataset else None,
-            # Use tokenizer's EOS token instead of corrupted placeholder
-            eos_token=config.get("eos_token"),
-            # Disable completion_only_loss to avoid conflicts
-            completion_only_loss=False,
             # Disable distributed training for Unsloth (required when using device_map='auto')
             ddp_find_unused_parameters=False,
         )
 
-        # Create trainer (dataset has been formatted to 'text' field in prepare_dataset)
-        trainer = SFTTrainer(
-            model=model,
-            train_dataset=train_dataset,
-            eval_dataset=eval_dataset,
-            args=training_args,
-            processing_class=tokenizer,
-            callbacks=callbacks or [],
-
+        # Create data collator for causal language modeling
+        # mlm=False means we're doing causal LM, not masked LM
+        data_collator = DataCollatorForLanguageModeling(
+            tokenizer=tokenizer,
+            mlm=False,  # Causal LM (not masked LM)
         )
 
-        logger.info("SFTTrainer created successfully")
+        # Create standard Trainer (NOT SFTTrainer)
+        trainer = Trainer(
+            model=model,
+            args=training_args,
+            train_dataset=train_dataset,
+            eval_dataset=eval_dataset,
+            data_collator=data_collator,  # Explicit data collator
+            callbacks=callbacks or [],
+        )
+
+        logger.info("Trainer created successfully for SFT")
         return trainer
 
     def get_required_dataset_fields(self) -> list:

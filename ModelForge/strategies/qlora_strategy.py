@@ -6,13 +6,13 @@ from typing import Any, Dict
 from peft import LoraConfig, get_peft_model, TaskType, prepare_model_for_kbit_training
 
 # Import unsloth first to prevent EOS token corruption
-# This must come before TRL imports to ensure proper tokenizer initialization
+# This must come before transformers imports to ensure proper tokenizer initialization
 try:
     import unsloth
 except ImportError:
     pass
 
-from trl import SFTTrainer, SFTConfig
+from transformers import Trainer, TrainingArguments, DataCollatorForLanguageModeling
 
 from ..logging_config import logger
 
@@ -87,21 +87,26 @@ class QLoRAStrategy:
 
     def prepare_dataset(self, dataset: Any, tokenizer: Any, config: Dict) -> Any:
         """
-        Prepare dataset for QLoRA by consolidating all fields into a single 'text' field.
+        Prepare dataset for QLoRA by tokenizing text and creating labels.
 
         Args:
             dataset: Pre-formatted dataset with task-specific fields
-            tokenizer: Tokenizer instance (for EOS token)
-            config: Configuration dictionary (contains task type)
+            tokenizer: Tokenizer instance
+            config: Configuration dictionary (contains task type, max_seq_length)
 
         Returns:
-            Dataset with consolidated 'text' field
+            Dataset with tokenized fields: input_ids, attention_mask, labels
         """
         logger.info(f"Preparing dataset for QLoRA: {len(dataset)} examples")
 
         # Get EOS token with SEP fallback
         eos_token = tokenizer.eos_token or tokenizer.sep_token or ""
         task = config.get("task", "text-generation")
+        max_seq_length = config.get("max_seq_length", 2048)
+
+        # Handle max_seq_length = -1 (use model's maximum)
+        if max_seq_length == -1:
+            max_seq_length = 2048  # Fallback default
 
         def create_text_field(example):
             """Consolidate all fields into a single 'text' field with EOS token."""
@@ -139,10 +144,40 @@ class QLoRAStrategy:
 
             return {"text": text}
 
-        # Apply transformation and remove original columns
-        dataset = dataset.map(create_text_field, remove_columns=dataset.column_names, num_proc=1)
+        # Step 1: Create text field
+        dataset = dataset.map(
+            create_text_field,
+            remove_columns=dataset.column_names,
+            num_proc=1
+        )
 
-        logger.info(f"Dataset prepared with consolidated 'text' field: {len(dataset)} examples")
+        # Step 2: Tokenize text
+        def tokenize_function(examples):
+            """Tokenize text and create labels for causal LM."""
+            # Tokenize with truncation and padding
+            tokenized = tokenizer(
+                examples["text"],
+                truncation=True,
+                max_length=max_seq_length,
+                padding="max_length",  # Pad to max_length for consistency
+                return_tensors=None,  # Return lists, not tensors (datasets handles this)
+            )
+
+            # For causal LM: labels = input_ids
+            # The model will shift internally for next-token prediction
+            tokenized["labels"] = tokenized["input_ids"].copy()
+
+            return tokenized
+
+        # Apply tokenization
+        dataset = dataset.map(
+            tokenize_function,
+            batched=True,
+            remove_columns=["text"],  # Remove text field, keep only tokenized
+            num_proc=1,
+        )
+
+        logger.info(f"Dataset tokenized: {len(dataset)} examples with max_length={max_seq_length}")
         return dataset
 
     def create_trainer(
@@ -155,23 +190,23 @@ class QLoRAStrategy:
         callbacks: list = None,
     ) -> Any:
         """
-        Create SFTTrainer with QLoRA-specific optimizations.
+        Create Trainer with QLoRA-specific optimizations.
 
         Args:
             model: Prepared model with QLoRA
-            train_dataset: Training dataset
-            eval_dataset: Evaluation dataset
+            train_dataset: Tokenized training dataset
+            eval_dataset: Tokenized evaluation dataset
             tokenizer: Tokenizer instance
             config: Training configuration
             callbacks: Training callbacks
 
         Returns:
-            SFTTrainer instance
+            Trainer instance
         """
-        logger.info("Creating SFTTrainer with QLoRA optimizations")
+        logger.info("Creating Trainer with QLoRA optimizations")
 
         # QLoRA-optimized training arguments
-        training_args = SFTConfig(
+        training_args = TrainingArguments(
             output_dir=config.get("output_dir", "./checkpoints"),
             num_train_epochs=config.get("num_train_epochs", 1),
             # QLoRA can use larger batch sizes due to memory efficiency
@@ -194,32 +229,33 @@ class QLoRAStrategy:
             lr_scheduler_type=config.get("lr_scheduler_type", "cosine"),
             report_to="tensorboard",
             logging_dir=config.get("logging_dir", "./training_logs"),
-            max_seq_length=config.get("max_seq_length", None),
-            packing=config.get("packing", False),
             # Gradient checkpointing for memory efficiency
             gradient_checkpointing=config.get("gradient_checkpointing", True),
             gradient_checkpointing_kwargs={"use_reentrant": False},
             # Evaluation settings
-            evaluation_strategy="steps" if eval_dataset else "no",
+            eval_strategy="steps" if eval_dataset else "no",
             eval_steps=config.get("eval_steps", 100),
             save_strategy="steps",
             load_best_model_at_end=True if eval_dataset else False,
             metric_for_best_model="eval_loss" if eval_dataset else None,
-            # Use tokenizer's EOS token instead of corrupted placeholder
-            eos_token=config.get("eos_token"),
-            # Disable completion_only_loss to avoid conflicts
-            completion_only_loss=False,
             # Disable distributed training for Unsloth (required when using device_map='auto')
             ddp_find_unused_parameters=False,
+            use_cache=False,
         )
 
-        # Create trainer (dataset has been formatted to 'text' field in prepare_dataset)
-        trainer = SFTTrainer(
+        # Create data collator for causal language modeling
+        data_collator = DataCollatorForLanguageModeling(
+            tokenizer=tokenizer,
+            mlm=False,  # Causal LM
+        )
+
+        # Create standard Trainer
+        trainer = Trainer(
             model=model,
+            args=training_args,
             train_dataset=train_dataset,
             eval_dataset=eval_dataset,
-            args=training_args,
-            processing_class=tokenizer,
+            data_collator=data_collator,
             callbacks=callbacks or [],
         )
 

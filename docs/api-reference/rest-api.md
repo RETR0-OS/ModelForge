@@ -26,7 +26,7 @@ Get system information including available providers, strategies, and tasks.
   "providers": ["huggingface", "unsloth"],
   "strategies": ["sft", "qlora", "rlhf", "dpo"],
   "tasks": ["text-generation", "summarization", "extractive-question-answering"],
-  "version": "2.0.0"
+  "version": "v2"
 }
 ```
 
@@ -38,7 +38,7 @@ Health check endpoint.
 ```json
 {
   "status": "healthy",
-  "version": "2.0.0"
+  "version": "v2"
 }
 ```
 
