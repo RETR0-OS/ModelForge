@@ -10,7 +10,7 @@ Complete these steps after installing ModelForge to ensure everything is configu
 modelforge --version
 ```
 
-Should display: `ModelForge v2.0.0` (or current version)
+Should display: `ModelForge v2` (or current version)
 
 ### 2. Verify GPU Detection
 
@@ -118,7 +118,7 @@ Should return:
 ```json
 {
   "status": "healthy",
-  "version": "2.0.0"
+  "version": "v2"
 }
 ```
 
