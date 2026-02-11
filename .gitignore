@@ -25,3 +25,4 @@ unsloth_compiled_cache/*
 site/
 .claude/
 */.claude/*
+server.log
