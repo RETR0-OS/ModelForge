@@ -1,0 +1,329 @@
+[2026-02-11 03:48:15] [INFO] ================================================================================
+[2026-02-11 03:48:15] [INFO] STARTING COMPREHENSIVE FINETUNING ENDPOINT TESTS
+[2026-02-11 03:48:15] [INFO] ================================================================================
+[2026-02-11 03:48:15] [INFO] Total combinations to test: 24
+[2026-02-11 03:48:15] [INFO] Test model: gpt2
+[2026-02-11 03:48:15] [INFO] Epochs per test: 1
+[2026-02-11 03:48:15] [INFO] ================================================================================
+[2026-02-11 03:48:15] [INFO] ================================================================================
+[2026-02-11 03:48:15] [INFO] TEST 1/24
+[2026-02-11 03:48:15] [INFO] Task: text-generation | Provider: huggingface | Strategy: sft
+[2026-02-11 03:48:15] [INFO] ================================================================================
+[2026-02-11 03:48:15] [INFO] Resetting session...
+[2026-02-11 03:48:15] [INFO] Session reset successful
+[2026-02-11 03:48:17] [INFO] Validating task: text-generation
+[2026-02-11 03:48:17] [INFO] Task 'text-generation' validated successfully
+[2026-02-11 03:48:17] [INFO] Setting model: gpt2
+[2026-02-11 03:48:17] [ERROR] Model setting failed: No response
+[2026-02-11 03:48:17] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:48:17] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:48:27] [INFO] ================================================================================
+[2026-02-11 03:48:27] [INFO] TEST 2/24
+[2026-02-11 03:48:27] [INFO] Task: text-generation | Provider: huggingface | Strategy: rlhf
+[2026-02-11 03:48:27] [INFO] ================================================================================
+[2026-02-11 03:48:27] [INFO] Resetting session...
+[2026-02-11 03:48:27] [INFO] Session reset successful
+[2026-02-11 03:48:29] [INFO] Validating task: text-generation
+[2026-02-11 03:48:29] [INFO] Task 'text-generation' validated successfully
+[2026-02-11 03:48:29] [INFO] Setting model: gpt2
+[2026-02-11 03:48:29] [ERROR] Model setting failed: No response
+[2026-02-11 03:48:29] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:48:29] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:48:39] [INFO] ================================================================================
+[2026-02-11 03:48:39] [INFO] TEST 3/24
+[2026-02-11 03:48:39] [INFO] Task: text-generation | Provider: huggingface | Strategy: dpo
+[2026-02-11 03:48:39] [INFO] ================================================================================
+[2026-02-11 03:48:39] [INFO] Resetting session...
+[2026-02-11 03:48:39] [INFO] Session reset successful
+[2026-02-11 03:48:41] [INFO] Validating task: text-generation
+[2026-02-11 03:48:41] [INFO] Task 'text-generation' validated successfully
+[2026-02-11 03:48:41] [INFO] Setting model: gpt2
+[2026-02-11 03:48:41] [ERROR] Model setting failed: No response
+[2026-02-11 03:48:41] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:48:41] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:48:51] [INFO] ================================================================================
+[2026-02-11 03:48:51] [INFO] TEST 4/24
+[2026-02-11 03:48:51] [INFO] Task: text-generation | Provider: huggingface | Strategy: qlora
+[2026-02-11 03:48:51] [INFO] ================================================================================
+[2026-02-11 03:48:51] [INFO] Resetting session...
+[2026-02-11 03:48:51] [INFO] Session reset successful
+[2026-02-11 03:48:53] [INFO] Validating task: text-generation
+[2026-02-11 03:48:53] [INFO] Task 'text-generation' validated successfully
+[2026-02-11 03:48:53] [INFO] Setting model: gpt2
+[2026-02-11 03:48:53] [ERROR] Model setting failed: No response
+[2026-02-11 03:48:53] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:48:53] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:49:03] [INFO] ================================================================================
+[2026-02-11 03:49:03] [INFO] TEST 5/24
+[2026-02-11 03:49:03] [INFO] Task: text-generation | Provider: unsloth | Strategy: sft
+[2026-02-11 03:49:03] [INFO] ================================================================================
+[2026-02-11 03:49:03] [INFO] Resetting session...
+[2026-02-11 03:49:03] [INFO] Session reset successful
+[2026-02-11 03:49:05] [INFO] Validating task: text-generation
+[2026-02-11 03:49:05] [INFO] Task 'text-generation' validated successfully
+[2026-02-11 03:49:05] [INFO] Setting model: gpt2
+[2026-02-11 03:49:05] [ERROR] Model setting failed: No response
+[2026-02-11 03:49:05] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:49:05] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:49:15] [INFO] ================================================================================
+[2026-02-11 03:49:15] [INFO] TEST 6/24
+[2026-02-11 03:49:15] [INFO] Task: text-generation | Provider: unsloth | Strategy: rlhf
+[2026-02-11 03:49:15] [INFO] ================================================================================
+[2026-02-11 03:49:15] [INFO] Resetting session...
+[2026-02-11 03:49:15] [INFO] Session reset successful
+[2026-02-11 03:49:17] [INFO] Validating task: text-generation
+[2026-02-11 03:49:17] [INFO] Task 'text-generation' validated successfully
+[2026-02-11 03:49:17] [INFO] Setting model: gpt2
+[2026-02-11 03:49:17] [ERROR] Model setting failed: No response
+[2026-02-11 03:49:17] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:49:17] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:49:27] [INFO] ================================================================================
+[2026-02-11 03:49:27] [INFO] TEST 7/24
+[2026-02-11 03:49:27] [INFO] Task: text-generation | Provider: unsloth | Strategy: dpo
+[2026-02-11 03:49:27] [INFO] ================================================================================
+[2026-02-11 03:49:27] [INFO] Resetting session...
+[2026-02-11 03:49:27] [INFO] Session reset successful
+[2026-02-11 03:49:29] [INFO] Validating task: text-generation
+[2026-02-11 03:49:29] [INFO] Task 'text-generation' validated successfully
+[2026-02-11 03:49:29] [INFO] Setting model: gpt2
+[2026-02-11 03:49:29] [ERROR] Model setting failed: No response
+[2026-02-11 03:49:29] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:49:29] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:49:39] [INFO] ================================================================================
+[2026-02-11 03:49:39] [INFO] TEST 8/24
+[2026-02-11 03:49:39] [INFO] Task: text-generation | Provider: unsloth | Strategy: qlora
+[2026-02-11 03:49:39] [INFO] ================================================================================
+[2026-02-11 03:49:39] [INFO] Resetting session...
+[2026-02-11 03:49:39] [INFO] Session reset successful
+[2026-02-11 03:49:41] [INFO] Validating task: text-generation
+[2026-02-11 03:49:41] [INFO] Task 'text-generation' validated successfully
+[2026-02-11 03:49:41] [INFO] Setting model: gpt2
+[2026-02-11 03:49:41] [ERROR] Model setting failed: No response
+[2026-02-11 03:49:41] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:49:41] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:49:51] [INFO] ================================================================================
+[2026-02-11 03:49:51] [INFO] TEST 9/24
+[2026-02-11 03:49:51] [INFO] Task: summarization | Provider: huggingface | Strategy: sft
+[2026-02-11 03:49:51] [INFO] ================================================================================
+[2026-02-11 03:49:51] [INFO] Resetting session...
+[2026-02-11 03:49:51] [INFO] Session reset successful
+[2026-02-11 03:49:53] [INFO] Validating task: summarization
+[2026-02-11 03:49:53] [INFO] Task 'summarization' validated successfully
+[2026-02-11 03:49:53] [INFO] Setting model: gpt2
+[2026-02-11 03:49:53] [ERROR] Model setting failed: No response
+[2026-02-11 03:49:53] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:49:53] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:50:03] [INFO] ================================================================================
+[2026-02-11 03:50:03] [INFO] TEST 10/24
+[2026-02-11 03:50:03] [INFO] Task: summarization | Provider: huggingface | Strategy: rlhf
+[2026-02-11 03:50:03] [INFO] ================================================================================
+[2026-02-11 03:50:03] [INFO] Resetting session...
+[2026-02-11 03:50:03] [INFO] Session reset successful
+[2026-02-11 03:50:05] [INFO] Validating task: summarization
+[2026-02-11 03:50:05] [INFO] Task 'summarization' validated successfully
+[2026-02-11 03:50:05] [INFO] Setting model: gpt2
+[2026-02-11 03:50:05] [ERROR] Model setting failed: No response
+[2026-02-11 03:50:05] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:50:05] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:50:15] [INFO] ================================================================================
+[2026-02-11 03:50:15] [INFO] TEST 11/24
+[2026-02-11 03:50:15] [INFO] Task: summarization | Provider: huggingface | Strategy: dpo
+[2026-02-11 03:50:15] [INFO] ================================================================================
+[2026-02-11 03:50:15] [INFO] Resetting session...
+[2026-02-11 03:50:15] [INFO] Session reset successful
+[2026-02-11 03:50:17] [INFO] Validating task: summarization
+[2026-02-11 03:50:17] [INFO] Task 'summarization' validated successfully
+[2026-02-11 03:50:17] [INFO] Setting model: gpt2
+[2026-02-11 03:50:17] [ERROR] Model setting failed: No response
+[2026-02-11 03:50:17] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:50:17] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:50:27] [INFO] ================================================================================
+[2026-02-11 03:50:27] [INFO] TEST 12/24
+[2026-02-11 03:50:27] [INFO] Task: summarization | Provider: huggingface | Strategy: qlora
+[2026-02-11 03:50:27] [INFO] ================================================================================
+[2026-02-11 03:50:27] [INFO] Resetting session...
+[2026-02-11 03:50:27] [INFO] Session reset successful
+[2026-02-11 03:50:29] [INFO] Validating task: summarization
+[2026-02-11 03:50:29] [INFO] Task 'summarization' validated successfully
+[2026-02-11 03:50:29] [INFO] Setting model: gpt2
+[2026-02-11 03:50:29] [ERROR] Model setting failed: No response
+[2026-02-11 03:50:29] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:50:29] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:50:39] [INFO] ================================================================================
+[2026-02-11 03:50:39] [INFO] TEST 13/24
+[2026-02-11 03:50:39] [INFO] Task: summarization | Provider: unsloth | Strategy: sft
+[2026-02-11 03:50:39] [INFO] ================================================================================
+[2026-02-11 03:50:39] [INFO] Resetting session...
+[2026-02-11 03:50:39] [INFO] Session reset successful
+[2026-02-11 03:50:41] [INFO] Validating task: summarization
+[2026-02-11 03:50:41] [INFO] Task 'summarization' validated successfully
+[2026-02-11 03:50:41] [INFO] Setting model: gpt2
+[2026-02-11 03:50:41] [ERROR] Model setting failed: No response
+[2026-02-11 03:50:41] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:50:41] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:50:51] [INFO] ================================================================================
+[2026-02-11 03:50:51] [INFO] TEST 14/24
+[2026-02-11 03:50:51] [INFO] Task: summarization | Provider: unsloth | Strategy: rlhf
+[2026-02-11 03:50:51] [INFO] ================================================================================
+[2026-02-11 03:50:51] [INFO] Resetting session...
+[2026-02-11 03:50:51] [INFO] Session reset successful
+[2026-02-11 03:50:53] [INFO] Validating task: summarization
+[2026-02-11 03:50:53] [INFO] Task 'summarization' validated successfully
+[2026-02-11 03:50:53] [INFO] Setting model: gpt2
+[2026-02-11 03:50:53] [ERROR] Model setting failed: No response
+[2026-02-11 03:50:53] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:50:53] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:51:03] [INFO] ================================================================================
+[2026-02-11 03:51:03] [INFO] TEST 15/24
+[2026-02-11 03:51:03] [INFO] Task: summarization | Provider: unsloth | Strategy: dpo
+[2026-02-11 03:51:03] [INFO] ================================================================================
+[2026-02-11 03:51:03] [INFO] Resetting session...
+[2026-02-11 03:51:03] [INFO] Session reset successful
+[2026-02-11 03:51:05] [INFO] Validating task: summarization
+[2026-02-11 03:51:05] [INFO] Task 'summarization' validated successfully
+[2026-02-11 03:51:05] [INFO] Setting model: gpt2
+[2026-02-11 03:51:05] [ERROR] Model setting failed: No response
+[2026-02-11 03:51:05] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:51:05] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:51:15] [INFO] ================================================================================
+[2026-02-11 03:51:15] [INFO] TEST 16/24
+[2026-02-11 03:51:15] [INFO] Task: summarization | Provider: unsloth | Strategy: qlora
+[2026-02-11 03:51:15] [INFO] ================================================================================
+[2026-02-11 03:51:15] [INFO] Resetting session...
+[2026-02-11 03:51:15] [INFO] Session reset successful
+[2026-02-11 03:51:17] [INFO] Validating task: summarization
+[2026-02-11 03:51:17] [INFO] Task 'summarization' validated successfully
+[2026-02-11 03:51:17] [INFO] Setting model: gpt2
+[2026-02-11 03:51:17] [ERROR] Model setting failed: No response
+[2026-02-11 03:51:17] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:51:17] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:51:27] [INFO] ================================================================================
+[2026-02-11 03:51:27] [INFO] TEST 17/24
+[2026-02-11 03:51:27] [INFO] Task: extractive-question-answering | Provider: huggingface | Strategy: sft
+[2026-02-11 03:51:27] [INFO] ================================================================================
+[2026-02-11 03:51:27] [INFO] Resetting session...
+[2026-02-11 03:51:27] [INFO] Session reset successful
+[2026-02-11 03:51:29] [INFO] Validating task: extractive-question-answering
+[2026-02-11 03:51:29] [INFO] Task 'extractive-question-answering' validated successfully
+[2026-02-11 03:51:29] [INFO] Setting model: gpt2
+[2026-02-11 03:51:29] [ERROR] Model setting failed: No response
+[2026-02-11 03:51:29] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:51:29] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:51:39] [INFO] ================================================================================
+[2026-02-11 03:51:39] [INFO] TEST 18/24
+[2026-02-11 03:51:39] [INFO] Task: extractive-question-answering | Provider: huggingface | Strategy: rlhf
+[2026-02-11 03:51:39] [INFO] ================================================================================
+[2026-02-11 03:51:39] [INFO] Resetting session...
+[2026-02-11 03:51:39] [INFO] Session reset successful
+[2026-02-11 03:51:41] [INFO] Validating task: extractive-question-answering
+[2026-02-11 03:51:41] [INFO] Task 'extractive-question-answering' validated successfully
+[2026-02-11 03:51:41] [INFO] Setting model: gpt2
+[2026-02-11 03:51:41] [ERROR] Model setting failed: No response
+[2026-02-11 03:51:41] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:51:41] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:51:51] [INFO] ================================================================================
+[2026-02-11 03:51:51] [INFO] TEST 19/24
+[2026-02-11 03:51:51] [INFO] Task: extractive-question-answering | Provider: huggingface | Strategy: dpo
+[2026-02-11 03:51:51] [INFO] ================================================================================
+[2026-02-11 03:51:51] [INFO] Resetting session...
+[2026-02-11 03:51:51] [INFO] Session reset successful
+[2026-02-11 03:51:53] [INFO] Validating task: extractive-question-answering
+[2026-02-11 03:51:53] [INFO] Task 'extractive-question-answering' validated successfully
+[2026-02-11 03:51:53] [INFO] Setting model: gpt2
+[2026-02-11 03:51:53] [ERROR] Model setting failed: No response
+[2026-02-11 03:51:53] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:51:53] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:52:03] [INFO] ================================================================================
+[2026-02-11 03:52:03] [INFO] TEST 20/24
+[2026-02-11 03:52:03] [INFO] Task: extractive-question-answering | Provider: huggingface | Strategy: qlora
+[2026-02-11 03:52:03] [INFO] ================================================================================
+[2026-02-11 03:52:03] [INFO] Resetting session...
+[2026-02-11 03:52:03] [INFO] Session reset successful
+[2026-02-11 03:52:05] [INFO] Validating task: extractive-question-answering
+[2026-02-11 03:52:05] [INFO] Task 'extractive-question-answering' validated successfully
+[2026-02-11 03:52:05] [INFO] Setting model: gpt2
+[2026-02-11 03:52:05] [ERROR] Model setting failed: No response
+[2026-02-11 03:52:05] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:52:05] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:52:15] [INFO] ================================================================================
+[2026-02-11 03:52:15] [INFO] TEST 21/24
+[2026-02-11 03:52:15] [INFO] Task: extractive-question-answering | Provider: unsloth | Strategy: sft
+[2026-02-11 03:52:15] [INFO] ================================================================================
+[2026-02-11 03:52:15] [INFO] Resetting session...
+[2026-02-11 03:52:15] [INFO] Session reset successful
+[2026-02-11 03:52:17] [INFO] Validating task: extractive-question-answering
+[2026-02-11 03:52:17] [INFO] Task 'extractive-question-answering' validated successfully
+[2026-02-11 03:52:17] [INFO] Setting model: gpt2
+[2026-02-11 03:52:17] [ERROR] Model setting failed: No response
+[2026-02-11 03:52:17] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:52:17] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:52:27] [INFO] ================================================================================
+[2026-02-11 03:52:27] [INFO] TEST 22/24
+[2026-02-11 03:52:27] [INFO] Task: extractive-question-answering | Provider: unsloth | Strategy: rlhf
+[2026-02-11 03:52:27] [INFO] ================================================================================
+[2026-02-11 03:52:27] [INFO] Resetting session...
+[2026-02-11 03:52:27] [INFO] Session reset successful
+[2026-02-11 03:52:29] [INFO] Validating task: extractive-question-answering
+[2026-02-11 03:52:29] [INFO] Task 'extractive-question-answering' validated successfully
+[2026-02-11 03:52:29] [INFO] Setting model: gpt2
+[2026-02-11 03:52:29] [ERROR] Model setting failed: No response
+[2026-02-11 03:52:29] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:52:29] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:52:39] [INFO] ================================================================================
+[2026-02-11 03:52:39] [INFO] TEST 23/24
+[2026-02-11 03:52:39] [INFO] Task: extractive-question-answering | Provider: unsloth | Strategy: dpo
+[2026-02-11 03:52:39] [INFO] ================================================================================
+[2026-02-11 03:52:39] [INFO] Resetting session...
+[2026-02-11 03:52:39] [INFO] Session reset successful
+[2026-02-11 03:52:41] [INFO] Validating task: extractive-question-answering
+[2026-02-11 03:52:41] [INFO] Task 'extractive-question-answering' validated successfully
+[2026-02-11 03:52:41] [INFO] Setting model: gpt2
+[2026-02-11 03:52:41] [ERROR] Model setting failed: No response
+[2026-02-11 03:52:41] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:52:41] [INFO] Pausing 10 seconds before next test...
+[2026-02-11 03:52:51] [INFO] ================================================================================
+[2026-02-11 03:52:51] [INFO] TEST 24/24
+[2026-02-11 03:52:51] [INFO] Task: extractive-question-answering | Provider: unsloth | Strategy: qlora
+[2026-02-11 03:52:51] [INFO] ================================================================================
+[2026-02-11 03:52:51] [INFO] Resetting session...
+[2026-02-11 03:52:51] [INFO] Session reset successful
+[2026-02-11 03:52:53] [INFO] Validating task: extractive-question-answering
+[2026-02-11 03:52:53] [INFO] Task 'extractive-question-answering' validated successfully
+[2026-02-11 03:52:53] [INFO] Setting model: gpt2
+[2026-02-11 03:52:53] [ERROR] Model setting failed: No response
+[2026-02-11 03:52:53] [INFO] Results saved to: /home/user/ModelForge/test_results.json
+[2026-02-11 03:52:53] [INFO] ================================================================================
+[2026-02-11 03:52:53] [INFO] ALL TESTS COMPLETED
+[2026-02-11 03:52:53] [INFO] ================================================================================
+[2026-02-11 03:52:53] [INFO] Total tests: 24
+[2026-02-11 03:52:53] [INFO] Successful: 0
+[2026-02-11 03:52:53] [INFO] Failed: 24
+[2026-02-11 03:52:53] [INFO] Total duration: 278.54 seconds (4.64 minutes)
+[2026-02-11 03:52:53] [INFO] ================================================================================
+[2026-02-11 03:52:53] [INFO] FAILED TESTS:
+[2026-02-11 03:52:53] [INFO] ================================================================================
+[2026-02-11 03:52:53] [INFO]   - text-generation / huggingface / sft: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - text-generation / huggingface / rlhf: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - text-generation / huggingface / dpo: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - text-generation / huggingface / qlora: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - text-generation / unsloth / sft: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - text-generation / unsloth / rlhf: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - text-generation / unsloth / dpo: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - text-generation / unsloth / qlora: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - summarization / huggingface / sft: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - summarization / huggingface / rlhf: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - summarization / huggingface / dpo: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - summarization / huggingface / qlora: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - summarization / unsloth / sft: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - summarization / unsloth / rlhf: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - summarization / unsloth / dpo: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - summarization / unsloth / qlora: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - extractive-question-answering / huggingface / sft: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - extractive-question-answering / huggingface / rlhf: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - extractive-question-answering / huggingface / dpo: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - extractive-question-answering / huggingface / qlora: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - extractive-question-answering / unsloth / sft: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - extractive-question-answering / unsloth / rlhf: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - extractive-question-answering / unsloth / dpo: Model setting failed
+[2026-02-11 03:52:53] [INFO]   - extractive-question-answering / unsloth / qlora: Model setting failed
+[2026-02-11 03:52:53] [INFO] Results saved to: /home/user/ModelForge/test_results.json

@@ -1,0 +1,1001 @@
+{
+  "test_date": "2026-02-11T03:55:15.373784",
+  "total_combinations": 24,
+  "passed": 0,
+  "failed": 24,
+  "success_rate": "0.0%",
+  "results": [
+    {
+      "test_number": 1,
+      "task": "text-generation",
+      "provider": "huggingface",
+      "strategy": "sft",
+      "timestamp": "2026-02-11T03:54:49.269758",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "text-generation"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 500,
+          "config_accepted": true,
+          "response": {
+            "detail": "GPU detection failed: NVML Shared Library Not Found"
+          }
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 2,
+      "task": "text-generation",
+      "provider": "huggingface",
+      "strategy": "rlhf",
+      "timestamp": "2026-02-11T03:54:50.506189",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "text-generation"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/text-generation: ['prompt', 'chosen', 'rejected']. Available fields: ['input',"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 3,
+      "task": "text-generation",
+      "provider": "huggingface",
+      "strategy": "dpo",
+      "timestamp": "2026-02-11T03:54:51.574921",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "text-generation"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/text-generation: ['prompt', 'chosen', 'rejected']. Available fields: ['input', "
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 4,
+      "task": "text-generation",
+      "provider": "huggingface",
+      "strategy": "qlora",
+      "timestamp": "2026-02-11T03:54:52.644925",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "text-generation"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 500,
+          "config_accepted": true,
+          "response": {
+            "detail": "GPU detection failed: NVML Shared Library Not Found"
+          }
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 5,
+      "task": "text-generation",
+      "provider": "unsloth",
+      "strategy": "sft",
+      "timestamp": "2026-02-11T03:54:53.764714",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "text-generation"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 500,
+          "config_accepted": true,
+          "response": {
+            "detail": "GPU detection failed: NVML Shared Library Not Found"
+          }
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 6,
+      "task": "text-generation",
+      "provider": "unsloth",
+      "strategy": "rlhf",
+      "timestamp": "2026-02-11T03:54:54.895968",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "text-generation"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/text-generation: ['prompt', 'chosen', 'rejected']. Available fields: ['input',"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 7,
+      "task": "text-generation",
+      "provider": "unsloth",
+      "strategy": "dpo",
+      "timestamp": "2026-02-11T03:54:55.966814",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "text-generation"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/text-generation: ['prompt', 'chosen', 'rejected']. Available fields: ['input', "
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 8,
+      "task": "text-generation",
+      "provider": "unsloth",
+      "strategy": "qlora",
+      "timestamp": "2026-02-11T03:54:57.033991",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "text-generation"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 500,
+          "config_accepted": true,
+          "response": {
+            "detail": "GPU detection failed: NVML Shared Library Not Found"
+          }
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 9,
+      "task": "summarization",
+      "provider": "huggingface",
+      "strategy": "sft",
+      "timestamp": "2026-02-11T03:54:58.165628",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "summarization"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['document']. Required for sft/summarization: ['document', 'summary']. Available fields: ['article', 'summary']\"}"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 10,
+      "task": "summarization",
+      "provider": "huggingface",
+      "strategy": "rlhf",
+      "timestamp": "2026-02-11T03:54:59.254528",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "summarization"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/summarization: ['prompt', 'chosen', 'rejected']. Available fields: ['article',"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 11,
+      "task": "summarization",
+      "provider": "huggingface",
+      "strategy": "dpo",
+      "timestamp": "2026-02-11T03:55:00.328665",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "summarization"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/summarization: ['prompt', 'chosen', 'rejected']. Available fields: ['article', "
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 12,
+      "task": "summarization",
+      "provider": "huggingface",
+      "strategy": "qlora",
+      "timestamp": "2026-02-11T03:55:01.404440",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "summarization"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['document']. Required for qlora/summarization: ['document', 'summary']. Available fields: ['article', 'summary']\"}"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 13,
+      "task": "summarization",
+      "provider": "unsloth",
+      "strategy": "sft",
+      "timestamp": "2026-02-11T03:55:02.484539",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "summarization"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['document']. Required for sft/summarization: ['document', 'summary']. Available fields: ['article', 'summary']\"}"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 14,
+      "task": "summarization",
+      "provider": "unsloth",
+      "strategy": "rlhf",
+      "timestamp": "2026-02-11T03:55:03.557020",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "summarization"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/summarization: ['prompt', 'chosen', 'rejected']. Available fields: ['article',"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 15,
+      "task": "summarization",
+      "provider": "unsloth",
+      "strategy": "dpo",
+      "timestamp": "2026-02-11T03:55:04.629258",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "summarization"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/summarization: ['prompt', 'chosen', 'rejected']. Available fields: ['article', "
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 16,
+      "task": "summarization",
+      "provider": "unsloth",
+      "strategy": "qlora",
+      "timestamp": "2026-02-11T03:55:05.700309",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "summarization"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['document']. Required for qlora/summarization: ['document', 'summary']. Available fields: ['article', 'summary']\"}"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 17,
+      "task": "extractive-question-answering",
+      "provider": "huggingface",
+      "strategy": "sft",
+      "timestamp": "2026-02-11T03:55:06.772622",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "extractive-question-answering"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['answers']. Required for sft/extractive-question-answering: ['context', 'question', 'answers']. Available fields: ['context', 'qu"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 18,
+      "task": "extractive-question-answering",
+      "provider": "huggingface",
+      "strategy": "rlhf",
+      "timestamp": "2026-02-11T03:55:07.854144",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "extractive-question-answering"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/extractive-question-answering: ['prompt', 'chosen', 'rejected']. Available fie"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 19,
+      "task": "extractive-question-answering",
+      "provider": "huggingface",
+      "strategy": "dpo",
+      "timestamp": "2026-02-11T03:55:08.930785",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "extractive-question-answering"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/extractive-question-answering: ['prompt', 'chosen', 'rejected']. Available fiel"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 20,
+      "task": "extractive-question-answering",
+      "provider": "huggingface",
+      "strategy": "qlora",
+      "timestamp": "2026-02-11T03:55:10.003149",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "extractive-question-answering"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['answers']. Required for qlora/extractive-question-answering: ['context', 'question', 'answers']. Available fields: ['context', '"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 21,
+      "task": "extractive-question-answering",
+      "provider": "unsloth",
+      "strategy": "sft",
+      "timestamp": "2026-02-11T03:55:11.079445",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "extractive-question-answering"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['answers']. Required for sft/extractive-question-answering: ['context', 'question', 'answers']. Available fields: ['context', 'qu"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 22,
+      "task": "extractive-question-answering",
+      "provider": "unsloth",
+      "strategy": "rlhf",
+      "timestamp": "2026-02-11T03:55:12.156658",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "extractive-question-answering"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/extractive-question-answering: ['prompt', 'chosen', 'rejected']. Available fie"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 23,
+      "task": "extractive-question-answering",
+      "provider": "unsloth",
+      "strategy": "dpo",
+      "timestamp": "2026-02-11T03:55:13.230689",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "extractive-question-answering"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/extractive-question-answering: ['prompt', 'chosen', 'rejected']. Available fiel"
+        }
+      },
+      "all_endpoints_valid": false
+    },
+    {
+      "test_number": 24,
+      "task": "extractive-question-answering",
+      "provider": "unsloth",
+      "strategy": "qlora",
+      "timestamp": "2026-02-11T03:55:14.302596",
+      "tests": {
+        "validate_task": {
+          "endpoint": "/validate_task",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "valid": true,
+            "task": "extractive-question-answering"
+          }
+        },
+        "set_model": {
+          "endpoint": "/set_model",
+          "status_code": 200,
+          "success": true,
+          "response": {
+            "success": true,
+            "selected_model": "gpt2",
+            "message": "Model selection saved successfully"
+          }
+        },
+        "validate_dataset": {
+          "endpoint": "/validate_dataset_path",
+          "status_code": 400,
+          "success": false,
+          "response": "{\"detail\":\"Dataset path cannot be empty.\"}"
+        },
+        "training_config": {
+          "endpoint": "/start_training",
+          "status_code": 400,
+          "config_accepted": false,
+          "response": "{\"detail\":\"Error validating dataset: Dataset missing required fields: ['answers']. Required for qlora/extractive-question-answering: ['context', 'question', 'answers']. Available fields: ['context', '"
+        }
+      },
+      "all_endpoints_valid": false
+    }
+  ]
+}

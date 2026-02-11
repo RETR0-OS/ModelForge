@@ -1,0 +1,405 @@
+[03:54:49] ================================================================================
+[03:54:49] FINETUNING ENDPOINT VALIDATION TEST
+[03:54:49] ================================================================================
+[03:54:49] Testing 24 combinations
+[03:54:49] ================================================================================
+[03:54:49] 
+[03:54:49] ================================================================================
+[03:54:49] TEST 1/24: text-generation / huggingface / sft
+[03:54:49] ================================================================================
+[03:54:49]   Testing /validate_task...
+[03:54:49]     → ✓
+[03:54:49]   Testing /set_model...
+[03:54:49]     → ✓
+[03:54:49]   Testing /validate_dataset_path...
+[03:54:49]     → ✗
+[03:54:49]   Testing /start_training config validation...
+[03:54:49]     → ✓
+[03:54:49] Overall: ✗ FAIL
+[03:54:49] 
+[03:54:50] ================================================================================
+[03:54:50] TEST 2/24: text-generation / huggingface / rlhf
+[03:54:50] ================================================================================
+[03:54:50]   Testing /validate_task...
+[03:54:50]     → ✓
+[03:54:50]   Testing /set_model...
+[03:54:50]     → ✓
+[03:54:50]   Testing /validate_dataset_path...
+[03:54:50]     → ✗
+[03:54:50]   Testing /start_training config validation...
+[03:54:50]     → ✗
+[03:54:50] Overall: ✗ FAIL
+[03:54:50] 
+[03:54:51] ================================================================================
+[03:54:51] TEST 3/24: text-generation / huggingface / dpo
+[03:54:51] ================================================================================
+[03:54:51]   Testing /validate_task...
+[03:54:51]     → ✓
+[03:54:51]   Testing /set_model...
+[03:54:51]     → ✓
+[03:54:51]   Testing /validate_dataset_path...
+[03:54:51]     → ✗
+[03:54:51]   Testing /start_training config validation...
+[03:54:51]     → ✗
+[03:54:51] Overall: ✗ FAIL
+[03:54:51] 
+[03:54:52] ================================================================================
+[03:54:52] TEST 4/24: text-generation / huggingface / qlora
+[03:54:52] ================================================================================
+[03:54:52]   Testing /validate_task...
+[03:54:52]     → ✓
+[03:54:52]   Testing /set_model...
+[03:54:52]     → ✓
+[03:54:52]   Testing /validate_dataset_path...
+[03:54:52]     → ✗
+[03:54:52]   Testing /start_training config validation...
+[03:54:52]     → ✓
+[03:54:52] Overall: ✗ FAIL
+[03:54:52] 
+[03:54:53] ================================================================================
+[03:54:53] TEST 5/24: text-generation / unsloth / sft
+[03:54:53] ================================================================================
+[03:54:53]   Testing /validate_task...
+[03:54:53]     → ✓
+[03:54:53]   Testing /set_model...
+[03:54:53]     → ✓
+[03:54:53]   Testing /validate_dataset_path...
+[03:54:53]     → ✗
+[03:54:53]   Testing /start_training config validation...
+[03:54:53]     → ✓
+[03:54:53] Overall: ✗ FAIL
+[03:54:53] 
+[03:54:54] ================================================================================
+[03:54:54] TEST 6/24: text-generation / unsloth / rlhf
+[03:54:54] ================================================================================
+[03:54:54]   Testing /validate_task...
+[03:54:54]     → ✓
+[03:54:54]   Testing /set_model...
+[03:54:54]     → ✓
+[03:54:54]   Testing /validate_dataset_path...
+[03:54:54]     → ✗
+[03:54:54]   Testing /start_training config validation...
+[03:54:54]     → ✗
+[03:54:54] Overall: ✗ FAIL
+[03:54:54] 
+[03:54:55] ================================================================================
+[03:54:55] TEST 7/24: text-generation / unsloth / dpo
+[03:54:55] ================================================================================
+[03:54:55]   Testing /validate_task...
+[03:54:55]     → ✓
+[03:54:55]   Testing /set_model...
+[03:54:55]     → ✓
+[03:54:55]   Testing /validate_dataset_path...
+[03:54:55]     → ✗
+[03:54:55]   Testing /start_training config validation...
+[03:54:56]     → ✗
+[03:54:56] Overall: ✗ FAIL
+[03:54:56] 
+[03:54:57] ================================================================================
+[03:54:57] TEST 8/24: text-generation / unsloth / qlora
+[03:54:57] ================================================================================
+[03:54:57]   Testing /validate_task...
+[03:54:57]     → ✓
+[03:54:57]   Testing /set_model...
+[03:54:57]     → ✓
+[03:54:57]   Testing /validate_dataset_path...
+[03:54:57]     → ✗
+[03:54:57]   Testing /start_training config validation...
+[03:54:57]     → ✓
+[03:54:57] Overall: ✗ FAIL
+[03:54:57] 
+[03:54:58] ================================================================================
+[03:54:58] TEST 9/24: summarization / huggingface / sft
+[03:54:58] ================================================================================
+[03:54:58]   Testing /validate_task...
+[03:54:58]     → ✓
+[03:54:58]   Testing /set_model...
+[03:54:58]     → ✓
+[03:54:58]   Testing /validate_dataset_path...
+[03:54:58]     → ✗
+[03:54:58]   Testing /start_training config validation...
+[03:54:58]     → ✗
+[03:54:58] Overall: ✗ FAIL
+[03:54:58] 
+[03:54:59] ================================================================================
+[03:54:59] TEST 10/24: summarization / huggingface / rlhf
+[03:54:59] ================================================================================
+[03:54:59]   Testing /validate_task...
+[03:54:59]     → ✓
+[03:54:59]   Testing /set_model...
+[03:54:59]     → ✓
+[03:54:59]   Testing /validate_dataset_path...
+[03:54:59]     → ✗
+[03:54:59]   Testing /start_training config validation...
+[03:54:59]     → ✗
+[03:54:59] Overall: ✗ FAIL
+[03:54:59] 
+[03:55:00] ================================================================================
+[03:55:00] TEST 11/24: summarization / huggingface / dpo
+[03:55:00] ================================================================================
+[03:55:00]   Testing /validate_task...
+[03:55:00]     → ✓
+[03:55:00]   Testing /set_model...
+[03:55:00]     → ✓
+[03:55:00]   Testing /validate_dataset_path...
+[03:55:00]     → ✗
+[03:55:00]   Testing /start_training config validation...
+[03:55:00]     → ✗
+[03:55:00] Overall: ✗ FAIL
+[03:55:00] 
+[03:55:01] ================================================================================
+[03:55:01] TEST 12/24: summarization / huggingface / qlora
+[03:55:01] ================================================================================
+[03:55:01]   Testing /validate_task...
+[03:55:01]     → ✓
+[03:55:01]   Testing /set_model...
+[03:55:01]     → ✓
+[03:55:01]   Testing /validate_dataset_path...
+[03:55:01]     → ✗
+[03:55:01]   Testing /start_training config validation...
+[03:55:01]     → ✗
+[03:55:01] Overall: ✗ FAIL
+[03:55:01] 
+[03:55:02] ================================================================================
+[03:55:02] TEST 13/24: summarization / unsloth / sft
+[03:55:02] ================================================================================
+[03:55:02]   Testing /validate_task...
+[03:55:02]     → ✓
+[03:55:02]   Testing /set_model...
+[03:55:02]     → ✓
+[03:55:02]   Testing /validate_dataset_path...
+[03:55:02]     → ✗
+[03:55:02]   Testing /start_training config validation...
+[03:55:02]     → ✗
+[03:55:02] Overall: ✗ FAIL
+[03:55:02] 
+[03:55:03] ================================================================================
+[03:55:03] TEST 14/24: summarization / unsloth / rlhf
+[03:55:03] ================================================================================
+[03:55:03]   Testing /validate_task...
+[03:55:03]     → ✓
+[03:55:03]   Testing /set_model...
+[03:55:03]     → ✓
+[03:55:03]   Testing /validate_dataset_path...
+[03:55:03]     → ✗
+[03:55:03]   Testing /start_training config validation...
+[03:55:03]     → ✗
+[03:55:03] Overall: ✗ FAIL
+[03:55:03] 
+[03:55:04] ================================================================================
+[03:55:04] TEST 15/24: summarization / unsloth / dpo
+[03:55:04] ================================================================================
+[03:55:04]   Testing /validate_task...
+[03:55:04]     → ✓
+[03:55:04]   Testing /set_model...
+[03:55:04]     → ✓
+[03:55:04]   Testing /validate_dataset_path...
+[03:55:04]     → ✗
+[03:55:04]   Testing /start_training config validation...
+[03:55:04]     → ✗
+[03:55:04] Overall: ✗ FAIL
+[03:55:04] 
+[03:55:05] ================================================================================
+[03:55:05] TEST 16/24: summarization / unsloth / qlora
+[03:55:05] ================================================================================
+[03:55:05]   Testing /validate_task...
+[03:55:05]     → ✓
+[03:55:05]   Testing /set_model...
+[03:55:05]     → ✓
+[03:55:05]   Testing /validate_dataset_path...
+[03:55:05]     → ✗
+[03:55:05]   Testing /start_training config validation...
+[03:55:05]     → ✗
+[03:55:05] Overall: ✗ FAIL
+[03:55:05] 
+[03:55:06] ================================================================================
+[03:55:06] TEST 17/24: extractive-question-answering / huggingface / sft
+[03:55:06] ================================================================================
+[03:55:06]   Testing /validate_task...
+[03:55:06]     → ✓
+[03:55:06]   Testing /set_model...
+[03:55:06]     → ✓
+[03:55:06]   Testing /validate_dataset_path...
+[03:55:06]     → ✗
+[03:55:06]   Testing /start_training config validation...
+[03:55:06]     → ✗
+[03:55:06] Overall: ✗ FAIL
+[03:55:06] 
+[03:55:07] ================================================================================
+[03:55:07] TEST 18/24: extractive-question-answering / huggingface / rlhf
+[03:55:07] ================================================================================
+[03:55:07]   Testing /validate_task...
+[03:55:07]     → ✓
+[03:55:07]   Testing /set_model...
+[03:55:07]     → ✓
+[03:55:07]   Testing /validate_dataset_path...
+[03:55:07]     → ✗
+[03:55:07]   Testing /start_training config validation...
+[03:55:07]     → ✗
+[03:55:07] Overall: ✗ FAIL
+[03:55:07] 
+[03:55:08] ================================================================================
+[03:55:08] TEST 19/24: extractive-question-answering / huggingface / dpo
+[03:55:08] ================================================================================
+[03:55:08]   Testing /validate_task...
+[03:55:08]     → ✓
+[03:55:08]   Testing /set_model...
+[03:55:08]     → ✓
+[03:55:08]   Testing /validate_dataset_path...
+[03:55:08]     → ✗
+[03:55:08]   Testing /start_training config validation...
+[03:55:09]     → ✗
+[03:55:09] Overall: ✗ FAIL
+[03:55:09] 
+[03:55:10] ================================================================================
+[03:55:10] TEST 20/24: extractive-question-answering / huggingface / qlora
+[03:55:10] ================================================================================
+[03:55:10]   Testing /validate_task...
+[03:55:10]     → ✓
+[03:55:10]   Testing /set_model...
+[03:55:10]     → ✓
+[03:55:10]   Testing /validate_dataset_path...
+[03:55:10]     → ✗
+[03:55:10]   Testing /start_training config validation...
+[03:55:10]     → ✗
+[03:55:10] Overall: ✗ FAIL
+[03:55:10] 
+[03:55:11] ================================================================================
+[03:55:11] TEST 21/24: extractive-question-answering / unsloth / sft
+[03:55:11] ================================================================================
+[03:55:11]   Testing /validate_task...
+[03:55:11]     → ✓
+[03:55:11]   Testing /set_model...
+[03:55:11]     → ✓
+[03:55:11]   Testing /validate_dataset_path...
+[03:55:11]     → ✗
+[03:55:11]   Testing /start_training config validation...
+[03:55:11]     → ✗
+[03:55:11] Overall: ✗ FAIL
+[03:55:11] 
+[03:55:12] ================================================================================
+[03:55:12] TEST 22/24: extractive-question-answering / unsloth / rlhf
+[03:55:12] ================================================================================
+[03:55:12]   Testing /validate_task...
+[03:55:12]     → ✓
+[03:55:12]   Testing /set_model...
+[03:55:12]     → ✓
+[03:55:12]   Testing /validate_dataset_path...
+[03:55:12]     → ✗
+[03:55:12]   Testing /start_training config validation...
+[03:55:12]     → ✗
+[03:55:12] Overall: ✗ FAIL
+[03:55:12] 
+[03:55:13] ================================================================================
+[03:55:13] TEST 23/24: extractive-question-answering / unsloth / dpo
+[03:55:13] ================================================================================
+[03:55:13]   Testing /validate_task...
+[03:55:13]     → ✓
+[03:55:13]   Testing /set_model...
+[03:55:13]     → ✓
+[03:55:13]   Testing /validate_dataset_path...
+[03:55:13]     → ✗
+[03:55:13]   Testing /start_training config validation...
+[03:55:13]     → ✗
+[03:55:13] Overall: ✗ FAIL
+[03:55:13] 
+[03:55:14] ================================================================================
+[03:55:14] TEST 24/24: extractive-question-answering / unsloth / qlora
+[03:55:14] ================================================================================
+[03:55:14]   Testing /validate_task...
+[03:55:14]     → ✓
+[03:55:14]   Testing /set_model...
+[03:55:14]     → ✓
+[03:55:14]   Testing /validate_dataset_path...
+[03:55:14]     → ✗
+[03:55:14]   Testing /start_training config validation...
+[03:55:14]     → ✗
+[03:55:14] Overall: ✗ FAIL
+[03:55:14] 
+[03:55:15] ================================================================================
+[03:55:15] TEST SUMMARY
+[03:55:15] ================================================================================
+[03:55:15] Total combinations tested: 24
+[03:55:15] Passed: 0
+[03:55:15] Failed: 24
+[03:55:15] Success rate: 0.0%
+[03:55:15] 
+[03:55:15] Endpoint Success Rates:
+[03:55:15]   validate_task: 24/24 (100.0%)
+[03:55:15]   set_model: 24/24 (100.0%)
+[03:55:15]   validate_dataset: 0/24 (0.0%)
+[03:55:15]   training_config: 4/24 (16.7%)
+[03:55:15] 
+Detailed results saved to: /home/user/ModelForge/endpoint_validation_results.json
+[03:55:15] 
+================================================================================
+[03:55:15] FAILED COMBINATIONS:
+[03:55:15] ================================================================================
+[03:55:15]   text-generation / huggingface / sft
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]   text-generation / huggingface / rlhf
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/text-generation: ['prompt', 'chosen', 'rejected']. Available fields: ['input',
+[03:55:15]   text-generation / huggingface / dpo
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/text-generation: ['prompt', 'chosen', 'rejected']. Available fields: ['input', 
+[03:55:15]   text-generation / huggingface / qlora
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]   text-generation / unsloth / sft
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]   text-generation / unsloth / rlhf
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/text-generation: ['prompt', 'chosen', 'rejected']. Available fields: ['input',
+[03:55:15]   text-generation / unsloth / dpo
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/text-generation: ['prompt', 'chosen', 'rejected']. Available fields: ['input', 
+[03:55:15]   text-generation / unsloth / qlora
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]   summarization / huggingface / sft
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['document']. Required for sft/summarization: ['document', 'summary']. Available fields: ['article', 'summary']"}
+[03:55:15]   summarization / huggingface / rlhf
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/summarization: ['prompt', 'chosen', 'rejected']. Available fields: ['article',
+[03:55:15]   summarization / huggingface / dpo
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/summarization: ['prompt', 'chosen', 'rejected']. Available fields: ['article', 
+[03:55:15]   summarization / huggingface / qlora
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['document']. Required for qlora/summarization: ['document', 'summary']. Available fields: ['article', 'summary']"}
+[03:55:15]   summarization / unsloth / sft
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['document']. Required for sft/summarization: ['document', 'summary']. Available fields: ['article', 'summary']"}
+[03:55:15]   summarization / unsloth / rlhf
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/summarization: ['prompt', 'chosen', 'rejected']. Available fields: ['article',
+[03:55:15]   summarization / unsloth / dpo
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/summarization: ['prompt', 'chosen', 'rejected']. Available fields: ['article', 
+[03:55:15]   summarization / unsloth / qlora
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['document']. Required for qlora/summarization: ['document', 'summary']. Available fields: ['article', 'summary']"}
+[03:55:15]   extractive-question-answering / huggingface / sft
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['answers']. Required for sft/extractive-question-answering: ['context', 'question', 'answers']. Available fields: ['context', 'qu
+[03:55:15]   extractive-question-answering / huggingface / rlhf
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/extractive-question-answering: ['prompt', 'chosen', 'rejected']. Available fie
+[03:55:15]   extractive-question-answering / huggingface / dpo
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/extractive-question-answering: ['prompt', 'chosen', 'rejected']. Available fiel
+[03:55:15]   extractive-question-answering / huggingface / qlora
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['answers']. Required for qlora/extractive-question-answering: ['context', 'question', 'answers']. Available fields: ['context', '
+[03:55:15]   extractive-question-answering / unsloth / sft
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['answers']. Required for sft/extractive-question-answering: ['context', 'question', 'answers']. Available fields: ['context', 'qu
+[03:55:15]   extractive-question-answering / unsloth / rlhf
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for rlhf/extractive-question-answering: ['prompt', 'chosen', 'rejected']. Available fie
+[03:55:15]   extractive-question-answering / unsloth / dpo
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['prompt', 'chosen', 'rejected']. Required for dpo/extractive-question-answering: ['prompt', 'chosen', 'rejected']. Available fiel
+[03:55:15]   extractive-question-answering / unsloth / qlora
+[03:55:15]     - validate_dataset: {"detail":"Dataset path cannot be empty."}
+[03:55:15]     - training_config: {"detail":"Error validating dataset: Dataset missing required fields: ['answers']. Required for qlora/extractive-question-answering: ['context', 'question', 'answers']. Available fields: ['context', '
